@@ -1,0 +1,16 @@
+FROM golang:1.12.7-alpine3.10
+ENV CGO_ENABLED 0
+
+RUN apk update && apk add bash git inotify-tools && \
+    go get github.com/go-delve/delve/cmd/dlv
+
+RUN mkdir /build/
+WORKDIR /build/
+
+# build micro-service binary
+COPY main.go /build/main.go
+COPY run.sh /build/run.sh
+
+RUN go build -gcflags "all=-N -l" -o /server main.go
+
+ENTRYPOINT sh run.sh

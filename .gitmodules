@@ -1,0 +1,6 @@
+[submodule "go-cli-demo"]
+	path = go-cli-demo
+	url = https://github.com/ahuigo/go-cli-demo.git
+[submodule "net/grpc-go"]
+	path = net/grpc-go
+	url = https://github.com/grpc/grpc-go

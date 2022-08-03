@@ -1,0 +1,10 @@
+env: local
+app: ahui
+tolerations:
+  - Key:      "large"
+    Effect:   "NoSchedule"
+    Value:    "true"
+    Operator: "Equal"
+  - Key:      "large"
+    Effect:   "NoSchedule"
+    Value:    "true"

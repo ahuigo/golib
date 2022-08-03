@@ -1,0 +1,34 @@
+godemo/
+/log/logs
+# gonic
+/gonic/ginapp/docs
+gonic/tmp
+tmp
+test.db
+.vscode
+*.log
+*.prof
+*.pprof
+*.profile
+go.sum
+
+go-debug/delve/debug
+__debug_bin
+
+
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, build with `go test -c`
+*.test
+.DS_Store
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+a.go
+hello
+conf.local.yaml

@@ -21,7 +21,7 @@ func closeCh() {
         for {
             foo, ok := <- ch
             if !ok {
-                println("done")
+                println("done", foo)
                 wg.Done()
                 return
             }

@@ -23,9 +23,8 @@ func TestCancel(t *testing.T) {
 					fmt.Println("ctx done!")
 					return // returning not to leak the goroutine
 				case dst <- n:
-					fmt.Println("wait....", n)
+					fmt.Println("send....", n)
 					time.Sleep(1 * time.Second)
-					fmt.Println("wait done")
 					n++
 				}
 			}

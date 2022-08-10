@@ -6,12 +6,12 @@ func main(){
     go func(){
         select {
 		case <-stopCh:
+            time.Sleep(1 * time.Second)
             println("stop")
 			return
 		}
     }()
-    println("sleep 5s")
-    time.Sleep(5 * time.Second)
     close(stopCh)
-    //time.Sleep(100000000000 * time.Millisecond)
+    println("quit break goroutinue")
+    //time.Sleep(2 * time.Second)
 }

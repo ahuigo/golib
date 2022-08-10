@@ -3,13 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
-	"testing"
 	"time"
 )
 
 const shortDuration = 1 * time.Millisecond
 
-func TestDeadline(t *testing.T) {
+func ExampleWithDeadline() {
 	d := time.Now().Add(shortDuration)
 	ctx, cancel := context.WithDeadline(context.Background(), d)
 
@@ -22,7 +21,9 @@ func TestDeadline(t *testing.T) {
 	case <-time.After(1 * time.Second):
 		fmt.Println("overslept")
 	case <-ctx.Done():
-		fmt.Println(ctx.Err()) //context deadline exceeded
+		fmt.Println(ctx.Err())
 	}
 
+	// Output:
+	// context deadline exceeded
 }

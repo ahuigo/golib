@@ -3,13 +3,13 @@
 1. run grpc server
 
 ```sh
-$ go run grpc/server.go
+$ go run server/server.go
 ```
 
-2. run gin server
+2. run client
 
 ```sh
-$ go run gin/main.go
+$ go run client/main.go
 ```
 
 3. use curl command to test it

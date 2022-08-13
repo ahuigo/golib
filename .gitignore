@@ -32,3 +32,7 @@ __debug_bin
 a.go
 hello
 conf.local.yaml
+
+# todo
+net/http2/x509
+#./net/http2/tls

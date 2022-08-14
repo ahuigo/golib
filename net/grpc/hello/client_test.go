@@ -1,18 +1,41 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
+	"testing"
 
 	"github.com/gin-gonic/gin"
 	//pb "github.com/gin-gonic/examples/grpc/pb"
 	pb "demo/pb"
+
 	"google.golang.org/grpc"
 )
 
-func main() {
-	// Set up a connection to the server.
+func TestClient(t *testing.T) {
+    // Refer to: https://github.com/grpc/grpc-go/examples/helloworld
+	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("did not connect: %v", err)
+	}
+	defer conn.Close()
+
+	client := pb.NewGreeterClient(conn)
+	req := &pb.HelloRequest{Name: "ahuigo"}
+	res, err := client.SayHello(context.Background(), req)
+	if err != nil {
+		t.Fatal(err.Error())
+	}
+	fmt.Printf("output:%v\n", res.Message)
+}
+
+
+// curl -v 'http://localhost:8052/rest/n/thinkerou'
+func TestGonic(t *testing.T) {
+    // Refer to: https://github.com/grpc/grpc-go/examples/helloworld
+    // conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	conn, err := grpc.Dial("localhost:50051", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)

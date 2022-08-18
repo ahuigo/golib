@@ -1,6 +1,7 @@
 package server
 
 import (
+	"io"
 	"net/http"
 	"path"
 	"strings"
@@ -39,11 +40,19 @@ func createStaticHandler(group *gin.RouterGroup, relativePath string, fs http.Fi
 		// Check if file exists and/or if we have permission to access it
 		f, err := fs.Open(file)
 		if err != nil {
+			c.Writer.WriteHeader(http.StatusNotFound)
 			if(_path404==""){
-				c.Writer.WriteHeader(http.StatusNotFound)
 				return
 			}
 			c.Request.URL.Path = _path404
+			f, err := fs.Open(_path404)
+			if err != nil {
+				return
+			}
+			defer f.Close()
+			io.Copy(c.Writer, f)
+			return
+
 			// c.Request.URL.Path =  "/a/404.html"
 		} else {
 			f.Close()

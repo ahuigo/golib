@@ -16,9 +16,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Register(r *gin.Engine, staticFS bool) {
+func Register(r *gin.Engine, staticFS bool, path404 string) {
 	if staticFS {
-		staticFsHandler(r)
+		staticFsHandler(r, path404)
 		return
 	}
 	// automatically add routers for net/http/pprof
@@ -56,7 +56,6 @@ func setTemplate(e *gin.Engine) {
 		return
 	}
 	e.Delims("{{", "}}")
-	e.LoadHTMLGlob("./tpl/*")
 	e.SetFuncMap(template.FuncMap{
 		"formatAsDate": func(t time.Time) string {
 			year, month, day := t.Date()
@@ -70,6 +69,7 @@ func setTemplate(e *gin.Engine) {
 			}
 		},
 	})
+	e.LoadHTMLGlob("./tpl/*")
 }
 
 func jsonMapFunc(c *gin.Context) {

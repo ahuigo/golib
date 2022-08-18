@@ -8,7 +8,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func staticFsHandler(r *gin.Engine) {
+var _path404 = ""
+
+func staticFsHandler(r *gin.Engine, path404 string) {
+	_path404 = path404
 	// redirect /index.html to /
 	// r.Static("/", "./")
 
@@ -36,8 +39,12 @@ func createStaticHandler(group *gin.RouterGroup, relativePath string, fs http.Fi
 		// Check if file exists and/or if we have permission to access it
 		f, err := fs.Open(file)
 		if err != nil {
-			// c.Writer.WriteHeader(http.StatusNotFound)
-			c.Request.URL.Path = "/" // use index.html
+			if(_path404==""){
+				c.Writer.WriteHeader(http.StatusNotFound)
+				return
+			}
+			c.Request.URL.Path = _path404
+			// c.Request.URL.Path =  "/a/404.html"
 		} else {
 			f.Close()
 		}

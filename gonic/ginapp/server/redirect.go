@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	URL "net/url"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/render"
@@ -54,6 +55,7 @@ func redirectForm(ctx *gin.Context) {
 	}
 	rdata := map[string]interface{}{
 		"url":  url,
+		"now1": time.Date(2017, 07, 01, 0, 0, 0, 0, time.UTC),
 		"body": data,
 	}
 

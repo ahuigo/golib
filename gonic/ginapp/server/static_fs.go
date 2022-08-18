@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 	"path"
 	"strings"
@@ -8,7 +9,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func staticFsHandler(r *gin.Engine) {
+var _basePath = ""
+
+func staticFsHandler(r *gin.Engine, basePath string) {
+	_basePath = basePath
 	// redirect /index.html to /
 	// r.Static("/", "./")
 
@@ -36,10 +40,13 @@ func createStaticHandler(group *gin.RouterGroup, relativePath string, fs http.Fi
 		// Check if file exists and/or if we have permission to access it
 		f, err := fs.Open(file)
 		if err != nil {
-			c.Writer.WriteHeader(http.StatusNotFound)
-			return
+			// c.Writer.WriteHeader(http.StatusNotFound)
+			// return
+			c.Request.URL.Path = _basePath + "/404.html"
+			fmt.Println(c.Request.URL.Path)
+		} else {
+			f.Close()
 		}
-		f.Close()
 
 		// Replace `/index.html` with `/` to stop 301 redirect
 		if strings.HasSuffix(c.Request.URL.Path, "/index.html") {

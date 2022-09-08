@@ -30,10 +30,10 @@ func LogTime(c *gin.Context) {
 	// after request
 	latency := time.Since(t)
 
-	// access the status we are sending
-	status := c.Writer.Status()
+	// access the statusCode we are sending
+	statusCode := c.Writer.Status()
 	loginName := getLoginUserFromBody(c)
-	log.Println(c.Request.RequestURI, status, latency, loginName, "----------")
+	log.Println(c.Request.RequestURI, statusCode, latency, loginName, "----------")
 }
 
 func getLoginUserFromBody(c *gin.Context) (name string) {

@@ -3,13 +3,14 @@ package main
 // 	go run race-string.go | grep -E '^WHAT$$'
 import (
 	"fmt"
+	"testing"
 	"time"
 )
 
 // 交替打印字符
 // go-lib/goroutine/race-string.go
 
-func ExampleRaceStringLock() {
+func TestRaceString(t *testing.T) {
 	const (
 		FIRST  = "Hello world!"
 		SECOND = "F*CK"
@@ -24,7 +25,7 @@ func ExampleRaceStringLock() {
 			} else {
 				s = SECOND
 			}
-			time.Sleep(10)
+			time.Sleep(10 * time.Nanosecond)
 			//time.Sleep(10*time.Second)
 		}
 	}()
@@ -37,6 +38,6 @@ func ExampleRaceStringLock() {
 			fmt.Printf("---------------\nlast string:%v\n", s1)
 			panic("err string")
 		}
-		time.Sleep(10)
+		time.Sleep(10 * time.Nanosecond)
 	}
 }

@@ -1,6 +1,10 @@
 start:
 	#arun sh -c 'swag init -g pkg/main.go && go run ./pkg'
 	arun sh -c 'swag init --parseDependency --parseInternal --parseDepth 1 && go run .'
+
+generate:
+	#//go:generate swag init --parseDependency --parseInternal -g description.go -o ./docs
+	go generate
 init:
 	#go install github.com/swaggo/swag/cmd/swag@latest -insecure
 	go install github.com/swaggo/swag/cmd/swag@v1.8.1

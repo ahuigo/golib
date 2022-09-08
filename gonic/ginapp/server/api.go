@@ -36,13 +36,17 @@ type User struct {
 	Extra interface{} `json:"extra"`
 }
 
+// Param Type: query path header body formData
+// Refer to: https://github.com/swaggo/swag/blob/master/README.md#param-type
+
 // @Summary      获取用户
 // @Description  获取用户详情
 // @Tags         user
 // @Accept       json
 // @Produce      json
-// @Param        id   path      int  true  "Account ID" Enums(1, 2, 3)
-// @Param         name  query      int  true  "Account name" default("Alex")
+// @Param 		 Cookie header string  false "token"     default(token=xxx)
+// @Param        id    path      int  true  "Account ID" Enums(1, 2, 3)
+// @Param        name  query      int  true  "Account name" default("Alex")
 // @Success      200  {object}  User
 // @Failure      400  {object}  HTTPError
 // @Failure      404  {object}  HTTPError

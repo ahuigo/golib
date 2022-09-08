@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
+	"testing"
 	"time"
 )
 
-func TestFormat() {
+func TestFormat(t *testing.T) {
 	t1, _ := time.Parse(time.RFC3339, "2012-02-03T9:09:41+01:00")
 	// t1, _ := time.Parse(time.RFC3339, "2012-02-03T9:09:41Z")
 	fmt.Println("time:", t1)

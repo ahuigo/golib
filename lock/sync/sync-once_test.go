@@ -1,11 +1,12 @@
-package main
+package lock
 
 import (
 	"fmt"
 	"sync"
+	"testing"
 )
 
-func main() {
+func TestSyncOnce(t *testing.T) {
 	var once sync.Once
 	onceBody := func() {
 		fmt.Println("Only once")
@@ -21,4 +22,3 @@ func main() {
 		<-done
 	}
 }
-

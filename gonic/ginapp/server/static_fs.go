@@ -41,7 +41,7 @@ func createStaticHandler(group *gin.RouterGroup, relativePath string, fs http.Fi
 		f, err := fs.Open(file)
 		if err != nil {
 			c.Writer.WriteHeader(http.StatusNotFound)
-			if(_path404==""){
+			if _path404 == "" {
 				return
 			}
 			c.Request.URL.Path = _path404
@@ -55,7 +55,13 @@ func createStaticHandler(group *gin.RouterGroup, relativePath string, fs http.Fi
 
 			// c.Request.URL.Path =  "/a/404.html"
 		} else {
-			f.Close()
+			defer f.Close()
+			if strings.HasSuffix(file, ".tsx") {
+				c.Writer.Header().Set("content-type", "application/typescript; charset=utf-8")
+				// c.Writer.WriteHeader(200)
+				io.Copy(c.Writer, f)
+				return
+			}
 		}
 
 		// Replace `/index.html` with `/` to stop 301 redirect

@@ -1,4 +1,4 @@
-package main
+package lock
 
 /**
 A Pool is a set of temporary objects that may be individually saved and retrieved.
@@ -13,6 +13,7 @@ import (
 	"io"
 	"os"
 	"sync"
+	"testing"
 	"time"
 )
 
@@ -43,6 +44,6 @@ func Log(w io.Writer, key, val string) {
 	bufPool.Put(b)
 }
 
-func main() {
+func TestSyncPoll(t *testing.T) {
 	Log(os.Stdout, "path", "/search?q=flowers")
 }

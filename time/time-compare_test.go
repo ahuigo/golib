@@ -1,8 +1,11 @@
 package main
 
-import "time"
+import (
+	"testing"
+	"time"
+)
 
-func main() {
+func TestCompare(t *testing.T) {
 	t1, _ := time.Parse(time.RFC3339, "2012-11-01T22:08:41+00:00")
 	t2, _ := time.Parse(time.RFC3339, "2012-11-01T22:08:41+00:00")
 	println(t1 == t2)     //false

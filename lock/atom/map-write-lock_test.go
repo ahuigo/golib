@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"testing"
 	"time"
 )
 
@@ -9,19 +10,19 @@ type User struct {
 	Name string
 }
 
-func ExampleMapWriteLock() {
+func TestMapWriteLock(t *testing.T) {
 	m := make(map[string]interface{})
 	//并发写：fatal error: concurrent map writes
 	go func() {
 		for {
 			m["abc"] = 134
-			time.Sleep(1)
+			time.Sleep(1 * time.Nanosecond)
 		}
 	}()
 	go func() {
 		for {
 			m["abc"] = User{}
-			time.Sleep(1)
+			time.Sleep(1 * time.Nanosecond)
 		}
 	}()
 

@@ -47,12 +47,13 @@ func Register(r *gin.Engine, staticFS bool, path404 string) {
 	r.GET("/sleep/:second", sleepFunc)
 	r.GET("/cpu/:second", cpuFunc)
 	r.GET("/json/map", jsonMapFunc)
+	r.GET("/proxy/*path", ProxyServer)
 	r.GET("/stream", streamApi)
 	// r.Any("/bind/*anypath", BindServer)
 }
 
 func setTemplate(e *gin.Engine) {
-	if _, err := os.Stat("./tpl"); os.IsNotExist(err) {
+	if _, err := os.Stat("./tpl/redirect.tmpl"); os.IsNotExist(err) {
 		return
 	}
 	e.Delims("{{", "}}")

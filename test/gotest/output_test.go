@@ -1,4 +1,4 @@
-package eg
+package demo
 
 import (
 	"fmt"

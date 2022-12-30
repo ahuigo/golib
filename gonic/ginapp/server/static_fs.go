@@ -31,11 +31,21 @@ func staticFS(group *gin.RouterGroup, relativePath string, fs http.FileSystem) {
 	group.HEAD(urlPattern, handler)
 }
 
+func corsMiddleware(c *gin.Context) {
+	r := c.Request
+	header := c.Writer.Header()
+	header.Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
+	header.Set("Access-Control-Allow-Credentials", "true")
+	header.Set( "Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With",)
+	header.Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
+}
+
 func createStaticHandler(group *gin.RouterGroup, relativePath string, fs http.FileSystem) gin.HandlerFunc {
 	absolutePath := joinPaths(group.BasePath(), relativePath)
 	fileServer := http.StripPrefix(absolutePath, http.FileServer(fs))
 
 	return func(c *gin.Context) {
+		corsMiddleware(c)
 		file := c.Param("filepath")
 		// Check if file exists and/or if we have permission to access it
 		f, err := fs.Open(file)

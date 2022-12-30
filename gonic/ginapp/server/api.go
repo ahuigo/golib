@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
@@ -30,6 +31,8 @@ type User struct {
 	ID      int    `json:"id" example:"1" format:"int64"`
 	Name    string `json:"name" form:"name" example:"Alex"`
 	Country string
+	// time rfc3339
+	Time time.Time `json:"time" form:"time"`
 	// 这是city 说明
 	City  string      `form:"city" example:"Beijing"`
 	Citys []string    `form:"city" example:"Bj,Tj"`

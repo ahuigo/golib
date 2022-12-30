@@ -22,6 +22,7 @@ func BindServer(c *gin.Context) {
 		fmt.Println("bind error:", err)
 	}
 	fmt.Printf("user:%#v \n", user)
+	fmt.Printf("user.time:%v \n", user.Time)
 
 	// c.String(http.StatusOK, res)
 	c.JSON(http.StatusOK, user)

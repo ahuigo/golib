@@ -2,6 +2,9 @@ start:
 	#arun sh -c 'swag init -g pkg/main.go && go run ./pkg'
 	arun sh -c 'swag init --parseDependency --parseInternal --parseDepth 1 && go run .'
 
+install:
+	go install .
+
 generate:
 	#//go:generate swag init --parseDependency --parseInternal -g description.go -o ./docs
 	go generate

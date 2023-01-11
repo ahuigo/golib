@@ -12,11 +12,11 @@ import (
 
 func TestAddUser(t *testing.T) {
 	// build request
-	user := User{
+	data := User{
 		Name: "testuser",
 		City: "Beijing",
 	}
-	req, _ := requests.BuildRequest("POST", "/api/v1/user", requests.Jsoni(user))
+	req, _ := requests.BuildRequest("POST", "/api/v1/user", requests.Jsoni(data))
 
 	// send request
 	respRecorder, ctx := createCtx(req)
@@ -33,7 +33,7 @@ func TestAddUser(t *testing.T) {
 	recvUser := User{}
 	resp := requests.BuildResponse(respRecorder.Result())
 	resp.Json(&recvUser)
-	if recvUser.Name != user.Name || recvUser.City != user.City {
+	if recvUser.Name != data.Name || recvUser.City != data.City {
 		t.Fatalf("unexpected response:%v", resp.Text())
 	}
 

@@ -13,7 +13,7 @@ func task(name string) {
 }
 func TestMain(m *testing.T) {
 	tw := NewTimer()
-	tw.CronFunc("*/2 * * * *", func() {
+	tw.CronFunc("*/1 * * * *", func() {
 		task("task2")
 	})
 
@@ -32,7 +32,7 @@ func TestMain(m *testing.T) {
 	// run timer in StartMonitorSrv
 	go tw.Run()
 
-	time.Sleep(time.Minute * 500)
+	time.Sleep(time.Minute * 6)
 	// timer.Stop()
 	time.Sleep(time.Second * 50)
 }

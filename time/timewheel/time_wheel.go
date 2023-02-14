@@ -163,9 +163,20 @@ func (t *timeWheel) ScheduleFunc(userExpire time.Duration, callback func()) Time
 
 func (t *timeWheel) getNextCronDuration(cron string) time.Duration {
 	// expr := cronexpr.MustParse("*/3 */4 * * *")
+
 	expr := cronexpr.MustParse(cron)
 	now := time.Now()
-	return expr.Next(now).Sub(now)
+	nextTime := expr.Next(now)
+	duration := nextTime.Sub(now)
+	// 执行时间精度有限，防止提前几秒计算导致定时时间过期失效
+	fmt.Println("dutration1:", duration)
+	if duration < 5*time.Second {
+		nextTime = expr.Next(nextTime)
+		duration = nextTime.Sub(now)
+	}
+	fmt.Println("now:", now, ",next cron time:", nextTime, ",dutration2:", duration)
+	return duration
+
 }
 
 func (t *timeWheel) CronFunc(cron string, callback func()) TimeNoder {

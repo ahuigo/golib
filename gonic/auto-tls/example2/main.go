@@ -19,7 +19,7 @@ func main() {
 	m := autocert.Manager{
 		Prompt:     autocert.AcceptTOS,
 		HostPolicy: autocert.HostWhitelist("example1.com", "example2.com"),
-		Cache:      autocert.DirCache("/var/www/.cache"),
+		Cache:      autocert.DirCache("tmp"),
 	}
 
 	log.Fatal(autotls.RunWithManager(r, &m))

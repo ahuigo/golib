@@ -14,7 +14,7 @@ require (
 	github.com/stretchr/testify v1.4.0
 	github.com/thinkerou/favicon v0.1.0
 	github.com/ugorji/go v1.1.13 // indirect
-	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
+	golang.org/x/crypto v0.0.0-20220314234659-1baeb1ce4c0b
 	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4
 	gopkg.in/go-playground/validator.v8 v8.18.2

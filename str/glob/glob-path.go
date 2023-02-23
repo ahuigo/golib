@@ -13,4 +13,6 @@ func main() {
 	fmt.Println("dir match", m, err) 
     m, err = filepath.Match("ahui.cn", "h.ahui.cn") // false
 	fmt.Println("dir match", m, err) 
+    m, err = filepath.Match("production-management:**","production-management:/api/v1/worker/register") // false
+	fmt.Println("dir match", m, err) 
 }

@@ -62,6 +62,8 @@ func sendBody(c *gin.Context) {
 	res += dumpRequestHeader(c.Request) + "\n"
 	res += fmt.Sprintf("c.Request.Host(include port):%s\n", c.Request.Host)
 	res += fmt.Sprintf("c.Request.URL.Host(invalid):%s\n", c.Request.URL.Host)
+	res += fmt.Sprintf("c.Request.URL.PATH:%s\n", c.Request.URL.Path)
+	res += fmt.Sprintf("c.FullPath():%s\n", c.FullPath())
 	res += fmt.Sprintf("origin:%s\n", c.Request.Header.Get("Origin"))
 	res += fmt.Sprintf("originDomain:%s\n", getOriginDomain(c))
 	res += fmt.Sprintf("cookieDomain:%s\n", GetCookieDomain(c))

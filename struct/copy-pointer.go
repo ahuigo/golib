@@ -19,7 +19,8 @@ func main() {
     fmt.Println(cat2)
 
     *cat2 = *cat1
-    fmt.Println(cat1)
-    fmt.Println(cat2)
+    cat1.friends[0] = "Tom1"
+    fmt.Println(cat1) // &{7 cat1 [Tom1 Tabata Willie]}
+    fmt.Println(cat2) //&{7 cat1 [Tom1 Tabata Willie]}
 
 }

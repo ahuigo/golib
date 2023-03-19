@@ -10,6 +10,7 @@ type ErrorType string
 
 const (
 	NetworkError ErrorType = "error-network"
+    NetworkTimeout ErrorType = "network-timeout"
 	URLError     ErrorType = "error-url"
 )
 
@@ -39,6 +40,14 @@ func Errorf(errType ErrorType, format string, args ...interface{}) *Error {
 	}
 }
 
+func Wrap(errType ErrorType, err error, msg string) *Error {
+	err = errors.Wrap(err, msg)
+	return &Error{
+		ErrType: errType,
+		Err:     err,
+	}
+}
+
 func Wrapf(errType ErrorType, err error, format string, args ...interface{}) *Error {
 	err = errors.Wrapf(err, format, args...)
 	return &Error{
@@ -47,10 +56,3 @@ func Wrapf(errType ErrorType, err error, format string, args ...interface{}) *Er
 	}
 }
 
-func Wrap(errType ErrorType, err error, msg string) *Error {
-	err = errors.Wrap(err, msg)
-	return &Error{
-		ErrType: errType,
-		Err:     err,
-	}
-}

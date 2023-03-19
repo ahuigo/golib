@@ -25,10 +25,24 @@ func ReadConfig() ([]byte, error) {
 
 func TestErrCause(t *testing.T) {
 	_, err := ReadConfig()
+	err = errors.Wrapf(err, "main(wrap3)")
 	if err != nil {
 		fmt.Printf("original (%T)err: %v\n", errors.Cause(err), errors.Cause(err))
 		fmt.Printf("err:%v\n", err)
-		fmt.Printf("stack trace:\n %+v\n", err) // %+v 可以在打印的时候打印完整的堆栈信息
+		fmt.Printf("stack trace:\n %+v\n", err)                                               // %+v 可以在打印的时候打印完整的堆栈信息
+		fmt.Printf("is PathError As: %+v\n", isPathError(err))                                // true
+		fmt.Printf("is PathError Strict: %+v\n", isPathErrorStrict(err))                      // false
+		fmt.Printf("is PathError Strict(Cause): %+v\n", isPathErrorStrict(errors.Cause(err))) // true
 		// os.Exit(1)
 	}
+}
+
+func isPathError(err error) bool {
+	var target *os.PathError
+	return errors.As(err, &target)
+}
+
+func isPathErrorStrict(err error) bool {
+	_, ok := err.(*os.PathError)
+	return ok
 }

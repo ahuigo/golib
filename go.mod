@@ -1,6 +1,6 @@
 module go-lib
 
-go 1.12
+go 1.19
 
 require (
 	github.com/ahuigo/requests v1.0.27

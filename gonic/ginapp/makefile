@@ -4,14 +4,15 @@ start:
 
 install:
 	go install .
+	#go build -o ~/bin/ginapp .
 
 generate:
 	#//go:generate swag init --parseDependency --parseInternal -g description.go -o ./docs
 	go generate
-init:
+init: doc
 	#go install github.com/swaggo/swag/cmd/swag@latest -insecure
 	go install github.com/swaggo/swag/cmd/swag@v1.8.1
-doc:
+doc: 
 	# swag init -g cmd/main.go
 	swag init --parseDependency --parseInternal --parseDepth 1 #&& open http://m:4500/swagger/index.html
 

@@ -1,8 +1,10 @@
 package server
 
 import (
+	"ginapp/fslib"
 	"io"
 	"net/http"
+	"os"
 	"path"
 	"strings"
 
@@ -36,7 +38,7 @@ func corsMiddleware(c *gin.Context) {
 	header := c.Writer.Header()
 	header.Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
 	header.Set("Access-Control-Allow-Credentials", "true")
-	header.Set( "Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With",)
+	header.Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
 	header.Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
 }
 
@@ -46,10 +48,17 @@ func createStaticHandler(group *gin.RouterGroup, relativePath string, fs http.Fi
 
 	return func(c *gin.Context) {
 		corsMiddleware(c)
-		file := c.Param("filepath")
+		filepath := c.Param("filepath")
+		if filepath == "/" {
+			filepath = "index.html"
+		}
+		filepath = fslib.SafePath(filepath)
 		// Check if file exists and/or if we have permission to access it
-		f, err := fs.Open(file)
+		f, err := fs.Open(filepath)
 		if err != nil {
+			if os.IsNotExist(err) && !fslib.IsValidRootDir() {
+				fslib.FixRootDir()
+			}
 			c.Writer.WriteHeader(http.StatusNotFound)
 			if _path404 == "" {
 				return
@@ -57,6 +66,7 @@ func createStaticHandler(group *gin.RouterGroup, relativePath string, fs http.Fi
 			c.Request.URL.Path = _path404
 			f, err := fs.Open(_path404)
 			if err != nil {
+				c.Writer.WriteString(err.Error())
 				return
 			}
 			defer f.Close()
@@ -66,12 +76,14 @@ func createStaticHandler(group *gin.RouterGroup, relativePath string, fs http.Fi
 			// c.Request.URL.Path =  "/a/404.html"
 		} else {
 			defer f.Close()
-			if strings.HasSuffix(file, ".tsx") {
+			if strings.HasSuffix(filepath, ".tsx") {
 				c.Writer.Header().Set("content-type", "application/typescript; charset=utf-8")
 				// c.Writer.WriteHeader(200)
 				io.Copy(c.Writer, f)
 				return
 			}
+			// io.Copy(c.Writer, f)
+			// return
 		}
 
 		// Replace `/index.html` with `/` to stop 301 redirect

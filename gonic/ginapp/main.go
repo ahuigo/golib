@@ -2,8 +2,8 @@ package main
 
 import (
 	"flag"
+	"ginapp/fslib"
 	"ginapp/server"
-	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,7 +18,7 @@ func main() {
 	// chang directory
 	if *dir != "" {
 		//home, _ := os.UserHomeDir()
-		if err := os.Chdir(*dir); err != nil {
+		if err := fslib.Chdir(*dir); err != nil {
 			panic(err)
 		}
 	}

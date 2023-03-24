@@ -67,10 +67,24 @@ func IsCwdChanged() bool {
 	}
 
 }
+
+var cwdDir string
+
+func Chdir(dir string) error {
+	cwdDir = dir
+	return os.Chdir(dir)
+}
+
 func FixRootDir() {
-	if rp, err := os.Getwd(); err == nil {
-		os.Chdir(rp)
+	var err error
+	dir := cwdDir
+	if dir == "" {
+		dir, err = os.Getwd()
+		if err != nil {
+			panic(err)
+		}
 	}
+	os.Chdir(dir)
 }
 
 func SafePath(path string) string {

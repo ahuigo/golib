@@ -56,7 +56,7 @@ func createStaticHandler(group *gin.RouterGroup, relativePath string, fs http.Fi
 		// Check if file exists and/or if we have permission to access it
 		f, err := fs.Open(filepath)
 		if err != nil {
-			if os.IsNotExist(err) && !fslib.IsValidRootDir() {
+			if os.IsNotExist(err) && fslib.IsCwdChanged() {
 				fslib.FixRootDir()
 			}
 			c.Writer.WriteHeader(http.StatusNotFound)

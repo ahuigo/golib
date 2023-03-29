@@ -2,6 +2,7 @@ package fslib
 
 import (
 	"os"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"syscall"
@@ -70,9 +71,12 @@ func IsCwdChanged() bool {
 
 var cwdDir string
 
-func Chdir(dir string) error {
-	cwdDir = dir
-	return os.Chdir(dir)
+func Chdir(dir string) (err error) {
+	if cwdDir, err = filepath.Abs(dir); err != nil {
+		println("get abs of path:", dir)
+		panic(err)
+	}
+	return os.Chdir(cwdDir)
 }
 
 func FixRootDir() {

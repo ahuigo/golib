@@ -41,6 +41,7 @@ func Register(r *gin.Engine, staticFS bool, path404 string) {
 	r.GET("/api/panic", panicApi)
 	r.GET("/dump/*anypath", DumpServer)
 	r.POST("/dump/*anypath", DumpServer)
+	r.GET("/status/:code", StatusServer)
 	r.GET("/redirect/:code", RedirectServer)
 	r.POST("/redirect/form", RedirectServer)
 	r.GET("/echo/:size", EchoServer)

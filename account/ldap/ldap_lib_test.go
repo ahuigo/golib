@@ -1,4 +1,5 @@
 package main
+
 import (
 	"strings"
 	"testing"
@@ -63,10 +64,10 @@ func GetAllUserNames() (usernames []string, err error) {
 	}
 	defer l.Close()
 
-	personDN := viper.GetString("ldap.baseDn")
+	baseDn := viper.GetString("ldap.baseDn")
 	personAttribute := []string{"sAMAccountName"}
 	searchRequest := ldap.NewSearchRequest(
-		personDN,
+		baseDn,
 		ldap.ScopeWholeSubtree, ldap.DerefAlways, 0, 0, false,
 		("(&(objectclass=person))"),
 		personAttribute,
@@ -103,7 +104,7 @@ func IsLdapUsername(username string) (isExisted bool, err error) {
 	return
 }
 
-//CheckUserPassword Check LDAP USER PASSWORD
+// CheckUserPassword Check LDAP USER PASSWORD
 func CheckUserPassword(username string, password string) (err error) {
 
 	l, err := getLdapConn()

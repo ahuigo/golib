@@ -24,7 +24,7 @@ func GetAllAttributes() (attrs []string, err error) {
 		ldap.NeverDerefAliases,
 		10, 0, false,
 		// ("(&(objectclass=person))"),
-		("(&(objectclass=*))"),
+		("(objectclass=*)"),
 		personAttribute,
 		nil,
 	)

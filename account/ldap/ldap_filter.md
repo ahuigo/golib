@@ -6,7 +6,6 @@
 
     "(&(objectclass=*))"
     "(objectclass=*)"
-    "()"
 
 ## How do I match more than one attribute?
 Notice the ampersand symbol '&' symbol at the start. Translated this means: search for objectClass=person AND objectClass=user.

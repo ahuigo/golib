@@ -1,6 +1,13 @@
 # ldap filter expression
 > Refer to: https://confluence.atlassian.com/kb/how-to-write-ldap-search-filters-792496933.html
 
+## Matching all
+以下语法都可以
+
+    "(&(objectclass=*))"
+    "(objectclass=*)"
+    "()"
+
 ## How do I match more than one attribute?
 Notice the ampersand symbol '&' symbol at the start. Translated this means: search for objectClass=person AND objectClass=user.
 

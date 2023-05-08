@@ -11,7 +11,7 @@ func testNilBytes(){
     b=[]byte(nil)
     fmt.Printf("b is Nil=%v\n", b==nil) // true
     b=[]byte{}
-    fmt.Printf("b is not Nil=%v\n", b==nil) // true
+    fmt.Printf("b is Nil=%v\n", b==nil) // false
     b=nil
     fmt.Printf("nil slice append:%v\n", append(b, 1,2)) // append true
 }

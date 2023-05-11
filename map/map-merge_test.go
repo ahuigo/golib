@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/samber/lo"
+	"golang.org/x/exp/maps"
 )
 
 func TestMapMerge(t *testing.T) {
@@ -16,4 +17,18 @@ func TestMapMerge(t *testing.T) {
 	)
 
 	fmt.Printf("%v", result)
+}
+
+func TestMapMerge2(t *testing.T) {
+	src := map[string]int{
+		"one": 1,
+		"two": 2,
+	}
+	dst := map[string]int{
+		"two":   2,
+		"three": 3,
+	}
+	maps.Copy(dst, src)
+	fmt.Println("src:", src)
+	fmt.Println("dst:", dst)
 }

@@ -1,6 +1,9 @@
 package demo
 
-import "fmt"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestMapInit(t *testing.T) {
 	key := "age"

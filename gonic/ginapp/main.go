@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	_ "ginapp/conf"
 	"ginapp/fslib"
 	"ginapp/server"
 

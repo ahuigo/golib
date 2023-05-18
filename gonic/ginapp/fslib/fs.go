@@ -98,3 +98,14 @@ func SafePath(path string) string {
 	path = strings.TrimLeft(path, "/")
 	return path
 }
+
+func IsValidPath(path string) bool {
+	if _, err := os.Stat(path); err == nil {
+		return true
+	} else {
+		if os.IsNotExist(err) {
+			return false
+		}
+		panic(err)
+	}
+}

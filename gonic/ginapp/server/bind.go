@@ -21,6 +21,9 @@ func BindServer(c *gin.Context) {
 	if err := c.ShouldBind(&user); err != nil {
 		fmt.Println("bind error:", err)
 	}
+	if user.Name == "" {
+		user.Name = c.Query("name")
+	}
 	fmt.Printf("user:%#v \n", user)
 	fmt.Printf("user.time:%v \n", user.Time)
 

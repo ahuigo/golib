@@ -1,16 +1,14 @@
 package server
 
 import (
-	"encoding/json"
 	"fmt"
-	"html/template"
 	"net/http"
-	"os"
 	"strconv"
 	"strings"
 	"time"
 
 	mid "ginapp/middleware"
+	"ginapp/tpl"
 
 	"github.com/DeanThompson/ginpprof"
 	"github.com/gin-gonic/gin"
@@ -30,7 +28,8 @@ func Register(r *gin.Engine, staticFS bool, path404 string) {
 	// staticFS
 	r.Static("/js", "./js")
 	// template
-	setTemplate(r)
+	tpl.SetTemplate(r)
+	r.POST("tpl", TplPage)
 
 	// router
 	r.GET("/gorm/insert", insertHandler)
@@ -53,27 +52,6 @@ func Register(r *gin.Engine, staticFS bool, path404 string) {
 	r.GET("/proxy/*path", ProxyServer)
 	r.GET("/stream", streamApi)
 	// r.Any("/bind/*anypath", BindServer)
-}
-
-func setTemplate(e *gin.Engine) {
-	if _, err := os.Stat("./tpl/redirect.tmpl"); os.IsNotExist(err) {
-		return
-	}
-	e.Delims("{{", "}}")
-	e.SetFuncMap(template.FuncMap{
-		"formatAsDate": func(t time.Time) string {
-			year, month, day := t.Date()
-			return fmt.Sprintf("%d%02d/%02d", year, month, day)
-		},
-		"jsonEncode": func(obj interface{}) string {
-			if d, err := json.Marshal(obj); err == nil {
-				return string(d)
-			} else {
-				return err.Error()
-			}
-		},
-	})
-	e.LoadHTMLGlob("./tpl/*")
 }
 
 func jsonMapFunc(c *gin.Context) {

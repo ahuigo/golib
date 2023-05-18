@@ -14,7 +14,8 @@ init: doc
 	go install github.com/swaggo/swag/cmd/swag@v1.8.1
 doc: 
 	# swag init -g cmd/main.go
-	swag init --parseDependency --parseInternal --parseDepth 1 #&& open http://m:4500/swagger/index.html
+	# swag init --parseDependency --parseInternal --parseDepth 1 #&& open http://m:4500/swagger/index.html
+	swag init  #&& open http://m:4500/swagger/index.html
 
 benchcpu:
 	go-wrk  -d=50 -c=50  http://localhost:4500/cpu/5

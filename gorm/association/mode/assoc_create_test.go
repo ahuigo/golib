@@ -1,15 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"log"
-	"os"
 	"testing"
-	"time"
+	"tt"
 
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 type Address struct {
@@ -24,7 +19,7 @@ type Email struct {
 
 // User has and belongs to many languages, `user_languages` is the join table
 type User struct {
-	gorm.Model
+	ID               uint `gorm:"primarykey"`
 	Name             string
 	BillingAddressID uint
 	BillingAddress   Address    `gorm:"foreignKey:uid;references:id;"`
@@ -33,37 +28,21 @@ type User struct {
 }
 
 type Language struct {
-	gorm.Model
+	ID    uint `gorm:"primarykey"`
 	Name  string
 	Users []*User `gorm:"many2many:user_languages;"` // 如果不用preload 这里可省略
 }
-type UserLanguage struct{}
 
 func TestAssoication(t *testing.T) {
-	newLogger := logger.New(
-		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
-		logger.Config{
-			SlowThreshold:             time.Second, // Slow SQL threshold
-			LogLevel:                  logger.Info, // Log level
-			IgnoreRecordNotFoundError: false,       // Ignore ErrRecordNotFound error for logger
-			Colorful:                  true,        // Disable color
-		},
-	)
-	dsn := "host=localhost host=localhost user=role1 dbname=ahuigo password= sslmode=disable TimeZone=Asia/Shanghai"
-	dsn = "postgres://role1:@localhost:5432/ahuigo?sslmode=disable"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
-		Logger: newLogger,
-	})
-	fmt.Println(err)
-
+	db := tt.Db
 	models := []interface{}{
 		&User{}, &Language{}, &Email{}, &Address{},
 	}
-	db.Migrator().DropTable(&UserLanguage{})
-	db.Migrator().DropTable(models...)
-	db.AutoMigrate(models...)
+	db.Debug().Migrator().DropTable(models...)
+	db.Debug().AutoMigrate(models...)
+	db.Debug().AutoMigrate(&Email{}, &Address{})
 	user := User{
-		Name:           "jinzhu",
+		Name:           "ahuigo",
 		BillingAddress: Address{Address1: "Billing Address - Address 1"},
 		Emails: []Email{
 			{Email: "jinzhu@example.com"},
@@ -76,7 +55,9 @@ func TestAssoication(t *testing.T) {
 	}
 
 	// db.Omit(clause.Associations).Create(&user)
-	db.Create(&user)
+	db.Debug().Create(&user)
+
+	t.Logf("-------------------------------------------------")
 	// BEGIN TRANSACTION;
 	// INSERT INTO "addresses" (address1) VALUES ("Billing Address - Address 1"), ("Shipping Address - Address 1") ON DUPLICATE KEY DO NOTHING;
 	// INSERT INTO "users" (name,billing_address_id,shipping_address_id) VALUES ("jinzhu", 1, 2);
@@ -85,6 +66,8 @@ func TestAssoication(t *testing.T) {
 	// INSERT INTO "user_languages" ("user_id","language_id") VALUES (111, 1), (111, 2) ON DUPLICATE KEY DO NOTHING;
 	// COMMIT;
 
-	// db.Save(&user)
+	db.Debug().Save(&user) // upsert
+	t.Logf("----------session---------------------------------------")
+	db.Debug().Session(&gorm.Session{FullSaveAssociations: true}).Updates(&user)
 
 }

@@ -13,5 +13,6 @@ func main() {
     m[b] =None{}
     _,exist := m[a]
     fmt.Println(a==b) // true
+    fmt.Println(a=="a") // true
     fmt.Println(exist) // true
 }

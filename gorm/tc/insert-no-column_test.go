@@ -1,12 +1,10 @@
-package t
+package tc
 
 import (
-	"fmt"
 	"testing"
+	"tt"
 
 	"github.com/ahuigo/glogger"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 // var db *gorm.DB
@@ -17,6 +15,7 @@ func TestInsertOnColumn(t *testing.T) {
 		Price uint
 		Count *uint `json:"count"  gorm:"default:2"`
 	}
+	db := tt.Db
 	createStock := func() {
 		p := Stock{Code: "L21", Price: 21}
 		// no err here(Warnning!!!!)
@@ -26,18 +25,7 @@ func TestInsertOnColumn(t *testing.T) {
 		}
 	}
 
-	var err error
-	db, err = gorm.Open("postgres", "host=localhost user=role1 dbname=ahuigo sslmode=disable password=")
-	db.LogMode(true)
-	if err != nil {
-		println(err)
-		println(err.Error())
-		fmt.Println(err)
-		panic("Db connection failed")
-	}
-
 	//db.AutoMigrate(&Stock{})
 	createStock()
 
-	defer db.Close()
 }

@@ -28,14 +28,18 @@ func GetDb() *gorm.DB {
 		},
 	)
 	_ = newLogger
+
 	Db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
 		// Logger: newLogger,
 		// Logger: logger.Default.LogMode(logger.Info),
 	})
-	// db.Debug()
 	if err != nil {
 		panic(err)
 	}
+
+	// global debug
+	Db = Db.Debug()
+
 	SqlDb, _ = Db.DB()
 	// SetMaxIdleConns 设置空闲连接池中连接的最大数量
 	SqlDb.SetMaxIdleConns(10)
@@ -45,6 +49,10 @@ func GetDb() *gorm.DB {
 	SqlDb.SetConnMaxLifetime(time.Hour)
 
 	// defer sqlDB.Close()
+	beforeCreate := func(db *gorm.DB) {
+	}
+	Db.Callback().Create().Before("gorm:create").Register("my_plugin:before_create", beforeCreate)
+
 	return Db
 }
 func init() {

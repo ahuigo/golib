@@ -6,51 +6,51 @@ import (
 )
 
 func TestMany2Many(t *testing.T) {
-	type Language struct {
+	type School struct {
 		ID   int `gorm:"primarykey"`
 		Name string
-		// Users []*User `gorm:"many2many:user_languages;"`
+		// Stus []*Stu `gorm:"many2many:stu_schools;"` // 这里注释掉(就不能preload实现通过School 查stus)
 	}
-	type User struct {
-		ID        int `gorm:"primarykey"`
-		Username  string
-		Languages []Language `gorm:"many2many:user_languages;"`
+	type Stu struct {
+		ID      int `gorm:"primarykey"`
+		Stuname string
+		Schools []School `gorm:"many2many:stu_schools;"`
 	}
 	/*
 		它会创建关联表、CONSTRAINT foreign key:
-			ALTER TABLE "user_languages" ADD CONSTRAINT "fk_user_languages_user" FOREIGN KEY ("user_id") REFERENCES "users"("id")
-			ahuigo=# \d user_languages
-					user_id     | bigint |           | not null |
-					language_id | bigint |           | not null |
+			ALTER TABLE "stu_schools" ADD CONSTRAINT "fk_stu_schools_stu" FOREIGN KEY ("stu_id") REFERENCES "stus"("id")
+			ahuigo=# \d stu_schools
+					stu_id     | bigint |           | not null |
+					school_id | bigint |           | not null |
 			Indexes:
-				"user_languages_pkey" PRIMARY KEY, btree (user_id, language_id)
+				"stu_schools_pkey" PRIMARY KEY, btree (stu_id, school_id)
 	*/
 	db := tt.Db
-	db.Migrator().DropTable(&Language{}, &User{})
-	db.Debug().AutoMigrate(&User{})
+	db.Migrator().DropTable(&School{}, &Stu{}, "stu_schools")
+	db.Debug().AutoMigrate(&Stu{})
 
 	/*
-		INSERT INTO "users" ("username","id") VALUES ('Alex3',3) RETURNING "id"
-		INSERT INTO "languages" ("name") VALUES ('English'),('Chinese') ON CONFLICT DO NOTHING RETURNING "id"
-		INSERT INTO "user_languages" ("user_id","language_id") VALUES (3,1),(3,2) ON CONFLICT DO NOTHING
+		INSERT INTO "stus" ("stuname","id") VALUES ('Alex3',3) RETURNING "id"
+		INSERT INTO "schools" ("name") VALUES ('PKU'),('TSU') ON CONFLICT DO NOTHING RETURNING "id"
+		INSERT INTO "stu_schools" ("stu_id","school_id") VALUES (3,1),(3,2) ON CONFLICT DO NOTHING
 	*/
-	db.Debug().Create(&User{
-		Username: "Alex3",
-		ID:       3,
-		Languages: []Language{
-			{Name: "English"}, {Name: "Chinese"},
+	db.Debug().Create(&Stu{
+		Stuname: "Alex3",
+		ID:      3,
+		Schools: []School{
+			{Name: "PKU"}, {Name: "TSU"},
 		},
 	})
 
 	// Preload
 	/*
-		SELECT * FROM "users" WHERE "users"."username" = 'Alex3'
-		SELECT * FROM "user_languages" WHERE "user_languages"."user_id" = 3
-		SELECT * FROM "languages" WHERE "languages"."id" IN (1,2)
+		SELECT * FROM "stus" WHERE "stus"."stuname" = 'Alex3'
+		SELECT * FROM "stu_schools" WHERE "stu_schools"."stu_id" = 3
+		SELECT * FROM "schools" WHERE "schools"."id" IN (1,2)
 	*/
-	users := User{}
-	tt.Db.Debug().Preload("Languages").Where(&User{Username: "Alex3"}).Find(&users)
-	t.Logf("%#v\n", users)
+	stus := Stu{}
+	tt.Db.Debug().Preload("Schools").Where(&Stu{Stuname: "Alex3"}).Find(&stus)
+	t.Logf("%#v\n", stus)
 
-	// db.Migrator().DropTable(&Language{}, &User{})
+	// db.Migrator().DropTable(&School{}, &Stu{})
 }

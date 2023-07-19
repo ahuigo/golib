@@ -8,9 +8,14 @@ import (
 
 type LazyInt func() int
 
+/*
+sync.Once 作用:
+1.　缓存
+2.　并发阻塞: refer to /lock/sync/once
+*/
 func Make(f func() int) LazyInt {
 	var v int
-	var once sync.Once //once只能用一次Do
+	var once sync.Once //once只能用一次Do, 同时调用do 被阻塞
 	return func() int {
 		println("call func")
 		once.Do(func() {

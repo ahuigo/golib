@@ -24,7 +24,7 @@ type Membership struct {
 	School   School `gorm:"foreignKey:SchoolID"`
 }
 
-func TestMany2Many3rd(t *testing.T) {
+func TestMany2Many3rel(t *testing.T) {
 	db := tt.Db
 	db.Migrator().DropTable(&School{}, "stus", &Membership{})
 	db.Debug().AutoMigrate(&Stu{}, &School{}, &Membership{})

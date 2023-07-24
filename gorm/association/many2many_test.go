@@ -9,7 +9,7 @@ func TestMany2Many(t *testing.T) {
 	type School struct {
 		ID   int `gorm:"primarykey"`
 		Name string
-		// Stus []*Stu `gorm:"many2many:stu_schools;"` // 这里注释掉(就不能preload实现通过School 查stus)
+		Stus []Stu `gorm:"many2many:stu_schools;"` // 这里注释掉(就不能preload实现通过School 查stus, 只能stu查school)
 	}
 	type Stu struct {
 		ID      int `gorm:"primarykey"`
@@ -51,6 +51,9 @@ func TestMany2Many(t *testing.T) {
 	stus := Stu{}
 	tt.Db.Debug().Preload("Schools").Where(&Stu{Stuname: "Alex3"}).Find(&stus)
 	t.Logf("%#v\n", stus)
+	// tt.Db.Debug().Preload("Stus").Where(&Stu{Stuname: "Alex3"}).Find(&stus)
 
-	// db.Migrator().DropTable(&School{}, &Stu{})
+	school := School{Name: "TSU"}
+	tt.Db.Debug().Preload("Stus").Where(&school).Find(&school)
+	t.Logf("%#v\n", school)
 }

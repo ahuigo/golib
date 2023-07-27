@@ -51,6 +51,7 @@ type User struct {
 // @Param        id    path      int  true  "Account ID" Enums(1, 2, 3)
 // @Param        name  query      int  true  "Account name" default("Alex")
 // @Success      200  {object}  User
+// @Header 		 200 {string} Token "qwerty"
 // @Failure      400  {object}  HTTPError
 // @Failure      404  {object}  HTTPError
 // @Failure      500  {string}  string "500 error"

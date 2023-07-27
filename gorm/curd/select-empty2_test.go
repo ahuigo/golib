@@ -33,14 +33,15 @@ func selectScanEmpty2() {
 
 func selectFindEmpty2() {
 	stock := &Stock{}
+	// gorm2 find 不再返回error, 只有First 才返回ErrRecordNotFound
 	cursor := tt.Db.Where("price%20>=?", 100).Select([]string{"code"}).Limit(10).Find(stock)
 	err := cursor.Error
 	fmt.Printf("find empty: err=%v, stock=%v\n", err, stock)
+	fmt.Printf("read r.RowsAffected == 0: %v\n\n", cursor.RowsAffected == 0)
 	if err != nil {
 		fmt.Println("read Find().RecordNotFound():", errors.Is(err, gorm.ErrRecordNotFound))                          // otgorm
 		fmt.Println("read empty stock string(record not found): ", strings.Contains(err.Error(), "record not found")) // ag -F 'record not found'
 	}
-	fmt.Printf("read r.RowsAffected > 0: %v\n\n", cursor.RowsAffected > 0)
 
 }
 
@@ -58,7 +59,7 @@ func TestSelectEmpty2(t *testing.T) {
 	tt.Db.AutoMigrate(&Product{})
 	tt.Db.AutoMigrate(&Stock{})
 	createStock()
-	selectFindEmpty2()
 	selectScanEmpty2()
+	selectFindEmpty2()
 
 }

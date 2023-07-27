@@ -5,7 +5,7 @@ import (
 	"tt"
 )
 
-type Stu struct {
+type Student struct {
 	ID          int `gorm:"primarykey"`
 	Stuname     string
 	Memberships []Membership `gorm:"foreignKey:StuID"`
@@ -17,24 +17,24 @@ type School struct {
 }
 
 type Membership struct {
-	ID       int    `gorm:"primarykey"`
-	StuID    uint   `gorm:"index;not null"`
-	SchoolID uint   `gorm:"index;not null"`
-	Stu      Stu    `gorm:"foreignKey:StuID"`
-	School   School `gorm:"foreignKey:SchoolID"`
+	ID       int     `gorm:"primarykey"`
+	StuID    uint    `gorm:"index;not null"`
+	SchoolID uint    `gorm:"index;not null"`
+	Stu      Student `gorm:"foreignKey:StuID"`
+	School   School  `gorm:"foreignKey:SchoolID"`
 }
 
 func TestMany2Many3rel(t *testing.T) {
 	db := tt.Db
 	db.Migrator().DropTable(&School{}, "stus", &Membership{})
-	db.Debug().AutoMigrate(&Stu{}, &School{}, &Membership{})
+	db.Debug().AutoMigrate(&Student{}, &School{}, &Membership{})
 
 	db.Debug().Create(&Membership{
 		ID: 3,
 		School: School{
 			Name: "PKU",
 		},
-		Stu: Stu{
+		Stu: Student{
 			Stuname: "Alex3",
 		},
 	})

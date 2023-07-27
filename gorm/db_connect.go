@@ -2,6 +2,7 @@ package tt
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"os"
 	"time"
@@ -37,10 +38,10 @@ func GetDb() *gorm.DB {
 		panic(err)
 	}
 
-	// global debug
-	Db = Db.Debug()
+	// Db = Db.Debug()
 
 	SqlDb, _ = Db.DB()
+	// defer sqlDB.Close()
 	// SetMaxIdleConns 设置空闲连接池中连接的最大数量
 	SqlDb.SetMaxIdleConns(10)
 	// SetMaxOpenConns 设置打开数据库连接的最大数量。
@@ -48,8 +49,8 @@ func GetDb() *gorm.DB {
 	// SetConnMaxLifetime 设置了连接可复用的最大时间。
 	SqlDb.SetConnMaxLifetime(time.Hour)
 
-	// defer sqlDB.Close()
 	beforeCreate := func(db *gorm.DB) {
+		fmt.Println("before create sql")
 	}
 	Db.Callback().Create().Before("gorm:create").Register("my_plugin:before_create", beforeCreate)
 

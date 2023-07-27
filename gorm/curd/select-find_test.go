@@ -43,8 +43,6 @@ func selectFind() {
 }
 
 func TestSelectFind(t *testing.T) {
-	// tt.Db.SetDebug()
-	defer tt.SqlDb.Close()
 	// 自动迁移模式
 	tt.Db.AutoMigrate(&Product{})
 	tt.Db.AutoMigrate(&Stock{})

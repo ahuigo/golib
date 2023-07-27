@@ -9,7 +9,7 @@ func TestMany2Many(t *testing.T) {
 	type School struct {
 		ID   int `gorm:"primarykey"`
 		Name string
-		Stus []Stu `gorm:"many2many:stu_schools;"` // 这里注释掉(就不能preload实现通过School 查stus, 只能stu查school)
+		// Stus []Stu `gorm:"many2many:stu_schools;"` // 这里注释掉(就不能preload实现通过School 查stus, 只能stu查school)
 	}
 	type Stu struct {
 		ID      int `gorm:"primarykey"`
@@ -41,6 +41,23 @@ func TestMany2Many(t *testing.T) {
 			{Name: "PKU"}, {Name: "TSU"},
 		},
 	})
+
+	// // skip associations
+	// 	db.Omit("CreditCard").Create(&user)
+	// // skip all associations
+	// db.Omit(clause.Associations).Create(&user)
+
+	db.Debug().Create(&Stu{
+		Stuname: "Alex4",
+		Schools: []School{
+			{Name: "PKU4"}, {Name: "TSU4"},
+		},
+	})
+	if err := db.Model(&Stu{ID: 3}).Association("Schools").Append(&[]School{
+		{Name: "PKU2"}, {Name: "TSU2"},
+	}); err != nil {
+		panic(err)
+	}
 
 	// Preload
 	/*

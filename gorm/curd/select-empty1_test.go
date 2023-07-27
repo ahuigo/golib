@@ -24,12 +24,12 @@ func selectFindEmpty() {
 	stock := &Stock{}
 	cursor := db1.Where("price%20>=?", 100).Select([]string{"code"}).Limit(10).Find(stock)
 	fmt.Println("stock:", stock)
+	fmt.Println("read r.RowsAffected > 0: ", cursor.RowsAffected > 0)
 
 	err := cursor.Error
 	if err != nil {
 		fmt.Println("read Find().RecordNotFound():", cursor.RecordNotFound())
 		fmt.Println("read empty stock string(record not found): ", strings.Contains(err.Error(), "record not found"))
-		fmt.Println("read r.RowsAffected > 0: ", cursor.RowsAffected > 0)
 	}
 
 }

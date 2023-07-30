@@ -1,6 +1,7 @@
 package tt
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"log"
@@ -49,8 +50,16 @@ func GetDb() *gorm.DB {
 	// SetConnMaxLifetime 设置了连接可复用的最大时间。
 	SqlDb.SetConnMaxLifetime(time.Hour)
 
-	beforeCreate := func(db *gorm.DB) {
+	beforeCreate := func(scope *gorm.DB) {
 		fmt.Println("before create sql")
+		contextScopeKey := "my_key"
+		rctx, _ := scope.Get(contextScopeKey)
+		ctx, ok := rctx.(context.Context)
+		if !ok || ctx == nil {
+			ctx = context.Background()
+		}
+		// handle ctx ....
+		scope.Set(contextScopeKey, ctx)
 	}
 	Db.Callback().Create().Before("gorm:create").Register("my_plugin:before_create", beforeCreate)
 

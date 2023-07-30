@@ -33,7 +33,7 @@ func selectScanEmpty2() {
 
 func selectFindEmpty2() {
 	stock := &Stock{}
-	// gorm2 find 不再返回error, 只有First 才返回ErrRecordNotFound
+	// gorm2 只有在你使用 First、Last、Take 这些预期会返回结果的方法查询记录时，才会返回 ErrRecordNotFound，我们还移除了 RecordNotFound
 	cursor := tt.Db.Where("price%20>=?", 100).Select([]string{"code"}).Limit(10).Find(stock)
 	err := cursor.Error
 	fmt.Printf("find empty: err=%v, stock=%v\n", err, stock)

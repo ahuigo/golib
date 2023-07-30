@@ -7,6 +7,7 @@ import (
 type Person struct {
 	Name     string `gorm:"primary_key" json:"name" form:"name"`
 	Username string `gorm:"unique_index:idx_username" json:"username"`
+	Age      int
 }
 
 type Product struct {

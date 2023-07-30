@@ -32,8 +32,11 @@ func timeNow() time.Time {
 }
 
 func Log(w io.Writer, key, val string) {
+	// 协程间pool 复用
 	b := bufPool.Get().(*bytes.Buffer)
+	os.Stdout.WriteString("ori: " + b.String() + "\n")
 	b.Reset()
+
 	// Replace this with time.Now() in a real logger.
 	b.WriteString(timeNow().UTC().Format(time.RFC3339))
 	b.WriteByte(' ')
@@ -41,9 +44,11 @@ func Log(w io.Writer, key, val string) {
 	b.WriteByte('=')
 	b.WriteString(val)
 	w.Write(b.Bytes())
+	w.Write([]byte{'\n', '\n'})
 	bufPool.Put(b)
 }
 
 func TestSyncPoll(t *testing.T) {
 	Log(os.Stdout, "path", "/search?q=flowers")
+	Log(os.Stdout, "path", "/search?q=abc")
 }

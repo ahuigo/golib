@@ -1,9 +1,9 @@
-package main
+package conf
 
 import (
 	"fmt"
 
-	Viper "github.com/spf13/viper"
+	"github.com/spf13/viper"
 )
 
 
@@ -15,7 +15,6 @@ type Toleration struct{
 }
 
 func main(){
-    viper:=Viper.New() //非全局, local-viper
     in := "conf"
 	viper.SetConfigName(in)
 	viper.AddConfigPath("./")
@@ -25,13 +24,21 @@ func main(){
         return
 	}
 
+    // UnmarshalKey
     tolerations :=[]Toleration{}
-    //tolerations :=[]corev1.Toleration{}
     err=viper.UnmarshalKey("tolerations",&tolerations)
 	if err != nil {
         fmt.Println(err)
         return
 	}
     fmt.Printf("conf: %#v\n", tolerations)
+
+    // Unmarshal
+    data := struct{
+        Env string
+        App string
+    }{}
+    err=viper.Unmarshal(&data)
+    fmt.Printf("conf: %#v\n", data)
 
 }

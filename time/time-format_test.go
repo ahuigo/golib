@@ -2,21 +2,23 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"testing"
 	"time"
-    "os"
 )
 
 func TestFormat(t *testing.T) {
 	println("chang zone to Africa...")
-    os.Setenv("TZ", "Europe/Berlin")
+	os.Setenv("TZ", "Europe/Berlin")
 
-	t1, _ := time.Parse(time.RFC3339, "2012-02-03T9:09:41+01:00")
+	t1, _ := time.Parse(time.RFC3339, "2012-02-03T4:05:13+01:00")
 	// t1, _ := time.Parse(time.RFC3339, "2012-02-03T9:09:41Z")
 	fmt.Println("time:", t1)
-	println(t1.Format("01"))         //month
-	println(t1.Format("01-04"))      //month-hour
-	println(t1.Format("3021-01-04")) //year-month-day
+	println(t1.Format("01"))                     //month
+	println(t1.Format("01-04"))                  //month-hour
+	println(t1.Format("01-2006-04"))             //month-year-day
+	println(t1.Format("2006-01-02 15:04:05"))    //year-month-day
+	println(t1.Format("2006-01-02 15:04:05Z07")) //year-month-day
 
 	println("with original zone", t1.Format(time.RFC3339Nano))
 	loc, _ := time.LoadLocation("Asia/Shanghai")

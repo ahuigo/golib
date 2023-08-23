@@ -13,16 +13,29 @@ import (
 
 func init() {
 	initWkDir()
-	InitViper()
+	// InitViper()
+}
+
+type Config struct {
+	Http Http `mapstructure:"http"`
+}
+type Http struct {
+	ReadTimeout  int `mapstructure:"read_timeout"`
+	WriteTimeout int `mapstructure:"write_timeout"`
 }
 
 var _inited = false
+var _config = Config{}
 
-func InitViper() {
+func GetConf() *Config {
 	if !_inited {
 		_inited = true
 		_loadConfig("conf")
+		if err := viper.Unmarshal(&_config); err != nil {
+			panic(err)
+		}
 	}
+	return &_config
 }
 
 // LoadConfig 载入配置

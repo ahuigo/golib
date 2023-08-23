@@ -1,7 +1,8 @@
-package main
+package pkg
 
 import (
 	"sync"
+	"testing"
 	"time"
 )
 
@@ -26,7 +27,7 @@ func sleep() {
 
 }
 
-func main() {
+func TestMultiRun(t *testing.T) {
 	fn := sleep
 	multi_run(5, fn)
 }

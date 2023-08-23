@@ -2,43 +2,50 @@ package conf
 
 import (
 	"fmt"
+	"testing"
 
 	"github.com/spf13/viper"
 )
 
-
-type Toleration struct{
-    Key string
-    Effect string
-    Value string
-    Operator string
+type Toleration struct {
+	Key      string
+	Effect   string
+	Value    string
+	Operator string
 }
 
-func main(){
-    in := "conf"
+func TestUnmarshal(t *testing.T) {
+	in := "conf"
 	viper.SetConfigName(in)
 	viper.AddConfigPath("./")
 	err := viper.ReadInConfig()
 	if err != nil {
-        fmt.Println(err)
-        return
+		fmt.Println(err)
+		return
 	}
 
-    // UnmarshalKey
-    tolerations :=[]Toleration{}
-    err=viper.UnmarshalKey("tolerations",&tolerations)
+	// 1. UnmarshalKey
+	tolerations := []Toleration{}
+	err = viper.UnmarshalKey("tolerations", &tolerations)
 	if err != nil {
-        fmt.Println(err)
-        return
+		fmt.Println(err)
+		return
 	}
-    fmt.Printf("conf: %#v\n", tolerations)
+	fmt.Printf("conf: %#v\n", tolerations)
 
-    // Unmarshal
-    data := struct{
-        Env string
-        App string
-    }{}
-    err=viper.Unmarshal(&data)
-    fmt.Printf("conf: %#v\n", data)
+	// 2. Unmarshal
+	type User struct {
+		Name string
+		Age  int
+	}
+	data := struct {
+		Env  string `yaml:"env1"` // viper不使用 yaml 
+		App  string
+		User User `mapstructure:"user1"` // mapstructure 不区分大小写
+	}{}
+	if err = viper.Unmarshal(&data); err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("conf: %#v\n", data)
 
 }

@@ -8,3 +8,6 @@ tolerations:
   - Key:      "large"
     Effect:   "NoSchedule"
     Value:    "true"
+user1:
+  name: Alex
+  age: 10

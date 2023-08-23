@@ -1,7 +1,8 @@
-package main
+package pkg
 
 import (
 	"fmt"
+	"testing"
 	"time"
 )
 
@@ -12,7 +13,7 @@ import (
 
 ***/
 
-func main() {
+func TestDeadLock(t *testing.T) {
 	dst := make(chan int)
 	n := 1
 	go func() {

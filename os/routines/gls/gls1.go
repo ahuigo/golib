@@ -1,4 +1,5 @@
 package main
+
 //https://groups.google.com/g/golang-nuts/c/Nt0hVV_nqHE
 
 import (
@@ -22,6 +23,9 @@ func main() {
 	}
 
 	mgr.SetValues(gls.Values{request_id_key: "12345"}, func() {
+		MyLog()
+	})
+	mgr.SetValues(gls.Values{request_id_key: "12346"}, func() {
 		MyLog()
 	})
 	MyLog()

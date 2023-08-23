@@ -4,6 +4,7 @@ godemo/
 # gonic
 /gonic/ginapp/docs
 gonic/tmp
+main
 tmp
 test.db
 .vscode

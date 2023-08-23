@@ -1,6 +1,6 @@
 module github.com/gin-gonic/examples
 
-go 1.19
+go 1.20
 
 require (
 	github.com/DeanThompson/ginpprof v0.0.0-20201112072838-007b1e56b2e1

@@ -1,7 +1,8 @@
-package main
+package pkg
 
 import (
 	"fmt"
+	"testing"
 	"time"
 )
 
@@ -14,8 +15,8 @@ func test() {
 		}
 	}()
 }
-func main() {
+func TestRoutineInFun(t *testing.T) {
 	test()
 	time.Sleep(5 * time.Second)
-	fmt.Println("goroutines exit")
+	fmt.Println("goroutines will exit")
 }

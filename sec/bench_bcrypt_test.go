@@ -28,13 +28,11 @@ func Benchmark_sha1(b *testing.B) {
     }
 }
 
-
-
 func Benchmark_bcrypt(b *testing.B) {
     b.StopTimer() //调用该函数停止压力测试的时间计数
-    b.StartTimer() //重新开始时间
     password := "secret"
     hash, _ := HashPassword(password) // ignore error for the sake of simplicity
+    b.StartTimer() //重新开始时间
 
     fmt.Println("Password:", password)
     fmt.Println("Hash:    ", hash)

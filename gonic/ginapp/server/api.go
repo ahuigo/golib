@@ -28,8 +28,12 @@ type HTTPError struct {
 }
 
 type User struct {
-	ID      int    `json:"id" example:"1" format:"int64"`
-	Name    string `json:"name" form:"name" example:"Alex"`
+	ID int `json:"id" example:"1" format:"int64"`
+	// 姓名
+	Name string `json:"name" form:"name" example:"Alex"`
+	// 班名
+	ClassName string `json:"class_name" form:"class_name" example:"class1"`
+	// 国家
 	Country string
 	// time rfc3339
 	Time time.Time `json:"time" form:"time"`
@@ -86,4 +90,18 @@ func AddUser(c *gin.Context) {
 		fmt.Println("bind error:", err)
 	}
 	c.JSON(http.StatusOK, user)
+}
+
+// @Summary Get用户List
+// @Tags user
+// @Param body-params query User true "user list query"
+// @Success 200 {object} User
+// @Failure 400  {object}  HTTPError
+// @Router /users [get]
+func GetUserList(c *gin.Context) {
+	req := User{}
+	if err := c.ShouldBind(&req); err != nil {
+		fmt.Println("bind error:", err)
+	}
+	c.JSON(http.StatusOK, []User{{ID: 1, Name: "Alex"}, {ID: 2, Name: "Tom"}})
 }

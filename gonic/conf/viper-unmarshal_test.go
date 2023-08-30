@@ -15,6 +15,11 @@ type Toleration struct {
 }
 
 func TestUnmarshal(t *testing.T) {
+	type User struct {
+		Name string
+		Age  int
+	}
+
 	in := "conf"
 	viper.SetConfigName(in)
 	viper.AddConfigPath("./")
@@ -31,15 +36,11 @@ func TestUnmarshal(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
-	fmt.Printf("conf: %#v\n", tolerations)
+	fmt.Printf("tolerations: %#v\n", tolerations)
 
 	// 2. Unmarshal
-	type User struct {
-		Name string
-		Age  int
-	}
 	data := struct {
-		Env  string `yaml:"env1"` // viper不使用 yaml 
+		Env  string `yaml:"env1"` // viper不使用 yaml
 		App  string
 		User User `mapstructure:"user1"` // mapstructure 不区分大小写
 	}{}
@@ -47,5 +48,4 @@ func TestUnmarshal(t *testing.T) {
 		t.Fatal(err)
 	}
 	fmt.Printf("conf: %#v\n", data)
-
 }

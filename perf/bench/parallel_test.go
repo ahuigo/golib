@@ -1,10 +1,11 @@
-package eg
+package gotest
 
 import (
 	"testing"
 )
 
-/**
+/*
+*
 $ go test -v parallel_test.go
 === RUN   TestParallel
 === RUN   TestParallel/test_1
@@ -16,20 +17,29 @@ $ go test -v parallel_test.go
 === RUN   TestParallel/test_4
 === PAUSE TestParallel/test_4
 === CONT  TestParallel/test_1
-    parallel_test.go:23: 4
+
+	parallel_test.go:23: 4
+
 === CONT  TestParallel/test_2
 === CONT  TestParallel/test_4
 === CONT  TestParallel/test_2
-    parallel_test.go:23: 4
+
+	parallel_test.go:23: 4
+
 === CONT  TestParallel/test_3
-    parallel_test.go:23: 4
+
+	parallel_test.go:23: 4
+
 === CONT  TestParallel/test_4
-    parallel_test.go:23: 4
+
+	parallel_test.go:23: 4
+
 --- PASS: TestParallel (0.00s)
-    --- PASS: TestParallel/test_1 (0.00s)
-    --- PASS: TestParallel/test_2 (0.00s)
-    --- PASS: TestParallel/test_3 (0.00s)
-    --- PASS: TestParallel/test_4 (0.00s)
+
+	--- PASS: TestParallel/test_1 (0.00s)
+	--- PASS: TestParallel/test_2 (0.00s)
+	--- PASS: TestParallel/test_3 (0.00s)
+	--- PASS: TestParallel/test_4 (0.00s)
 */
 func TestParallel(t *testing.T) {
 	tests := []struct {

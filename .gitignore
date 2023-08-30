@@ -1,10 +1,10 @@
+main
 dump.rdb
 godemo/
 /log/logs
 # gonic
 /gonic/ginapp/docs
 gonic/tmp
-main
 tmp
 test.db
 .vscode

@@ -7,6 +7,7 @@ require (
 	github.com/ahuigo/requests v1.0.29
 	github.com/gin-gonic/gin v1.9.1
 	github.com/jinzhu/gorm v1.9.16
+	github.com/mackerelio/go-osstat v0.2.4
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/viper v1.15.0
 	github.com/swaggo/files v1.0.1

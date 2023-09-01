@@ -8,6 +8,7 @@ import (
 	"time"
 
 	mid "ginapp/middleware"
+	"ginapp/server/stat"
 	"ginapp/tpl"
 
 	"github.com/DeanThompson/ginpprof"
@@ -19,6 +20,8 @@ func Register(r *gin.Engine, staticFS bool, path404 string) {
 		staticFsHandler(r, path404)
 		return
 	}
+	// set static template
+	tpl.SetTemplate(r)
 	// automatically add routers for net/http/pprof
 	ginpprof.Wrap(r)
 	// swagger
@@ -28,8 +31,7 @@ func Register(r *gin.Engine, staticFS bool, path404 string) {
 	// staticFS
 	r.Static("/js", "./js")
 	// template
-	tpl.SetTemplate(r)
-	r.POST("tpl", TplPage)
+	r.POST("tpl/redirect", TplRedirectPage)
 
 	// router
 	r.GET("/gorm/insert", insertHandler)
@@ -51,6 +53,7 @@ func Register(r *gin.Engine, staticFS bool, path404 string) {
 	r.GET("/json/map", jsonMapFunc)
 	r.GET("/proxy/*path", ProxyServer)
 	r.GET("/stream", streamApi)
+	r.GET("/stat/os", stat.OsStat)
 	// r.Any("/bind/*anypath", BindServer)
 }
 

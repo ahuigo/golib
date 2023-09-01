@@ -1,11 +1,14 @@
 start:
 	#arun sh -c 'swag init -g pkg/main.go && go run ./pkg'
-	arun sh -c 'swag init --parseDependency --parseInternal --parseDepth 1 && go run .'
+	#sh -c 'swag init --parseDependency --parseInternal --parseDepth 1 && go run .'
+	go run .
 
 install:
-	go install .
+	# go install .
+	go install -ldflags="-s -w -X ginapp/conf.BuildDate=$(shell date -Iseconds) -X ginapp/conf.BuildBranch=$(shell git rev-parse --abbrev-ref HEAD)" 
 	#go build -o ~/bin/ginapp .
-
+build:
+	go build -ldflags="-s -w -X ginapp/conf.BuildDate=$(shell date -Iseconds) -X ginapp/conf.BuildBranch=$(shell git rev-parse --abbrev-ref HEAD)" -o ginapp main.go
 generate:
 	#//go:generate swag init --parseDependency --parseInternal -g description.go -o ./docs
 	go generate

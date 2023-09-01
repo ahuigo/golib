@@ -1,7 +1,7 @@
 package server
 
 import (
-	"io/ioutil"
+	"io"
 	"net/http"
 	URL "net/url"
 	"time"
@@ -9,14 +9,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// requestForm('post','http://m:4500/tpl?redirect_uri=https://s/dump/ab/c/c2',{redirect_uri:"https://s/dump/ab/c/c"})
-// curl 'http://m:4500/tpl?redirect_uri=https://s/dump/ab/c/c2' -d '{id_token:"xx"}'
-func TplPage(ctx *gin.Context) {
+// requestForm('post','http://m:4500/tpl/redirect?redirect_uri=https://s/dump/ab/c/c2',{redirect_uri:"https://s/dump/ab/c/c"})
+// or: curl 'http://m:4500/tpl/redirect?redirect_uri=https://s/dump/ab/c/c2' -d '{id_token:"xx"}'
+func TplRedirectPage(ctx *gin.Context) {
 	url := encodeURI(ctx.Query("redirect_uri"))
 	if url == "" {
 		url = "https://s/dump/ab/c/c2"
 	}
-	body, _ := ioutil.ReadAll(ctx.Request.Body)
+	body, _ := io.ReadAll(ctx.Request.Body)
 	query, _ := URL.ParseQuery(string(body))
 	data := map[string]string{}
 	for k, v := range query {

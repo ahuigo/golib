@@ -2,11 +2,8 @@ package middleware
 
 import (
 	"bytes"
-	_ "fmt"
-	"io/ioutil"
+	"io"
 	"log"
-	"net/http"
-	_ "regexp"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -18,11 +15,8 @@ func LogTime(c *gin.Context) {
 	// Set example variable
 	c.Set("example", "12345")
 
-	if false {
-		c.JSON(http.StatusUnauthorized, gin.H{"message": "hey", "status": http.StatusOK})
-		c.Abort() //暂停冒泡
-		return    //没有return 的话，gonic 会继续执行after request
-	}
+	uri := c.Request.URL.Path + "?" + c.Request.URL.RawQuery
+	log.Println(uri)
 
 	// next  middleware
 	c.Next()
@@ -47,11 +41,11 @@ func getLoginUserFromBody(c *gin.Context) (name string) {
 }
 
 func bindPre(c *gin.Context, req interface{}) error {
-	buf, _ := ioutil.ReadAll(c.Request.Body)
+	buf, _ := io.ReadAll(c.Request.Body)
 	defer func() {
-		c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(buf))
+		c.Request.Body = io.NopCloser(bytes.NewBuffer(buf))
 	}()
 	// revert
-	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(buf))
+	c.Request.Body = io.NopCloser(bytes.NewBuffer(buf))
 	return c.ShouldBind(&req)
 }

@@ -7,13 +7,19 @@ import (
 	"os"
 	"path"
 	"runtime"
+	"runtime/debug"
 
 	"github.com/spf13/viper"
 )
 
+func initGcConf() {
+	debug.SetGCPercent(1000)
+	runtime.GOMAXPROCS(runtime.NumCPU())
+	log.Println("max procs:", runtime.GOMAXPROCS(0))
+}
 func init() {
+	initGcConf()
 	initWkDir()
-	// InitViper()
 }
 
 type Config struct {
@@ -24,18 +30,16 @@ type Http struct {
 	WriteTimeout int `mapstructure:"write_timeout"`
 }
 
-var _inited = false
-var _config = Config{}
+var _config = &Config{}
 
 func GetConf() *Config {
-	if !_inited {
-		_inited = true
+	if _config == nil {
 		_loadConfig("conf")
 		if err := viper.Unmarshal(&_config); err != nil {
 			panic(err)
 		}
 	}
-	return &_config
+	return _config
 }
 
 // LoadConfig 载入配置
@@ -45,16 +49,16 @@ func _loadConfig(in string) {
 	}
 	viper.SetConfigName(in)
 	viper.AddConfigPath("config/")
-	err := viper.ReadInConfig() // Find and read the config file
+	err := viper.ReadInConfig()
 
-	if err != nil { // Handle errors reading the config file
+	if err != nil {
 		log.Fatal("fail to load config file:", err)
 	}
 }
 
 func initWkDir() {
 	if !isInTest() {
-		println("in normal mode")
+		println("in normal mode(not test)")
 		return
 	}
 	println("in test mode")

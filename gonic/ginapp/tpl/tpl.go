@@ -35,7 +35,6 @@ func SetTemplate(e *gin.Engine) {
 	}
 	if _, err := os.Stat("./tpl/login/redirect.tmpl"); os.IsNotExist(err) {
 		panic("redirect.tmpl is not exist")
-		return
 	}
 	// 2. config
 	e.Delims("{{", "}}")

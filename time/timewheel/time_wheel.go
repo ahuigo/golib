@@ -95,16 +95,12 @@ func (t *timeWheel) add(node *timeNode, jiffies uint64) *timeNode {
 	level, index := uint64(1), uint64(0)
 
 	if idx < nearSize {
-
 		index = uint64(expire) & nearMask
 		head = t.t1[index]
-
 	} else {
-
 		max := maxVal()
 		for i := 0; i <= 3; i++ {
-
-			if idx > max {
+			if idx > max { // 防溢出, 最大的seq
 				idx = max
 				expire = idx + jiffies
 			}
@@ -209,6 +205,7 @@ func (t *timeWheel) cascade(levelIndex int, index int) {
 		return
 	}
 
+	// 清空l链表, l链表里面的节点被移动到tmp链表
 	l.ReplaceInit(&tmp.Head)
 
 	// 每次链表的元素被移动走，都修改version
@@ -235,7 +232,7 @@ func (t *timeWheel) moveAndExec() {
 	// 	// return
 	// }
 
-	//如果本层的盘子没有定时器，这时候从上层的盘子移动一些过来
+	// 小盘子256个槽位被256时间片消耗完了后，就从大盘子里面移动一些节点过来
 	index := t.jiffies & nearMask
 	if index == 0 {
 		for i := 0; i <= 3; i++ {

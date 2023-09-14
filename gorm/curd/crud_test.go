@@ -46,6 +46,7 @@ func selectStock() {
 
 func TestCurd(t *testing.T) {
 	// 自动迁移模式
+	tt.Db.Migrator().DropTable(&Product{}, &User{})
 	tt.Db.AutoMigrate(&Product{})
 	tt.Db.AutoMigrate(&Stock{})
 	tt.Db.AutoMigrate(&User{})

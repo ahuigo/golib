@@ -27,6 +27,7 @@ type Time struct {
 	version uint64
 }
 
+// init 环形链表
 func newTimeHead(level uint64, index uint64) *Time {
 	head := &Time{}
 	head.version = genVersionHeight(level, index)

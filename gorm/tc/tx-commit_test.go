@@ -7,9 +7,7 @@ import (
 	"github.com/ahuigo/glogger"
 )
 
-// var db *gorm.DB
-
-func TestAborted(t *testing.T) {
+func TestTxCommit(t *testing.T) {
 	type Stock struct {
 		Code  string `gorm:"primary_key" `
 		Price uint
@@ -19,24 +17,26 @@ func TestAborted(t *testing.T) {
 	db.AutoMigrate(&Stock{})
 	createStock := func() {
 		p := Stock{Code: "L21", Price: 21}
-		dbt := db.Begin()
-		// no err here
-		if err := dbt.Create(&p).Error; err != nil {
+		// 1. begin
+		tx := db.Begin()
+		// 2. create 1
+		if err := tx.Create(&p).Error; err != nil {
 			glogger.Info(err)
-			dbt.Rollback()
+			tx.Rollback()
 			return
 		}
-		// pq: current transaction is aborted, commands ignored until end of transaction block
+		// 2. create 2
 		p = Stock{Code: "L22", Price: 22}
-		if err := dbt.Create(&p).Error; err != nil {
+		if err := tx.Create(&p).Error; err != nil {
 			glogger.Info(err)
-			dbt.Rollback()
+			tx.Rollback()
 			return
 		}
-		dbt.Commit()
+
+		// 3. commit or rollback
+		tx.Commit()
 	}
 
 	//db.AutoMigrate(&Stock{})
 	createStock()
-
 }

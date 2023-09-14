@@ -13,10 +13,11 @@ func TestDel(t *testing.T) {
 
 	p := Person{Name: "com", Age: 3}
 
-	// delete(只判断主键p.Name)
+	// 指定字段
 	tt.Db.Debug().Unscoped().Where("Username=?", "Alex").Delete(p)
 	tt.Db.Debug().Unscoped().Delete(p, "Username=? and age=?", "Alex", 23)
 
+	// 指定结构体
 	tt.Db.Debug().Unscoped().Where(p).Delete(Person{})
 	tt.Db.Debug().Unscoped().Delete(Person{}, p)
 

@@ -25,9 +25,9 @@
             e10ms(userExpire) 就是1s/10ms = 100
         2. tw.add(node, jiffies=t.jiffies)
             1. idx=expire-jiffies, level=1, index =0
-                // jiffies 是时间片计数，
+                // jiffies 是当前时间片计数，
                 // expire 是下次执行的时间片
-                // idx 是离下次执行的时间片差值
+                // idx 是离下次执行的时间片差值(expire-jiffies)
             2. if idx < nearSize: //2^8
                 index = expire & nearSize
                 head = t.t1[index]
@@ -107,6 +107,9 @@ node.version:
         // 小盘子256个槽位被256时间片消耗完了后，就从大盘子里面移动一些节点过来
         2. if index = 0:   
             1. for i in range(3):
+                // 将大盘level，移动到小盘level
+                // 先移动小盘level, index=rang(0,64)
+                // 当小盘level的index!=0时，说明小盘还没有消耗完时间片，大盘不用移动（break）
                 index2 := t.index(i)
                 t.cascade(i, int(index2))
                 if index2!=0:

@@ -100,7 +100,7 @@ func (t *timeWheel) add(node *timeNode, jiffies uint64) *timeNode {
 	} else {
 		max := maxVal()
 		for i := 0; i <= 3; i++ {
-			if idx > max { // 防溢出, 最大的seq
+			if idx > max { // 防溢出, 最大的seq(保证node会一直处在最大的level盘子里面)
 				idx = max
 				expire = idx + jiffies
 			}
@@ -212,6 +212,7 @@ func (t *timeWheel) cascade(levelIndex int, index int) {
 	atomic.AddUint64(&l.version, 1)
 	l.Unlock()
 
+	// 把tmp链表里面的节点移动到下一层
 	offset := unsafe.Offsetof(tmp.Head)
 	tmp.ForEachSafe(func(pos *list.Head) {
 		node := (*timeNode)(pos.Entry(offset))
@@ -272,18 +273,17 @@ func (t *timeWheel) moveAndExec() {
 
 		go val.callback()
 
+		nextJiffies := t.jiffies
 		if val.isSchedule == ScheduleTypePeriod {
-			jiffies := t.jiffies
 			// 这里的jiffies必须要减去1
-			// 当前的callback被调用，已经包含一个时间片,如果不把这个时间片减去，
-			// 每次多一个时间片，就变成累加器, 最后周期定时器慢慢会变得不准
-			val.expire = uint64(getExpire(val.userExpire, jiffies-1))
-			t.add(val, jiffies)
+			// nextJiffies已经增加时间片+1, 如果不把这个时间片减去，
+			// 每次执行都晚一个时间片，就变成累加器, 最后周期定时器慢慢会变得不准
+			val.expire = uint64(getExpire(val.userExpire, nextJiffies-1))
+			t.add(val, nextJiffies)
 		} else if val.isSchedule == ScheduleTypeCron {
-			jiffies := t.jiffies
 			val.userExpire = t.getNextCronDuration(val.cron)
-			val.expire = uint64(getExpire(val.userExpire, jiffies-1))
-			t.add(val, jiffies)
+			val.expire = uint64(getExpire(val.userExpire, nextJiffies-1))
+			t.add(val, nextJiffies)
 		}
 	})
 

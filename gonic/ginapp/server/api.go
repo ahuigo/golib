@@ -46,14 +46,16 @@ type User struct {
 // Param Type: query path header body formData
 // Refer to: https://github.com/swaggo/swag/blob/master/README.md#param-type
 
+// @Param        name  query      int  true  "Account name" default("Alex")
 // @Summary      获取用户
 // @Description  获取用户详情
 // @Tags         user
 // @Accept       json
 // @Produce      json
 // @Param 		 Cookie header string  false "token"     default(token=xxx)
-// @Param        id    path      int  true  "Account ID" Enums(1, 2, 3)
-// @Param        name  query      int  true  "Account name" default("Alex")
+// @Param        id    	path      int  true  "Account ID" Enums(1, 2, 3)
+// @Param        name  	query      int  true  "Account name" default("Alex")
+// @Param        queryStr  query      User  true  "query struct" default("name=Alex&page=1")
 // @Success      200  {object}  User
 // @Header 		 200 {string} Token "qwerty"
 // @Failure      400  {object}  HTTPError

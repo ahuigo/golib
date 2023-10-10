@@ -1,6 +1,7 @@
-package server
+package tpls
 
 import (
+	"ginapp/utils/String"
 	"io"
 	"net/http"
 	URL "net/url"
@@ -12,7 +13,7 @@ import (
 // requestForm('post','http://m:4500/tpl/redirect?redirect_uri=https://s/dump/ab/c/c2',{redirect_uri:"https://s/dump/ab/c/c"})
 // or: curl 'http://m:4500/tpl/redirect?redirect_uri=https://s/dump/ab/c/c2' -d '{id_token:"xx"}'
 func TplRedirectPage(ctx *gin.Context) {
-	url := encodeURI(ctx.Query("redirect_uri"))
+	url := String.EncodeURI(ctx.Query("redirect_uri"))
 	if url == "" {
 		url = "https://s/dump/ab/c/c2"
 	}

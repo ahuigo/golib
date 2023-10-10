@@ -1,7 +1,8 @@
 package server
 
 import (
-	"io/ioutil"
+	"ginapp/utils/String"
+	"io"
 	"net/http"
 	URL "net/url"
 	"time"
@@ -31,7 +32,7 @@ func RedirectServer(ctx *gin.Context) {
 
 // RedirectHandler
 func redirectRefresh(ctx *gin.Context) {
-	url := encodeURI(ctx.Query("redirect_uri"))
+	url := String.EncodeURI(ctx.Query("redirect_uri"))
 	html := `<head>
 	<meta http-equiv="refresh"  content="1; url=` + url + `">
 	</head>`
@@ -43,11 +44,11 @@ func redirectRefresh(ctx *gin.Context) {
 
 // requestForm('post','http://m:4500/redirect/form?redirect_uri=https://s/dump/ab/c/c2',{id_token:"xx",timeout:11,redirect_uri:"https://s/dump/ab/c/c"})
 func redirectForm(ctx *gin.Context) {
-	url := encodeURI(ctx.Query("redirect_uri"))
+	url := String.EncodeURI(ctx.Query("redirect_uri"))
 	if url == "" {
 		url = "https://s/dump/ab/c/c2"
 	}
-	body, _ := ioutil.ReadAll(ctx.Request.Body)
+	body, _ := io.ReadAll(ctx.Request.Body)
 	query, _ := URL.ParseQuery(string(body))
 	data := map[string]string{}
 	for k, v := range query {
@@ -61,10 +62,4 @@ func redirectForm(ctx *gin.Context) {
 
 	ctx.HTML(http.StatusOK, "redirect.tmpl", rdata)
 
-}
-
-func encodeURI(url string) string {
-	u, _ := URL.Parse(url)
-	u.RawQuery = u.Query().Encode()
-	return u.String()
 }

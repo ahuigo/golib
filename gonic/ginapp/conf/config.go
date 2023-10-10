@@ -23,7 +23,19 @@ func init() {
 }
 
 type Config struct {
-	Http Http `mapstructure:"http"`
+	Http   Http   `mapstructure:"http"`
+	PgConf PgConf `mapstructure:"pg_conf"`
+	App    App    `mapstructure:"app"`
+}
+type App struct {
+	Mode string `mapstructure:"mode"`
+}
+type PgConf struct {
+	Host     string `mapstructure:"host"`
+	Port     int    `mapstructure:"port"`
+	User     string `mapstructure:"user"`
+	Password string `mapstructure:"password"`
+	Dbname   string `mapstructure:"dbname"`
 }
 type Http struct {
 	ReadTimeout  int `mapstructure:"read_timeout"`

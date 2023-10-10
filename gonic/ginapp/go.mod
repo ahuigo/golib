@@ -1,18 +1,19 @@
 module ginapp
 
-go 1.19
+go 1.20
 
 require (
 	github.com/DeanThompson/ginpprof v0.0.0-20201112072838-007b1e56b2e1
 	github.com/ahuigo/requests v1.0.29
 	github.com/gin-gonic/gin v1.9.1
-	github.com/jinzhu/gorm v1.9.16
 	github.com/mackerelio/go-osstat v0.2.4
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/viper v1.15.0
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
 	github.com/swaggo/swag v1.16.1
+	gorm.io/driver/postgres v1.5.2
+	gorm.io/gorm v1.25.4
 )
 
 require (
@@ -34,12 +35,15 @@ require (
 	github.com/go-playground/validator/v10 v10.14.0 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
+	github.com/jackc/pgpassfile v1.0.0 // indirect
+	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
+	github.com/jackc/pgx/v5 v5.3.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.4 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
-	github.com/lib/pq v1.1.1 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect

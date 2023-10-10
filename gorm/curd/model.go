@@ -9,7 +9,8 @@ type Person struct {
 	Name     string `gorm:"primary_key" json:"name" form:"name"`
 	Username string `gorm:"unique_index:idx_username" json:"username"`
 	Age      int
-	Addrs    pq.StringArray `gorm:"not null;default:array[]::varchar[];type:text[]" json:"addrs" form:"addrs"`
+	Valid    *bool
+	Addrs    pq.StringArray `gorm:"null;default:array[]::varchar[];type:text[]" json:"addrs" form:"addrs"`
 	// Addrs []string `gorm:"not null;default:array[]::varchar[];type:text[]" json:"addrs" form:"addrs"`
 }
 

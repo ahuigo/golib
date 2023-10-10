@@ -1,13 +1,12 @@
 package server
 
 import (
-	"fmt"
+	"ginapp/store"
 	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"gorm.io/gorm"
 )
 
 type Stock struct {
@@ -18,16 +17,8 @@ type Stock struct {
 }
 
 func getDb() (db *gorm.DB, err error) {
-	conn := `host=localhost user=role1 dbname=ahuigo sslmode=disable password=`
-	println(conn)
-	db, err = gorm.Open("postgres", conn)
-	db.LogMode(true)
-	if err != nil {
-		err = fmt.Errorf("gorm.Open %s, err: %v", conn, err)
-		println(err)
-		return
-	}
-	return
+	Db := store.GetPgDB()
+	return Db.DB, nil
 }
 
 func insertHandler(c *gin.Context) {

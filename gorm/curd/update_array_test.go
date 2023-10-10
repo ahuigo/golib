@@ -31,10 +31,12 @@ func TestUpdateArray(t *testing.T) {
 	}
 
 	/************* update **
-	 不能用 []string(nil)
-	 不能用 []string{}
-	 不能用 pq.StringArray(nil)
-	 只能用 pq.StringArray{}
+	这三种都会转成null:
+	 1. 不能用 []string(nil)
+	 2. 不能用 []string{}
+	 2. 不能用 pq.StringArray(nil)
+	这种才会转成空数组:
+		1. 只能用 pq.StringArray{}
 	********************************************/
 	// 2. update empty
 	addrs := pq.StringArray{}

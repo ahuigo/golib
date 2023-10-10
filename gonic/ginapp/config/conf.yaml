@@ -1,3 +1,12 @@
 http:
   read_timeout: 5s
   write_timeout: 5s
+pg_conf:
+	# conn := `host=localhost user=role1 dbname=ahuigo sslmode=disable password=`
+  host: localhost
+  user: role1
+  password:
+  dbname: ahuigo
+  sslmode: disable
+  port: 5432
+  max_idle_conns: 10

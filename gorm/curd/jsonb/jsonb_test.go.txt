@@ -1,0 +1,51 @@
+package main
+
+import (
+	"database/sql/driver"
+	"encoding/json"
+	"errors"
+
+	"github.com/jinzhu/gorm"
+)
+
+type JSONB struct {
+	data interface{}
+}
+
+// Value makes `JSONB` satisfy the `driver.Valuer` interface.
+func (j JSONB) Value() (driver.Value, error) {
+	value, err := json.Marshal(j.data)
+	if err != nil {
+		return nil, err
+	}
+	return value, nil
+}
+
+// Scan makes `JSONB` satisfy the `sql.Scanner` interface.
+func (j *JSONB) Scan(value interface{}) error {
+	bytes, ok := value.([]byte)
+	if !ok {
+		return errors.New("type assertion to []byte failed")
+	}
+	err := json.Unmarshal(bytes, &j.data)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+
+type Profile struct {
+	Age  int
+	Address string
+}
+
+type User struct {
+	gorm.Model
+	Name    string
+	Profile JSONB `gorm:"type:json"`
+}
+
+func main() {
+	//...
+}

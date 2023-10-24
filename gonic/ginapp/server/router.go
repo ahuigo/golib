@@ -8,10 +8,11 @@ import (
 	"time"
 
 	mid "ginapp/middleware"
-	"ginapp/server/stat"
+	statHandler "ginapp/server/stat"
 	tpls "ginapp/server/tpl-server"
 
 	"github.com/DeanThompson/ginpprof"
+	"github.com/ahuigo/gonic-tools/stat"
 	"github.com/gin-gonic/gin"
 )
 
@@ -52,6 +53,8 @@ func Register(r *gin.Engine, staticFS bool, path404 string) {
 	r.GET("/proxy/*path", ProxyServer)
 	r.GET("/stream", streamApi)
 	r.GET("/stat/os", stat.OsStat)
+	r.GET("/stat/net", stat.StatNet)
+	r.GET("/stat/os/cosume-mem", statHandler.ConsumeMemory)
 	// r.Any("/bind/*anypath", BindServer)
 }
 

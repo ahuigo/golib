@@ -37,12 +37,13 @@ func TplRouter(e *gin.Engine) {
 	e.LoadHTMLGlob("./tpl/login/*")
 	**/
 
-	// 3. template with funcs
+	// 3. set template path with funcs
 	tmplWithFuncs := template.Must(template.New("").Funcs(funcMap).ParseFS(tpl.GetLoginFS(), "login/*.tmpl"))
 	e.SetHTMLTemplate(tmplWithFuncs)
+	// e.LoadHTMLGlob("template/*/*.html")// 或者使用这种方式
 
-	// 3. curl -D- m:4500/tpl-raw/login/redirect.tmpl
+	// 4. curl -D- m:4500/tpl-raw/login/redirect.tmpl
 	e.StaticFS("tpl-raw", http.FS(tpl.GetLoginFS()))
-	// 4. redirect
+	// 5. curl m:4500/tpl/redirect -d '{}'
 	e.POST("tpl/redirect", TplRedirectPage)
 }

@@ -1,12 +1,10 @@
 package demo
 
 import (
-	"fmt"
 	"testing"
 )
 
 func TestMapNil(t *testing.T) {
-	var m map[string]string
-	m["a"] = "1"
-	fmt.Println(m) //bad
+	var m map[string]string //nil
+	m["a"] = "1"            // error
 }

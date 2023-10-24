@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"ginapp/conf"
 	_ "ginapp/conf"
 	"ginapp/fslib"
 	"ginapp/server"
@@ -14,6 +15,7 @@ import (
 )
 
 func main() {
+	conf := conf.GetConf()
 	port := flag.String("p", "4500", "Public Server Port")
 	dir := flag.String("d", "", "change directory")
 	staticFS := flag.Bool("s", false, "static fs")
@@ -41,15 +43,14 @@ func main() {
 		// set timeout
 		publicServer := &http.Server{
 			Addr: fmt.Sprintf(":%s", *port),
-            // https://ieftimov.com/posts/testing-in-go-test-doubles-by-example/
+			// https://ieftimov.com/posts/testing-in-go-test-doubles-by-example/
 			// Handler: engine,
 			// Handler:      http.TimeoutHandler(http.HandlerFunc(slowHandler), 1*time.Second, "Timeout!\n"),
-			Handler: http.TimeoutHandler(engine, 10*time.Second, "Timeout!\n"),
-
+			Handler: http.TimeoutHandler(engine, 60*time.Second, "Handler Timeout!\n"),
 			// ReadTimeout: the maximum duration for reading the entire request, including the body
-			ReadTimeout: 2 * time.Second,
+			ReadTimeout: conf.Http.ReadTimeout,
 			// WriteTimeout: the maximum duration before timing out writes of the response
-			WriteTimeout: 2 * time.Second,
+			WriteTimeout: conf.Http.WriteTimeout,
 			// IdleTimetout: the maximum amount of time to wait for the next request when keep-alive is enabled
 			IdleTimeout:       30 * time.Second,
 			ReadHeaderTimeout: 2 * time.Second,

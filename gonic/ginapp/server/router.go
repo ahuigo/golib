@@ -91,6 +91,7 @@ func longRun(seconds int) int {
 }
 
 func sleepFunc(c *gin.Context) {
+	// this is depend on: ReadTimeout, WriteTimeout, HandlerTimeout in main.go
 	seconds, _ := strconv.Atoi(c.Param("second"))
 	fmt.Printf("%vs sleep!\n", seconds)
 	time.Sleep(time.Duration(seconds) * time.Second)

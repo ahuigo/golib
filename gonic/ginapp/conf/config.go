@@ -8,6 +8,7 @@ import (
 	"path"
 	"runtime"
 	"runtime/debug"
+	"time"
 
 	"github.com/spf13/viper"
 )
@@ -38,8 +39,8 @@ type PgConf struct {
 	Dbname   string `mapstructure:"dbname"`
 }
 type Http struct {
-	ReadTimeout  int `mapstructure:"read_timeout"`
-	WriteTimeout int `mapstructure:"write_timeout"`
+	ReadTimeout  time.Duration `mapstructure:"read_timeout"`
+	WriteTimeout time.Duration `mapstructure:"write_timeout"`
 }
 
 var _config = &Config{}

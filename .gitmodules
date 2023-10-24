@@ -1,3 +1,9 @@
 [submodule "net/grpc-go"]
 	path = net/grpc-go
 	url = https://github.com/grpc/grpc-go
+[submodule "gonic/gonic-tools"]
+	path = gonic/gonic-tools
+	url = git@github.com:ahuigo/gonic-tools.git
+[submodule "gonic/goos-utils"]
+	path = gonic/goos-utils
+	url = git@github.com:ahuigo/goos-utils.git

@@ -4,6 +4,6 @@
 [submodule "gonic/gonic-tools"]
 	path = gonic/gonic-tools
 	url = git@github.com:ahuigo/gonic-tools.git
-[submodule "gonic/goos-utils"]
-	path = gonic/goos-utils
-	url = git@github.com:ahuigo/goos-utils.git
+[submodule "gonic/goos-tools"]
+	path = gonic/goos-tools
+	url = git@github.com:ahuigo/goos-tools.git

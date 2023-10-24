@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/DeanThompson/ginpprof v0.0.0-20201112072838-007b1e56b2e1
-	github.com/ahuigo/gonic-tools v0.0.2
+	github.com/ahuigo/gonic-tools v0.0.3
 	github.com/ahuigo/requests v1.0.29
 	github.com/gin-gonic/gin v1.9.1
 	github.com/pkg/errors v0.9.1
@@ -20,7 +20,7 @@ require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
-	github.com/ahuigo/goos-utils v0.0.1 // indirect
+	github.com/ahuigo/goos-tools v0.0.2 // indirect
 	github.com/alessio/shellescape v1.4.1 // indirect
 	github.com/bytedance/sonic v1.9.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect

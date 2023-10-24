@@ -46,10 +46,10 @@ github.com/PuerkitoBio/purell v1.1.1 h1:WEQqlqaGbrPkxLJWfBwQmfEAE1Z7ONdDLqrN38tN
 github.com/PuerkitoBio/purell v1.1.1/go.mod h1:c11w/QuzBsJSee3cPx9rAFu61PvFxuPbtSwDGJws/X0=
 github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 h1:d+Bc7a5rLufV/sSk/8dngufqelfh6jnri85riMAaF/M=
 github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578/go.mod h1:uGdkoq3SwY9Y+13GIhn11/XLaGBb4BfwItxLd5jeuXE=
-github.com/ahuigo/gonic-tools v0.0.2 h1:bkFKhcKwzEzbsk9YRaBJiHw362CsMKG/p6OwVjfYYjs=
-github.com/ahuigo/gonic-tools v0.0.2/go.mod h1:gigtNIWzATRlb35novPX8WgTMm6uVbz7nUY3mT1Tn4Y=
-github.com/ahuigo/goos-utils v0.0.1 h1:S4Xq7Hm/U02Gja6VegeG8HglhtGOdYBoBK8nvOUPpf8=
-github.com/ahuigo/goos-utils v0.0.1/go.mod h1:1hfwCWN4s3VaDaSkUB3/E+huow8hTzq5hV2uqra7nxM=
+github.com/ahuigo/gonic-tools v0.0.3 h1:Btu+27Gn/ZLmHeu/rBVFfMVur3iNPvjWxI5ZCnN7c2o=
+github.com/ahuigo/gonic-tools v0.0.3/go.mod h1:no/AuAh+jRasMm5xji/Z3/d9OijkMybUjJuR1yxMso0=
+github.com/ahuigo/goos-tools v0.0.2 h1:EXiB35E+DdqUtvzC3vszIdmDozsFikGM30SsygMTAVg=
+github.com/ahuigo/goos-tools v0.0.2/go.mod h1:t8RvEo8S+B+IOVJoqczmDjSpKZIYd8XQxQgxAuJP0B4=
 github.com/ahuigo/requests v1.0.29 h1:m4YMCcQFZlcM32gGGmVb2kc2IW9N2oyns6/2YvkOSzQ=
 github.com/ahuigo/requests v1.0.29/go.mod h1:+Hi6pffZQOf0g+pEM+xKxZWneSeryYk3QJzj/+Pjku8=
 github.com/alessio/shellescape v1.4.1 h1:V7yhSDDn8LP4lc4jS8pFkt0zCnzVJlG5JXy9BVKJUX0=

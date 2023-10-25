@@ -53,7 +53,7 @@ func Register(r *gin.Engine, staticFS bool, path404 string) {
 	r.GET("/proxy/*path", ProxyServer)
 	r.GET("/stream", streamApi)
 	r.GET("/stat/os", stat.OsStat)
-	r.GET("/stat/net", stat.StatNet)
+	r.GET("/stat/net", stat.NetStat)
 	r.GET("/stat/os/cosume-mem", statHandler.ConsumeMemory)
 	// r.Any("/bind/*anypath", BindServer)
 }

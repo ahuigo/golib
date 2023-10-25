@@ -1,6 +1,6 @@
 main
 dump.rdb
-godemo/
+go.work.sum
 /log/logs
 # gonic
 /gonic/ginapp/docs

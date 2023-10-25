@@ -9,7 +9,7 @@ var (
 	tplFS embed.FS
 
 	//go:embed resource
-	resource embed.FS
+	resourceFS embed.FS
 
 	//go:embed resource/index.tmpl
 	indexPageString string
@@ -20,7 +20,7 @@ func GetLoginFS() embed.FS {
 }
 
 func GetResourceFS() embed.FS {
-	return resource
+	return resourceFS
 }
 func GetIndexPageString() string {
 	return indexPageString

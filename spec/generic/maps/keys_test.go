@@ -1,5 +1,5 @@
 // https://stackoverflow.com/questions/71905177/why-does-maps-keys-in-go-specify-the-map-type-as-m
-package demo
+package maps
 
 import (
 	"fmt"

@@ -32,7 +32,6 @@ __debug_bin
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 a.go
-hello
 conf.local.yaml
 
 # todo

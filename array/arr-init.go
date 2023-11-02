@@ -12,4 +12,10 @@ func main(){
     fmt.Println(s, len(s), cap(s)) //[] 0 0
     s = append(s, 1)
     fmt.Println(s, len(s), cap(s)) //[] 0 0
+
+    // nil slice 也可以for in
+    s=[]int(nil)
+    for _,item := range s{
+        println(item)
+    }
 }

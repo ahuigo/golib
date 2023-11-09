@@ -11,7 +11,7 @@ func TestMutex(t *testing.T) {
 	for i := 0; i < 5; i++ {
 		go func(j int) {
 			println("start:", j)
-			mutex.Lock() // 阻塞
+			mutex.Lock() // 阻塞的
 			defer mutex.Unlock()
 			println(j)
 			time.Sleep(time.Second * 1)

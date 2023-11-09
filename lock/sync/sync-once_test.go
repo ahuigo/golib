@@ -16,16 +16,23 @@ var out = 0
 
 func TestSyncOnce(t *testing.T) {
 	var once sync.Once
-	onceBody := func() {
-		time.Sleep(5 * time.Second)
-		fmt.Println("Only once")
-		out = 100
+	onceBodyFunc := func(i int) func() {
+		return func() {
+			fmt.Println("once start:", i)
+			time.Sleep(5 * time.Second)
+			fmt.Println("Only once")
+			out += i * 100
+		}
 	}
+	onceBody1 := onceBodyFunc(1)
+	onceBody2 := onceBodyFunc(2)
 	done := make(chan bool)
 	for i := 0; i < 10; i++ {
 		go func(j int) {
-			fmt.Println("start:", j)
-			once.Do(onceBody) // 阻塞等待
+			fmt.Println("routine step1:", j)
+			once.Do(onceBody1) // 阻塞等待(	o.m.Lock())
+			fmt.Println("routine step 2:", j)
+			once.Do(onceBody2) // 已经done，不会再执行了
 			fmt.Println("end:", j, ", out:", out)
 			done <- true
 		}(i)

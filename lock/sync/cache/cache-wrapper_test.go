@@ -32,8 +32,8 @@ func NewCacheFn0[V any](getFunc func() (V, error)) *cachedFn[int8, V] {
 	return &cachedFn[int8, V]{getFunc: getFunc0}
 }
 
-func (c *cachedFn[uint8, V]) Get0() (V, error) {
-	var s uint8
+func (c *cachedFn[int, V]) Get0() (V, error) {
+	var s int
 	// s = 0                                    // error: cannot use 0 (untyped int constant) as uint8 value in assignment
 	fmt.Printf("cache key: %#v, %T\n", s, s) // cache key: 0, uint8
 	return c.Get(s)
@@ -95,7 +95,7 @@ func TestCacheFuncWithNoParam(t *testing.T) {
 	}
 
 	// Cacheable Function
-	getUserInfoFromDbWithCache := NewCacheFn0(getUserInfoFromDb).SetTimeout(time.Hour).Get0 // getFunc can only accept zero parameter
+	getUserInfoFromDbWithCache := NewCacheFn0(getUserInfoFromDb).SetTimeout(500 * time.Millisecond).Get0 // getFunc can only accept zero parameter
 	_ = getUserInfoFromDbWithCache
 
 	// Parallel invocation of multiple functions.
@@ -103,12 +103,14 @@ func TestCacheFuncWithNoParam(t *testing.T) {
 		userinfo, err := getUserInfoFromDbWithCache()
 		fmt.Println(userinfo, err)
 	}, 10)
-	println("------------------")
-	userinfo, err := getUserInfoFromDbWithCache()
-	fmt.Println(userinfo, err)
 
-	if executeCount != 1 {
-		t.Error("executeCount != 1")
+	// Test timeout
+	_, _ = getUserInfoFromDbWithCache()
+	time.Sleep(600 * time.Millisecond)
+	_, _ = getUserInfoFromDbWithCache()
+
+	if executeCount != 2 {
+		t.Error("executeCount should be 2")
 	}
 }
 

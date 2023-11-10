@@ -48,14 +48,14 @@ func (c *cachedFn[K, V]) SetTimeout(timeout time.Duration) *cachedFn[K, V] {
 
 func (c *cachedFn[K, V]) Get(key K) (V, error) {
 	needRefresh := false
-	value, ok := c.cacheMap.Load(key)
-	if ok {
+	value, hasCache := c.cacheMap.Load(key)
+	if hasCache {
 		cachedObj := value.(*cachedObjType)
 		if c.timeout > 0 && time.Since(cachedObj.createdAt) > c.timeout {
 			needRefresh = true
 		}
 	}
-	if !ok || needRefresh {
+	if !hasCache || needRefresh {
 		var tmpOnce sync.Once
 		oncePtr := &tmpOnce
 		//1. clean up routineOnceMap key

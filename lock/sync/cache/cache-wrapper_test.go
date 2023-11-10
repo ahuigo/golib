@@ -32,21 +32,12 @@ func NewCacheFn0[V any](getFunc func() (V, error)) *cachedFn[int8, V] {
 	return &cachedFn[int8, V]{getFunc: getFunc0}
 }
 
-func (c *cachedFn[string, V]) Get0() (V, error) {
-	// var s any
-	var s string
-	// s = "abc" // error: cannot use "abc" (untyped string constant) as string value in assignment
-	fmt.Printf("cache key: %#v, %T\n", s, s)
+func (c *cachedFn[uint8, V]) Get0() (V, error) {
+	var s uint8
+	// s = 0                                    // error: cannot use 0 (untyped int constant) as uint8 value in assignment
+	fmt.Printf("cache key: %#v, %T\n", s, s) // cache key: 0, uint8
 	return c.Get(s)
 }
-
-/*
-func (c *cachedFn[int, V]) Get0() (V, error) {
-	var s int = 100 //error: cannot use 100 (untyped int constant) as int value in variable declaration
-	fmt.Printf("cache key: %#v, %T\n", s, s)
-	return c.Get(s)
-}
-*/
 
 func (c *cachedFn[K, V]) SetTimeout(timeout time.Duration) *cachedFn[K, V] {
 	c.mu.Lock()
@@ -95,12 +86,12 @@ func TestCacheFuncWithNoParam(t *testing.T) {
 	}
 
 	// Cacheable Function
-	getUserInfoFromDbWithCache := NewCacheFn0(getUserInfoFromDb) // getFunc can only accept zero parameter
+	getUserInfoFromDbWithCache := NewCacheFn0(getUserInfoFromDb).Get0 // getFunc can only accept zero parameter
 	_ = getUserInfoFromDbWithCache
 
 	// Parallel invocation of multiple functions.
 	parallelCall(func() {
-		userinfo, err := getUserInfoFromDbWithCache.Get0()
+		userinfo, err := getUserInfoFromDbWithCache()
 		fmt.Println(userinfo, err)
 	}, 10)
 }
@@ -117,6 +108,24 @@ func parallelCall(fn func(), times int) {
 	}
 	wg.Wait()
 }
+
+/*
+func (c *cachedFn[string, V]) Get0() (V, error) {
+	// var s any
+	var s string
+	// s = "abc" // error: cannot use "abc" (untyped string constant) as string value in assignment
+	fmt.Printf("cache key: %#v, %T\n", s, s)
+	return c.Get(s)
+}
+*/
+
+/*
+func (c *cachedFn[int, V]) Get0() (V, error) {
+	var s int = 100 //error: cannot use 100 (untyped int constant) as int value in variable declaration
+	fmt.Printf("cache key: %#v, %T\n", s, s)
+	return c.Get(s)
+}
+*/
 
 func TestCacheFuncWithOneParam(t *testing.T) {
 	type UserInfo struct {

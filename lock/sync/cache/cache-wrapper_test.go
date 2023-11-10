@@ -58,13 +58,20 @@ func (c *cachedFn[K, V]) Get(key K) (V, error) {
 	if !ok || needRefresh {
 		var tmpOnce sync.Once
 		oncePtr := &tmpOnce
+		//1. clean up routineOnceMap key
+		if needRefresh {
+			c.routineOnceMap.Delete(key)
+		}
+		// 2. load or store routineOnceMap key
 		onceInterface, loaded := c.routineOnceMap.LoadOrStore(key, oncePtr)
 		if loaded {
 			oncePtr = onceInterface.(*sync.Once)
 		}
+		// 3. Execute getFunc(only once)
 		oncePtr.Do(func() {
 			val, err := c.getFunc(key)
-			c.cacheMap.Store(key, &cachedObjType{val: &val, err: err})
+			createdAt := time.Now()
+			c.cacheMap.Store(key, &cachedObjType{val: &val, err: err, createdAt: createdAt})
 		})
 		value, _ = c.cacheMap.Load(key)
 	}
@@ -78,15 +85,17 @@ func TestCacheFuncWithNoParam(t *testing.T) {
 		Age  int
 	}
 
+	executeCount := 0
 	// Original function
 	getUserInfoFromDb := func() (UserInfo, error) {
+		executeCount++
 		fmt.Println("select * from db limit 1", time.Now())
 		time.Sleep(10 * time.Millisecond)
 		return UserInfo{Name: "Anonymous", Age: 9}, errors.New("db error")
 	}
 
 	// Cacheable Function
-	getUserInfoFromDbWithCache := NewCacheFn0(getUserInfoFromDb).Get0 // getFunc can only accept zero parameter
+	getUserInfoFromDbWithCache := NewCacheFn0(getUserInfoFromDb).SetTimeout(time.Hour).Get0 // getFunc can only accept zero parameter
 	_ = getUserInfoFromDbWithCache
 
 	// Parallel invocation of multiple functions.
@@ -94,6 +103,13 @@ func TestCacheFuncWithNoParam(t *testing.T) {
 		userinfo, err := getUserInfoFromDbWithCache()
 		fmt.Println(userinfo, err)
 	}, 10)
+	println("------------------")
+	userinfo, err := getUserInfoFromDbWithCache()
+	fmt.Println(userinfo, err)
+
+	if executeCount != 1 {
+		t.Error("executeCount != 1")
+	}
 }
 
 // Parallel caller via goroutines
@@ -141,13 +157,13 @@ func TestCacheFuncWithOneParam(t *testing.T) {
 	}
 
 	// Cacheable Function
-	getUserInfoFromDbWithCache := NewCacheFn(getUserInfoFromDb) // getFunc can only accept 1 parameter
+	getUserInfoFromDbWithCache := NewCacheFn(getUserInfoFromDb).SetTimeout(time.Hour).Get // getFunc can only accept 1 parameter
 
 	// Parallel invocation of multiple functions.
 	parallelCall(func() {
-		userinfo, err := getUserInfoFromDbWithCache.Get("alex")
+		userinfo, err := getUserInfoFromDbWithCache("alex")
 		fmt.Println(userinfo, err)
-		userinfo, err = getUserInfoFromDbWithCache.Get("John")
+		userinfo, err = getUserInfoFromDbWithCache("John")
 		fmt.Println(userinfo, err)
 	}, 10)
 

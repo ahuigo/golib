@@ -3,6 +3,7 @@ package cache
 import (
 	"errors"
 	"fmt"
+	"reflect"
 	"sync"
 	"testing"
 	"time"
@@ -47,8 +48,13 @@ func (c *cachedFn[K, V]) SetTimeout(timeout time.Duration) *cachedFn[K, V] {
 }
 
 func (c *cachedFn[K, V]) Get(key K) (V, error) {
+	var pkey any = key
 	needRefresh := false
-	value, hasCache := c.cacheMap.Load(key)
+	kind := reflect.TypeOf(key).Kind()
+	if kind == reflect.Map || kind == reflect.Slice {
+		pkey = fmt.Sprintf("%#v", key)
+	}
+	value, hasCache := c.cacheMap.Load(pkey)
 	if hasCache {
 		cachedObj := value.(*cachedObjType)
 		if c.timeout > 0 && time.Since(cachedObj.createdAt) > c.timeout {
@@ -60,10 +66,10 @@ func (c *cachedFn[K, V]) Get(key K) (V, error) {
 		oncePtr := &tmpOnce
 		//1. clean up routineOnceMap key
 		if needRefresh {
-			c.routineOnceMap.Delete(key)
+			c.routineOnceMap.Delete(pkey)
 		}
 		// 2. load or store routineOnceMap key
-		onceInterface, loaded := c.routineOnceMap.LoadOrStore(key, oncePtr)
+		onceInterface, loaded := c.routineOnceMap.LoadOrStore(pkey, oncePtr)
 		if loaded {
 			oncePtr = onceInterface.(*sync.Once)
 		}
@@ -71,9 +77,9 @@ func (c *cachedFn[K, V]) Get(key K) (V, error) {
 		oncePtr.Do(func() {
 			val, err := c.getFunc(key)
 			createdAt := time.Now()
-			c.cacheMap.Store(key, &cachedObjType{val: &val, err: err, createdAt: createdAt})
+			c.cacheMap.Store(pkey, &cachedObjType{val: &val, err: err, createdAt: createdAt})
 		})
-		value, _ = c.cacheMap.Load(key)
+		value, _ = c.cacheMap.Load(pkey)
 	}
 	cachedObj := value.(*cachedObjType)
 	return *(cachedObj.val).(*V), cachedObj.err
@@ -110,7 +116,7 @@ func TestCacheFuncWithNoParam(t *testing.T) {
 	_, _ = getUserInfoFromDbWithCache()
 
 	if executeCount != 2 {
-		t.Error("executeCount should be 2")
+		t.Error("executeCount should be 2", ", but get ", executeCount)
 	}
 }
 
@@ -146,27 +152,29 @@ func (c *cachedFn[int, V]) Get0() (V, error) {
 */
 
 func TestCacheFuncWithOneParam(t *testing.T) {
-	type UserInfo struct {
-		Name string
-		Age  int
-	}
-
 	// Original function
-	getUserInfoFromDb := func(name string) (UserInfo, error) {
-		fmt.Println("select * from db where name=", name, time.Now())
+	executeCount := 0
+	getUserScore := func(arg map[int]int) (int, error) {
+		executeCount++
+		fmt.Println("select score from db where id=", arg[0], time.Now())
 		time.Sleep(10 * time.Millisecond)
-		return UserInfo{Name: name, Age: 9}, errors.New("db error")
+		return 98, errors.New("db error")
 	}
 
 	// Cacheable Function
-	getUserInfoFromDbWithCache := NewCacheFn(getUserInfoFromDb).SetTimeout(time.Hour).Get // getFunc can only accept 1 parameter
+	getUserScoreFromDbWithCache := NewCacheFn(getUserScore).SetTimeout(time.Hour).Get // getFunc can only accept 1 parameter
 
 	// Parallel invocation of multiple functions.
 	parallelCall(func() {
-		userinfo, err := getUserInfoFromDbWithCache("alex")
-		fmt.Println(userinfo, err)
-		userinfo, err = getUserInfoFromDbWithCache("John")
-		fmt.Println(userinfo, err)
+		score, err := getUserScoreFromDbWithCache(map[int]int{0: 1})
+		fmt.Println(score, err)
+		score, err = getUserScoreFromDbWithCache(map[int]int{0: 2})
+		fmt.Println(score, err)
+		getUserScoreFromDbWithCache(map[int]int{0: 3})
 	}, 10)
+
+	if executeCount != 3 {
+		t.Error("executeCount should be 3")
+	}
 
 }

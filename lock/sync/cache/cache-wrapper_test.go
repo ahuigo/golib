@@ -1,12 +1,16 @@
 package cache
 
 import (
+	"context"
 	"errors"
 	"fmt"
+	"net/http/httptest"
 	"reflect"
 	"sync"
 	"testing"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 type cachedObjType struct {
@@ -14,46 +18,74 @@ type cachedObjType struct {
 	createdAt time.Time
 	err       error
 }
-type cachedFn[K any, V any] struct {
+type cachedFn[Ctx any, K any, V any] struct {
 	mu             sync.RWMutex
 	cacheMap       sync.Map
 	routineOnceMap sync.Map
 	timeout        time.Duration
-	getFunc        func(K) (V, error)
+	keyLen         int
+	getFunc        func(Ctx, K) (V, error)
 }
 
-func NewCacheFn[K any, V any](getFunc func(K) (V, error)) *cachedFn[K, V] {
-	return &cachedFn[K, V]{getFunc: getFunc}
+// Cache Function with ctx and 1 parameter
+func NewCacheFn2[Ctx any, K any, V any](getFunc func(Ctx, K) (V, error)) *cachedFn[Ctx, K, V] {
+	return &cachedFn[Ctx, K, V]{getFunc: getFunc, keyLen: 2}
 }
 
-func NewCacheFn0[V any](getFunc func() (V, error)) *cachedFn[int8, V] {
-	getFunc0 := func(i int8) (V, error) {
+// Cache Function with 1 parameter
+func NewCacheFn1[K any, V any](getFunc func(K) (V, error)) *cachedFn[context.Context, K, V] {
+	getFunc0 := func(ctx context.Context, key K) (V, error) {
+		return getFunc(key)
+	}
+	return &cachedFn[context.Context, K, V]{getFunc: getFunc0, keyLen: 1}
+}
+
+// Cache Function with no parameter
+func NewCacheFn0[V any](getFunc func() (V, error)) *cachedFn[context.Context, int8, V] {
+	getFunc0 := func(ctx context.Context, i int8) (V, error) {
 		return getFunc()
 	}
-	return &cachedFn[int8, V]{getFunc: getFunc0}
+	return &cachedFn[context.Context, int8, V]{getFunc: getFunc0, keyLen: 0}
 }
 
-func (c *cachedFn[int, V]) Get0() (V, error) {
-	var s int
-	// s = 0                                    // error: cannot use 0 (untyped int constant) as uint8 value in assignment
-	fmt.Printf("cache key: %#v, %T\n", s, s) // cache key: 0, uint8
-	return c.Get(s)
+// Invoke cached function with 1 parameter
+func (c *cachedFn[Ctx, K, V]) Get1(key K) (V, error) {
+	var ctx Ctx
+	return c.Get2(ctx, key)
 }
 
-func (c *cachedFn[K, V]) SetTimeout(timeout time.Duration) *cachedFn[K, V] {
+// Invoke cached function with no parameter
+func (c *cachedFn[any, int, V]) Get0() (V, error) {
+	var ctx any
+	var key int
+	// key = 0                                    // error: cannot use 0 (untyped int constant) as uint8 value in assignment
+	fmt.Printf("cache key: %#v, %T\n", key, key) // cache key: 0, uint8
+	return c.Get2(ctx, key)
+}
+
+func (c *cachedFn[Ctx, K, V]) SetTimeout(timeout time.Duration) *cachedFn[Ctx, K, V] {
 	c.mu.Lock()
 	c.timeout = timeout
 	c.mu.Unlock()
 	return c
 }
 
-func (c *cachedFn[K, V]) Get(key K) (V, error) {
-	var pkey any = key
-	needRefresh := false
-	kind := reflect.TypeOf(key).Kind()
-	if kind == reflect.Map || kind == reflect.Slice {
-		pkey = fmt.Sprintf("%#v", key)
+// Invoke cached function with no parameter
+func (c *cachedFn[Ctx, K, V]) Get2(key1 Ctx, key2 K) (V, error) {
+	// pkey
+	var pkey any = key2
+	if _, hasCtx := any(key1).(context.Context); hasCtx || c.keyLen <= 1 {
+		// ignore context key
+		kind := reflect.TypeOf(key2).Kind()
+		if kind == reflect.Map || kind == reflect.Slice {
+			pkey = fmt.Sprintf("%#v", key2)
+		}
+	} else {
+		pkey = fmt.Sprintf("%#v,%#v", key1, key2)
 	}
+
+	// check cache
+	needRefresh := false
 	value, hasCache := c.cacheMap.Load(pkey)
 	if hasCache {
 		cachedObj := value.(*cachedObjType)
@@ -61,6 +93,7 @@ func (c *cachedFn[K, V]) Get(key K) (V, error) {
 			needRefresh = true
 		}
 	}
+
 	if !hasCache || needRefresh {
 		var tmpOnce sync.Once
 		oncePtr := &tmpOnce
@@ -75,7 +108,7 @@ func (c *cachedFn[K, V]) Get(key K) (V, error) {
 		}
 		// 3. Execute getFunc(only once)
 		oncePtr.Do(func() {
-			val, err := c.getFunc(key)
+			val, err := c.getFunc(key1, key2)
 			createdAt := time.Now()
 			c.cacheMap.Store(pkey, &cachedObjType{val: &val, err: err, createdAt: createdAt})
 		})
@@ -154,7 +187,7 @@ func (c *cachedFn[int, V]) Get0() (V, error) {
 func TestCacheFuncWithOneParam(t *testing.T) {
 	// Original function
 	executeCount := 0
-	getUserScore := func(arg map[int]int) (int, error) {
+	getUserScore := func(c *gin.Context, arg map[int]int) (int, error) {
 		executeCount++
 		fmt.Println("select score from db where id=", arg[0], time.Now())
 		time.Sleep(10 * time.Millisecond)
@@ -162,19 +195,29 @@ func TestCacheFuncWithOneParam(t *testing.T) {
 	}
 
 	// Cacheable Function
-	getUserScoreFromDbWithCache := NewCacheFn(getUserScore).SetTimeout(time.Hour).Get // getFunc can only accept 1 parameter
+	getUserScoreFromDbWithCache := NewCacheFn2(getUserScore).SetTimeout(time.Hour).Get2 // getFunc can only accept 1 parameter
 
 	// Parallel invocation of multiple functions.
+	ctx, _ := gin.CreateTestContext(httptest.NewRecorder())
 	parallelCall(func() {
-		score, err := getUserScoreFromDbWithCache(map[int]int{0: 1})
+		score, err := getUserScoreFromDbWithCache(ctx, map[int]int{0: 1})
 		fmt.Println(score, err)
-		score, err = getUserScoreFromDbWithCache(map[int]int{0: 2})
+		score, err = getUserScoreFromDbWithCache(ctx, map[int]int{0: 2})
 		fmt.Println(score, err)
-		getUserScoreFromDbWithCache(map[int]int{0: 3})
+		getUserScoreFromDbWithCache(ctx, map[int]int{0: 3})
 	}, 10)
 
 	if executeCount != 3 {
 		t.Error("executeCount should be 3")
 	}
 
+}
+
+func TestCacheFuncWithNilContext(t *testing.T) {
+	getUserScore := func(c context.Context, arg map[int]int) (int, error) {
+		return 98, errors.New("db error")
+	}
+	getUserScoreFromDbWithCache := NewCacheFn2(getUserScore).SetTimeout(time.Hour).Get2 // getFunc can only accept 1 parameter
+	var ctx context.Context
+	getUserScoreFromDbWithCache(ctx, map[int]int{0: 1})
 }

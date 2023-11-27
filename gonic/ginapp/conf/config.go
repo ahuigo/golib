@@ -1,13 +1,13 @@
 package conf
 
 import (
-	"flag"
 	"ginapp/fslib"
 	"log"
 	"os"
 	"path"
 	"runtime"
 	"runtime/debug"
+	"testing"
 	"time"
 
 	"github.com/spf13/viper"
@@ -86,5 +86,6 @@ func initWkDir() {
 func isInTest() bool {
 	// strings.HasSuffix(os.Args[0], ".test")
 	//Or strings.Contains(os.Args[0], "/_test/")
-	return flag.Lookup("test.v") != nil
+	//Or return flag.Lookup("test.v") != nil
+	return testing.Testing()
 }

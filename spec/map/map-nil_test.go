@@ -10,7 +10,7 @@ func TestMapNil(t *testing.T) {
 	var m1 map[string]int
 
 	// fatal: 不过slice 可以 append(nil, 1)
-	// m1["kk"] = 1
+	// m1["kk"] = 1 // 写不行,读可以
 
 	println("nil[k]=0:", m1["k"])
 	if _, ok := m1["a"]; !ok {

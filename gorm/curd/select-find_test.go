@@ -41,11 +41,22 @@ func selectFind() {
 	fmt.Printf("stocks:%v\n", stocks)
 
 }
+func selectPluck() {
+	stock := &Stock{}
+	var code string
+	err := tt.Db.Model(&stock).Debug().Where("price%20>=?", 1).Pluck("code", &code).Error
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("code:%v\n", code)
+
+}
 
 func TestSelectFind(t *testing.T) {
 	// 自动迁移模式
 	tt.Db.AutoMigrate(&Product{})
 	tt.Db.AutoMigrate(&Stock{})
+	selectPluck()
 	selectFind()
 	selectScan()
 

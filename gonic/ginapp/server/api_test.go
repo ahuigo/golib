@@ -3,11 +3,11 @@ package server
 import (
 	"fmt"
 	"net/http"
-	"net/http/httptest"
 	"testing"
 
+	"ginapp/test"
+
 	"github.com/ahuigo/requests"
-	"github.com/gin-gonic/gin"
 )
 
 func TestAddUser(t *testing.T) {
@@ -19,7 +19,7 @@ func TestAddUser(t *testing.T) {
 	req, _ := requests.BuildRequest("POST", "/api/v1/user", requests.Jsoni(data))
 
 	// send request
-	respRecorder, ctx := createCtx(req)
+	respRecorder, ctx := test.CreateTestCtx(req)
 	AddUser(ctx)
 
 	// test response status
@@ -37,11 +37,4 @@ func TestAddUser(t *testing.T) {
 		t.Fatalf("unexpected response:%v", resp.Text())
 	}
 
-}
-
-func createCtx(req *http.Request) (resp *httptest.ResponseRecorder, ctx *gin.Context) {
-	resp = httptest.NewRecorder()
-	ctx, _ = gin.CreateTestContext(resp)
-	ctx.Request = req
-	return
 }

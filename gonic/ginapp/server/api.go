@@ -37,6 +37,7 @@ type User struct {
 	Country string
 	// time rfc3339
 	Time time.Time `json:"time" form:"time"`
+
 	// 这是city 说明
 	City  string      `form:"city" example:"Beijing"`
 	Citys []string    `form:"city" example:"Bj,Tj"`

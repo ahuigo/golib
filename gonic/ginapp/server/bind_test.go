@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"ginapp/test"
 	"net/http"
 	"testing"
 
@@ -16,7 +17,7 @@ func TestBind(t *testing.T) {
 	req, _ := requests.BuildRequest("POST", "/bind?name=Alex", requests.Jsoni(data))
 
 	// send request
-	respRecorder, ctx := createCtx(req)
+	respRecorder, ctx := test.CreateTestCtx(req)
 	BindServer(ctx)
 
 	// test response status

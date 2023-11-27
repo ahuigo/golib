@@ -18,6 +18,10 @@ type cachedObjType struct {
 	createdAt time.Time
 	err       error
 }
+type Config struct {
+	Timeout time.Duration
+}
+
 type cachedFn[Ctx any, K any, V any] struct {
 	mu             sync.RWMutex
 	cacheMap       sync.Map
@@ -28,50 +32,71 @@ type cachedFn[Ctx any, K any, V any] struct {
 }
 
 // Cache Function with ctx and 1 parameter
-func NewCacheFn2[Ctx any, K any, V any](getFunc func(Ctx, K) (V, error)) *cachedFn[Ctx, K, V] {
-	return &cachedFn[Ctx, K, V]{getFunc: getFunc, keyLen: 2}
+func NewCacheFn2[Ctx any, K any, V any](
+	getFunc func(Ctx, K) (V, error),
+	config *Config,
+) func(Ctx, K) (V, error) {
+	ins := &cachedFn[Ctx, K, V]{getFunc: getFunc, keyLen: 2}
+	if config != nil {
+		ins.timeout = config.Timeout
+	}
+	return ins.invoke2
 }
 
 // Cache Function with 1 parameter
-func NewCacheFn1[K any, V any](getFunc func(K) (V, error)) *cachedFn[context.Context, K, V] {
+func NewCacheFn1[K any, V any](
+	getFunc func(K) (V, error),
+	config *Config,
+) func(K) (V, error) {
 	getFunc0 := func(ctx context.Context, key K) (V, error) {
 		return getFunc(key)
 	}
-	return &cachedFn[context.Context, K, V]{getFunc: getFunc0, keyLen: 1}
-}
-
-// Cache Function with no parameter
-func NewCacheFn0[V any](getFunc func() (V, error)) *cachedFn[context.Context, int8, V] {
-	getFunc0 := func(ctx context.Context, i int8) (V, error) {
-		return getFunc()
+	ins := &cachedFn[context.Context, K, V]{getFunc: getFunc0, keyLen: 1}
+	if config != nil {
+		ins.timeout = config.Timeout
 	}
-	return &cachedFn[context.Context, int8, V]{getFunc: getFunc0, keyLen: 0}
+	return ins.invoke1
 }
 
 // Invoke cached function with 1 parameter
-func (c *cachedFn[Ctx, K, V]) Get1(key K) (V, error) {
+func (c *cachedFn[Ctx, K, V]) invoke1(key K) (V, error) {
 	var ctx Ctx
-	return c.Get2(ctx, key)
+	return c.invoke2(ctx, key)
+}
+
+// Cache Function with no parameter
+func NewCacheFn0[V any](
+	getFunc func() (V, error),
+	config *Config,
+) func() (V, error) {
+	getFunc0 := func(ctx context.Context, i int8) (V, error) {
+		return getFunc()
+	}
+	ins := &cachedFn[context.Context, int8, V]{getFunc: getFunc0, keyLen: 0}
+	if config != nil {
+		ins.timeout = config.Timeout
+	}
+	return ins.invoke0
 }
 
 // Invoke cached function with no parameter
-func (c *cachedFn[any, int, V]) Get0() (V, error) {
+func (c *cachedFn[any, int, V]) invoke0() (V, error) {
 	var ctx any
 	var key int
 	// key = 0                                    // error: cannot use 0 (untyped int constant) as uint8 value in assignment
 	fmt.Printf("cache key: %#v, %T\n", key, key) // cache key: 0, uint8
-	return c.Get2(ctx, key)
+	return c.invoke2(ctx, key)
 }
 
-func (c *cachedFn[Ctx, K, V]) SetTimeout(timeout time.Duration) *cachedFn[Ctx, K, V] {
+func (c *cachedFn[Ctx, K, V]) SetConfig(config Config) *cachedFn[Ctx, K, V] {
 	c.mu.Lock()
-	c.timeout = timeout
+	c.timeout = config.Timeout
 	c.mu.Unlock()
 	return c
 }
 
-// Invoke cached function with no parameter
-func (c *cachedFn[Ctx, K, V]) Get2(key1 Ctx, key2 K) (V, error) {
+// Invoke cached function with 2 parameter
+func (c *cachedFn[Ctx, K, V]) invoke2(key1 Ctx, key2 K) (V, error) {
 	// pkey
 	var pkey any = key2
 	if _, hasCtx := any(key1).(context.Context); hasCtx || c.keyLen <= 1 {
@@ -134,7 +159,7 @@ func TestCacheFuncWithNoParam(t *testing.T) {
 	}
 
 	// Cacheable Function
-	getUserInfoFromDbWithCache := NewCacheFn0(getUserInfoFromDb).SetTimeout(500 * time.Millisecond).Get0 // getFunc can only accept zero parameter
+	getUserInfoFromDbWithCache := NewCacheFn0(getUserInfoFromDb, &Config{Timeout: 500 * time.Millisecond}) // getFunc can only accept zero parameter
 	_ = getUserInfoFromDbWithCache
 
 	// Parallel invocation of multiple functions.
@@ -195,7 +220,7 @@ func TestCacheFuncWithOneParam(t *testing.T) {
 	}
 
 	// Cacheable Function
-	getUserScoreFromDbWithCache := NewCacheFn2(getUserScore).SetTimeout(time.Hour).Get2 // getFunc can only accept 1 parameter
+	getUserScoreFromDbWithCache := NewCacheFn2(getUserScore, &Config{Timeout: time.Hour}) // getFunc can only accept 1 parameter
 
 	// Parallel invocation of multiple functions.
 	ctx, _ := gin.CreateTestContext(httptest.NewRecorder())
@@ -217,7 +242,7 @@ func TestCacheFuncWithNilContext(t *testing.T) {
 	getUserScore := func(c context.Context, arg map[int]int) (int, error) {
 		return 98, errors.New("db error")
 	}
-	getUserScoreFromDbWithCache := NewCacheFn2(getUserScore).SetTimeout(time.Hour).Get2 // getFunc can only accept 1 parameter
+	getUserScoreFromDbWithCache := NewCacheFn2(getUserScore, nil) // getFunc can only accept 1 parameter
 	var ctx context.Context
 	getUserScoreFromDbWithCache(ctx, map[int]int{0: 1})
 }

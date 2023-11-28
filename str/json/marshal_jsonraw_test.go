@@ -10,7 +10,10 @@ func TestMarshal(t *testing.T) {
 	if v, ok := c.(json.RawMessage); ok {
 		c = string(v)
 	}
-	if _, err := json.Marshal(c); err != nil {
+	if out, err := json.Marshal(c); err != nil {
 		panic(err)
-	}
+	}else{
+        t.Logf("%s\n",string(out))
+    }
+
 }

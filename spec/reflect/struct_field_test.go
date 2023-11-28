@@ -7,13 +7,13 @@ import (
 )
 
 func TestStructField(t *testing.T) {
-	type B struct {
+	type StructB struct {
 		Age  int
 		Name string
 	}
 
 	pf := fmt.Printf
-	b := B{Age: 100}
+	b := StructB{Age: 100}
 	s := reflect.ValueOf(b)
 
 	pf("KindType:%T, KindValue: %#v \n", s.Kind(), s.Kind())

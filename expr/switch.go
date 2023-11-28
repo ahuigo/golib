@@ -6,12 +6,13 @@ import (
 
 func main() {
     status := 1+2
-    switch status {
-    case 1:
+    a, b := false, true
+    switch true{
+    case status==1, a, b:
         fmt.Println(status)
-    case 2:
-        fmt.Println(status) 
-    case 3:
+        fallthrough
+    case status==2:
+        fmt.Println("fallthrough")
     default:
         fmt.Println("return") 
         return

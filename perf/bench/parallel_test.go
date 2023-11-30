@@ -2,6 +2,8 @@ package gotest
 
 import (
 	"testing"
+    "time"
+    "strconv"
 )
 
 /*
@@ -61,6 +63,19 @@ func TestParallel(t *testing.T) {
 			if obj.value != v {
 				t.Error("invalid obj.value:", obj.value)
 			}
+		})
+	}
+}
+func TestParallelWithSleep(t *testing.T) {
+	tests := []int {
+        1,2,3,4,5,
+	}
+	for _, v := range tests {
+        name := strconv.Itoa(v)
+		t.Run(name, func(t *testing.T) {
+			t.Parallel() //开启并行 
+            time.Sleep(time.Second)
+            println(name)
 		})
 	}
 }

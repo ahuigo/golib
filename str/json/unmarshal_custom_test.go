@@ -4,6 +4,9 @@ import (
 	"encoding/json"
 	"strconv"
 	"testing"
+
+	"github.com/bytedance/sonic"
+	gojson "github.com/goccy/go-json"
 )
 
 type IntStr struct {
@@ -43,8 +46,14 @@ func (v *IntStr) UnmarshalJSON(b []byte) (err error) {
 }
 
 func TestUnmarshalCustom(t *testing.T) {
-	item := &Item{}
+	item1 := &Item{}
+	item2 := &Item{}
+	item3 := &Item{}
 	bytes := []byte(`{"price":"200","age":"10"}`)
-	_ = json.Unmarshal(bytes, item)
-	t.Logf("%#v\n", item)
+	_ = json.Unmarshal(bytes, item1)
+	_ = gojson.Unmarshal(bytes, item2)
+	_ = sonic.Unmarshal(bytes, item3)
+	t.Logf("%#v\n", item1)
+	t.Logf("%#v\n", item2)
+	t.Logf("%#v\n", item3)
 }

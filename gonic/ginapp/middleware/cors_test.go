@@ -12,7 +12,7 @@ import (
 )
 
 func TestGetUsername(t *testing.T) {
-	req, _ := requests.BuildRequest("POST", "http://m/api/v1/mauth/login", requests.FormData{
+	req, _ := requests.BuildRequest("POST", "http://m/api/v1/mauth/login", requests.Json{
 		"username": "alex",
 	})
 	_, ctx := test.CreateTestCtx(req)

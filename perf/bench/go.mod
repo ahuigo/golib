@@ -1,6 +1,6 @@
 module bench-demo
 
-go 1.17
+go 1.21
 
 require github.com/pkg/profile v1.7.0
 

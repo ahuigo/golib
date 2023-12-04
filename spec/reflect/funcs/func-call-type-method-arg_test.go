@@ -6,18 +6,21 @@ import (
 	"testing"
 )
 
-func unmarshalJSONWraper(data []byte, iface interface{}) error {
-	ifaceType := reflect.TypeOf(iface)
+func unmarshalJSONWraper(data []byte, objIface interface{}) error {
+	ifaceType := reflect.TypeOf(objIface)
 	unmarshalJSONMethod, ok := ifaceType.MethodByName("UnmarshalJSON")
 	if !ok {
 		panic("UnmarshalJSON method not found")
 		// return json.Unmarshal(data, iface)
 	}
 
-	ifaceValue := reflect.ValueOf(iface)
 	args := []reflect.Value{reflect.ValueOf(data)}
 
+	// 或者转换成正常的UnmarshalJSON方法
+	//fn := unmarshalJSONMethod.Func.Interface().(func([]byte, obj any) error)
+
 	// 调用UnmarshalJSON方法
+	ifaceValue := reflect.ValueOf(objIface)
 	result := unmarshalJSONMethod.Func.Call([]reflect.Value{ifaceValue, args[0]})
 
 	// 检查调用结果是否有错误

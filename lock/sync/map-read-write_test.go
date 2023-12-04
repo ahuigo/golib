@@ -1,10 +1,11 @@
-package gotest
+package lock
 
 import (
 	"testing"
 )
 
-var _isHashKey map[any]int
+var _isHashKeyNil map[any]int
+var _isHashKey = make(map[any]int)
 
 func isHashableKey(key any) (canHash bool) {
 	// defer func() {
@@ -12,8 +13,12 @@ func isHashableKey(key any) (canHash bool) {
 	// 		canHash = false
 	// 	}
 	// }()
-	_ = _isHashKey[key] // read: concurrent read ok
-	// _isHashKey[key] = key.(int) // fatal: concurrent map write error
+	flag := 1
+	if flag == 0 {
+		_ = _isHashKeyNil[key] // read: concurrent read ok
+	} else {
+		_isHashKey[key] = key.(int) // fatal: concurrent map write error
+	}
 	return true
 }
 

@@ -21,12 +21,12 @@ func TestFuncCallValueArgs(t *testing.T) {
 
 		if methodValue.IsValid() {
 			argsNum := methodValue.Type().NumIn() // len(keys)
-			fmt.Printf("args num:%d\n", argsNum)  // 变参数是1
-			// convert HashKeyFunc 方法
+			fmt.Printf("args num:%d\n", argsNum)
+			// method 1. convert HashKeyFunc 方法
 			fn := methodValue.Interface().(func(int, ...any) string)
 			_ = fn
 
-			// 调用 HashKeyFunc 方法
+			// method2: 调用 HashKeyFunc 方法
 			reflectKeys := make([]reflect.Value, argsNum)
 			reflectKeys[0] = reflect.ValueOf(29)
 			reflectKeys[1] = reflect.ValueOf(keys)

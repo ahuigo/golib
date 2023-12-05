@@ -1,5 +1,11 @@
 package demo
 
+import (
+	"fmt"
+	"reflect"
+	"strings"
+)
+
 // Refer to github.com/thoas/go-funk library
 func contains(in interface{}, elem interface{}) bool {
 	inValue := reflect.ValueOf(in)
@@ -34,7 +40,8 @@ func equal(expectedOrPredicate interface{}, optionalIsMap ...bool) func(keyValue
 	isMap := append(optionalIsMap, false)[0]
 
 	if IsFunction(expectedOrPredicate) {
-		inTypes := []reflect.Type{nil}; if isMap {
+		inTypes := []reflect.Type{nil}
+		if isMap {
 			inTypes = append(inTypes, nil)
 		}
 

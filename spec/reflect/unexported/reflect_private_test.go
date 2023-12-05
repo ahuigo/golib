@@ -35,7 +35,7 @@ func TestReflecPointerUnexported(t *testing.T) {
 
 		// method2(recommended): Get the field, returns https://golang.org/pkg/reflect/#Value
 		rv := "<unknown>"
-		switch field.Kind() {
+		switch field.Kind() { // 如果直接用field.Interface() 会报错: unexported field or method
 		case reflect.String:
 			rv = `"` + field.String() + `"`
 		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:

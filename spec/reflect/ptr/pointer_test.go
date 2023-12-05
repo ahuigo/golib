@@ -1,16 +1,25 @@
 package ptr
 
-func getPointerAddress(refV reflect.Value) uintptr {
-    address:=refV.Pointer()
+import (
+	"fmt"
+	"reflect"
+	"testing"
+	"unsafe"
+)
 
-    // ptr string
-    addressStr := fmt.Sprintf("%p", address)
+func TestPointerAddress(t *testing.T) {
+	var age int = 10
+	agei := &age
+	refV := reflect.ValueOf(agei)
+	address := refV.Pointer()
 
-    // 获取指针的地址
-    pointer := unsafe.Pointer(address)
+	fmt.Printf("address uintptr:%v\n", address)
 
-    // 将指针地址转换为uintptr类型
-    address := uintptr(pointer)
+	// 获取指针的地址
+	pointer := unsafe.Pointer(address)
 
-    return address
+	// 将指针地址转换为uintptr类型
+	intptr := uintptr(pointer)
+	fmt.Printf("address uintptr:%v\n", intptr)
+
 }

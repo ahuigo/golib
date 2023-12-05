@@ -1,11 +1,12 @@
-package main
+package demo
 
 import (
 	"fmt"
 	"testing"
 )
 
-/********************************
+/*
+*******************************
 info and visitor
 */
 type VisitorFunc func(*Info, error) error

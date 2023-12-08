@@ -5,6 +5,7 @@ import (
 	"tt"
 )
 
+// 外键表
 type Student struct {
 	ID          int `gorm:"primarykey"`
 	Stuname     string

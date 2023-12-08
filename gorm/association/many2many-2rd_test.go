@@ -6,15 +6,28 @@ import (
 )
 
 // doc: https://gorm.io/docs/many_to_many.html#Override-Foreign-Key
+// usage: https://github.com/go-gorm/gorm/issues/6482
+/**
+companies		->		stu_companys					-->						stus
+Name(foreignKey)		CompanyName(joinForeignKey)/Stuname(joinReferences)		Stuname(References)
+
+*/
 type Company struct {
 	ID   int    `gorm:"primarykey"`
 	Name string `gorm:"index:,unique"`
-	Stus []Stu  `gorm:"many2many:stu_companys;foreignKey:Name;joinForeignKey:CompanyName;References:Stuname;joinReferences:Stuname;"`
+	Stus []Stu  `gorm:"many2many:stu_companys;foreignKey:Name;joinForeignKey:CompanyName;joinReferences:Stuname;References:Stuname;"`
 }
+
+/*
+*
+companies		<--		stu_companys						<--					stus
+Name(References)		CompanyName(joinReferences)/Stuname(joinForeignKey)		Stuname(foreignKey)
+*/
 type Stu struct {
-	ID        int       `gorm:"primarykey"`
-	Stuname   string    `gorm:"index:,unique"`
-	Companies []Company `gorm:"many2many:stu_companys;"`
+	ID      int    `gorm:"primarykey"`
+	Stuname string `gorm:"index:,unique"`
+	// Companies []Company `gorm:"many2many:stu_companys;"` // default join key is "stu_id",ERROR: column "stu_id" of "stu_compannys" does not exist
+	Companies []Company `gorm:"many2many:stu_companys;foreignKey:Stuname;joinForeignKey:Stuname;joinReferences:CompanyName;References:Name;"`
 }
 
 // type StuCompany struct {
@@ -40,12 +53,12 @@ func TestMany2ManyUniqueKey(t *testing.T) {
 		panic(err)
 	}
 
-	stus := Stu{}
-	tt.Db.Debug().Preload("Companies").Where(&Stu{Stuname: "Alex3"}).Find(&stus)
-	t.Logf("%#v\n", stus)
+	stu := Stu{}
+	tt.Db.Debug().Preload("Companies").Where(&Stu{Stuname: "Alex3"}).Find(&stu)
+	t.Logf("stu:%#v\n", stu)
 	// tt.Db.Debug().Preload("Stus").Where(&Stu{Stuname: "Alex3"}).Find(&stus)
 
 	company := Company{Name: "TSU"}
 	tt.Db.Debug().Preload("Stus").Where(&company).Find(&company)
-	t.Logf("%#v\n", company)
+	t.Logf("company:%#v\n", company)
 }

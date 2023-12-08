@@ -1,4 +1,4 @@
-package server
+package router
 
 import (
 	"fmt"
@@ -8,8 +8,8 @@ import (
 	"time"
 
 	mid "ginapp/middleware"
-	statHandler "ginapp/server/stat"
-	tpls "ginapp/server/tpl-server"
+	statHandler "ginapp/router/stat"
+	tpls "ginapp/router/tpl-server"
 
 	"github.com/DeanThompson/ginpprof"
 	"github.com/ahuigo/gonic-tools/stat"

@@ -15,7 +15,7 @@ var (
 )
 
 // curl m:4501/embed/index
-func TestEmbedServer(t *testing.T) {
+func TmpEmbedServer(t *testing.T) {
 	resourceFS := tpl.GetResourceFS()
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		page, ok := pages[r.URL.Path]

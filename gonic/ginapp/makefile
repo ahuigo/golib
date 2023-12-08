@@ -31,18 +31,20 @@ docker:
 	docker build -t ginapp .
 	docker run -p 4502:4501 --rm -it  ginapp ./main -p 4501
 
-ALL_SRC := $(shell find . -name "*_test.go" | grep -v -e vendor \
+ALL_SRC := $(shell find . -name "*_test.go" | grep -v \
 	-e ".*/\..*" \
 	-e ".*/_.*" \
 	-e ".*/mocks.*")
 TEST_DIRS := $(sort $(dir $(filter %_test.go,$(ALL_SRC))))
-COVERAGE_FILE := coverage.out
+
+COVERAGE_FILE := cover.out
+.PHONY: test
 test:
 	echo $(TEST_DIRS)
 	@rm -f test.log
 	@rm -f $(COVERAGE_FILE)
 	@for dir in $(TEST_DIRS); do \
-		go test -timeout 20m -coverprofile="test.temp" "$$dir" | tee -a test.log; \
-		cat test.temp >> $(COVERAGE_FILE); \
+		go test -timeout 20m -coverprofile="cover.tmp" "$$dir" | tee -a test.log; \
+		cat cover.tmp >> $(COVERAGE_FILE); \
 	done;
-	@rm -f test.temp
+	@rm -f cover.tmp

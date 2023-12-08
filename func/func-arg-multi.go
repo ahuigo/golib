@@ -5,6 +5,7 @@ type ClaimPayload interface{}
 type UserType string
 type UserType2 string
 
+// golang/js的variadic arguments
 func f(args ...interface{}) {
     claims := map[string]interface{}{}
     for _, arg := range args {

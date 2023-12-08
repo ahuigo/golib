@@ -1,4 +1,4 @@
-package server
+package router
 
 import (
 	// swag: https://github.com/swaggo/swag
@@ -20,7 +20,7 @@ func RegisterSwagger(r *gin.Engine) {
 `
 	docs.SwaggerInfo.Version = "1.0"
 	// docs.SwaggerInfo.Host = "m:" + fmt.Sprint(*port)
-    r.Use(func(c *gin.Context) {
+	r.Use(func(c *gin.Context) {
 		docs.SwaggerInfo.Host = c.Request.Host
 	})
 

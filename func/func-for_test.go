@@ -1,24 +1,25 @@
 package main
 
-import "fmt"
-import "time"
-import "math/rand"
+import (
+	"fmt"
+	"math/rand"
+	"testing"
+	"time"
+)
 
 type User struct {
 	Name string
 }
 
-func main() {
+func TestFuncFor(t *testing.T) {
 	user := User{"ahui"}
 	fmt.Println(user) //ahui
-	rand.Seed(time.Now().Unix())
 
 	for {
 		err := getUsers()
 		fmt.Println("noerr:", err)
 		time.Sleep(time.Second * 3)
 	}
-	fmt.Println("som err:")
 
 }
 

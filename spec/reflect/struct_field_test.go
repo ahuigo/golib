@@ -27,8 +27,8 @@ func TestStructField(t *testing.T) {
 
 	pf("-------set struct.Age---------------------\n")
 	rv := reflect.ValueOf(12)
-	refpb := reflect.Indirect(reflect.ValueOf(&b))
-	refpb = reflect.ValueOf(&b).Elem()
+	// refpb := reflect.Indirect(reflect.ValueOf(&b))
+	refpb := reflect.ValueOf(&b).Elem()
 	refpb.FieldByName("Age").Set(rv)
 	pf("structS:%+v\n", s)
 	pf("originB:%+v\n", b)

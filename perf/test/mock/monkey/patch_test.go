@@ -1,10 +1,10 @@
-package main
+package m2
 
 import (
 	"testing"
-    "github.com/undefinedlabs/go-mpatch"
-)
 
+	"github.com/undefinedlabs/go-mpatch"
+)
 
 //go:noinline
 func methodA() int { return 1 }

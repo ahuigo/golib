@@ -6,8 +6,11 @@ import (
 )
 
 type Person struct {
+    // primary_key, index, uniqueIndex, ...
+    //Name2 string `gorm:"uniqueIndex"`
+    //Name2 string `gorm:"uniqueIndex:idx_name,sort:desc"`
 	Name     string `gorm:"primary_key" json:"name" form:"name"`
-	Username string `gorm:"unique_index:idx_username" json:"username"`
+	Username string `gorm:"uniqueIndex:idx_username" json:"username"`
 	Age      int
 	Valid    *bool
 	Addrs    pq.StringArray `gorm:"null;default:array[]::varchar[];type:text[]" json:"addrs" form:"addrs"`

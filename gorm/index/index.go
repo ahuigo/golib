@@ -9,3 +9,10 @@ type User struct {
 	Age   int64  `gorm:"index:,class:FULLTEXT,comment:hello \\, world,where:age > 10"`
 	Age2  int64  `gorm:"index:,expression:ABS(age)"`
 }
+
+// Composite Indexes, for example:
+// create composite index `idx_member` with columns `name`, `number`
+type UserCompositeIndexes struct {
+	Name   string `gorm:"index:idx_member"`
+	Number string `gorm:"index:idx_member"`
+}

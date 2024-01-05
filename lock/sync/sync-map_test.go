@@ -14,6 +14,16 @@ type User struct {
 type Key struct {
 }
 
+func TestMapNotOk(t *testing.T) {
+	// 1. test map
+	var sm sync.Map
+	key := &Key{}
+
+	// 2.1 add 100 by reference
+	v, _ := sm.Load(key)
+	fmt.Printf("%#v\n", v == nil)
+}
+
 func TestMapUpdate(t *testing.T) {
 	// 1. test map
 	m := map[string]int{

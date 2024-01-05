@@ -48,6 +48,10 @@ func main() {
 			// https://ieftimov.com/posts/testing-in-go-test-doubles-by-example/
 			// Handler: engine,
 			// Handler:      http.TimeoutHandler(http.HandlerFunc(slowHandler), 1*time.Second, "Timeout!\n"),
+			/*
+				1. 无论handerTimeout还是client主动取消，handler本身还会继续执行,
+				2. 不过可以用 case <-c.Request.Context().Done() 或 <- c.Done 判断context 是否关闭： https://github.com/gin-gonic/gin/issues/1452
+			*/
 			Handler: http.TimeoutHandler(engine, 60*time.Second, "Handler Timeout!\n"),
 			// ReadTimeout: the maximum duration for reading the entire request, including the body
 			ReadTimeout: conf.Http.ReadTimeout,

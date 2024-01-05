@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-func TestCreateConflict(t *testing.T) {
+func TestCreateConflictDoNothing(t *testing.T) {
 	tt.Db.AutoMigrate(&Product{})
 
 	p := []Product{{Code: "L1217", Price: 17, Model: gorm.Model{ID: 1}}}
@@ -26,14 +26,14 @@ func TestCreateUpdateAll(t *testing.T) {
 	}
 	db.Debug().
 		Clauses(clause.OnConflict{
-			// Columns:   []clause.Column{{Name: "groupname","username"}}, // 默认是primary key(仅限单主键，非联合主键)
+			// Columns:   []clause.Column{{Name: "groupname"}{Name:"username"}}, // 默认是primary key(仅限单主键，非联合主键)
 			UpdateAll: true,
 		}).
 		Create(&users)
 }
 
 // gorm1 移除了： Set("gorm:insert_option", "ON CONFLICT (domain) DO UPDATE SET host= excluded.host,\"remark\"=excluded.remark").
-func TestCreateUpdate(t *testing.T) {
+func TestCreateUpdateDo(t *testing.T) {
 	tt.Db.Debug().AutoMigrate(&City{})
 	db := tt.Db
 	// Update columns to default value on `id` conflict

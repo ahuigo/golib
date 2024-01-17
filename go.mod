@@ -9,6 +9,7 @@ require (
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/gocql/gocql v1.6.0
 	github.com/golang/protobuf v1.5.3
+	github.com/petermattis/goid v0.0.0-20231207134359-e60b3f734c67
 	github.com/pkg/errors v0.9.1
 	go.uber.org/zap v1.26.0
 	golang.org/x/crypto v0.14.0

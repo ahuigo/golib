@@ -45,7 +45,7 @@ func Log(w io.Writer, key, val string) {
 	b.WriteString(val)
 	w.Write(b.Bytes())
 	w.Write([]byte{'\n', '\n'})
-	bufPool.Put(b)
+	bufPool.Put(b) // 放回pool
 }
 
 func TestSyncPoll(t *testing.T) {

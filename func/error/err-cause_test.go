@@ -27,9 +27,9 @@ func TestErrCause(t *testing.T) {
 	_, err := ReadConfig()
 	err = errors.Wrapf(err, "main(wrap3)")
 	if err != nil {
-		fmt.Printf("original (%T)err: %v\n", errors.Cause(err), errors.Cause(err))
-		fmt.Printf("err:%v\n", err)
-		fmt.Printf("stack trace:\n %+v\n", err)                                               // %+v 可以在打印的时候打印完整的堆栈信息
+		fmt.Printf("original (%T): %v\n\n", errors.Cause(err), errors.Cause(err))
+		fmt.Printf("error():%v\n\n", err.Error())
+		fmt.Printf("stack trace:\n %+v\n\n", err)                                             // %+v 可以在打印的时候打印完整的堆栈信息
 		fmt.Printf("is PathError As: %+v\n", isPathError(err))                                // true
 		fmt.Printf("is PathError Strict: %+v\n", isPathErrorStrict(err))                      // false
 		fmt.Printf("is PathError Strict(Cause): %+v\n", isPathErrorStrict(errors.Cause(err))) // true
@@ -39,6 +39,7 @@ func TestErrCause(t *testing.T) {
 
 func isPathError(err error) bool {
 	var target *os.PathError
+	// return errors.Is(err, target) // 不能用Is, 因为Is是判断是否是同一个error, 而不是判断是否是同一个类型
 	return errors.As(err, &target)
 }
 

@@ -1,8 +1,7 @@
 // refer: https://geektutu.com/post/hpg-slice.html
-package demo
+package perf
 
 import (
-	"fmt"
 	"math/rand"
 	"runtime"
 	"testing"
@@ -37,29 +36,19 @@ func printMem(t *testing.T, args ...string) {
 	t.Logf("%.2f MB(%v)", float64(rtm.Alloc)/1024./1024., args)
 }
 
-func wrap(t *testing.T, f func([]int) []int) [][]int {
-	ans := make([][]int, 0)
+func testLastChars(t *testing.T, f func([]int) []int) {
 	printMem(t, "start")
+	ans := make([][]int, 0)
 	for k := 0; k < 100; k++ {
 		//printMem(t, fmt.Sprintf("start %d", k))
 		origin := generateWithCap(128 * 1024) // 1M
 		ans = append(ans, f(origin))
-		//runtime.GC() // 1. 显式gc: 由于ans对origin[-2:] 的引用，循环内gc不能回收origin
+		//runtime.GC() // 1. 循环内gc不能回收origin
 	}
-	//runtime.GC() // 2. 显式gc：循环外gc可以回收origin(主动gc), 虽然也引用了origin[-2:]
+	//runtime.GC() // 2. 显式gc：循环外gc可以回收origin(主动gc)
 	// 3. 触发隐式GC: 增长50% 后且进入函数调用时触发？
 	printMem(t, "end")
-	return ans
-}
-func testLastChars(t *testing.T, f func([]int) []int) {
-	fmt.Printf("")
-	t.Helper()
-	ans := wrap(t, f)
-	printMem(t)
-	ans2 := wrap(t, f)
-	printMem(t)
 	_ = ans
-	_ = ans2
 }
 
 func TestLastCharsBySlice(t *testing.T) { testLastChars(t, lastNumsBySlice) }

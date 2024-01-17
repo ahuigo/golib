@@ -6,6 +6,12 @@ import (
 	"testing"
 )
 
+func TestPrintf(t *testing.T){
+    src:=[]int{1,2,3}
+    fmt.Printf("source slice: %[1]v, address: %[1]p\n", src)
+
+}
+
 func OffTestPrintPointer(t *testing.T) {
 	type User struct {
 		Name string

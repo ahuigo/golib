@@ -25,8 +25,8 @@ func TestTrace(t *testing.T) {
 	err := f()
 	fmt.Printf("err.(stackTracer)---------------------------\n")
 	if err, ok := err.(stackTracer); ok {
-		for _, f := range err.StackTrace() {
-			fmt.Printf("%+s:%d(%T)\n", f, f, f)
+		for _, e := range err.StackTrace() {
+			fmt.Printf("%+s:%d(%T)\n", e, e, e)
 		}
 	}
 
@@ -39,7 +39,7 @@ func TestTrace(t *testing.T) {
 		}
 	}
 
-	fmt.Printf("\n\ntrace with %%+v--------------\n%+v", err)
+	fmt.Printf("\n\ntrace all--------------\n%+v", err)
 	// Example output:
 	// whoops
 	// github.com/pkg/errors_test.ExampleNew_printf

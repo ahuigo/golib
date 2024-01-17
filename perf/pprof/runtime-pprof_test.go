@@ -8,10 +8,12 @@ import (
 	"runtime"
 	"runtime/pprof"
 	"runtime/trace"
+	"testing"
 	"time"
 )
 
 var cpuprofile = flag.String("cpuprofile", "cpu.pprof", "write cpu profile `file`")
+
 var memprofile = flag.String("memprofile", "mem.pprof", "write memory profile to `file`")
 
 // time.Sleep 函数让当前的 goroutine 进入休眠状态，这种情况下 CPU 将不会执行任何操作，因此在 CPU profile 中是看不到 time.Sleep 的
@@ -36,7 +38,7 @@ func hello() {
 	fmt.Printf("hello world!\n")
 }
 
-func main() {
+func TestRuntimeProf(t *testing.T) {
 	flag.Parse()
 	if f, _ := os.Create(*traceprofile); f != nil {
 		// go tool trace -http=:9999 trace.pprof

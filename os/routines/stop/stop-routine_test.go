@@ -1,4 +1,4 @@
-package pkg
+package stop
 
 import (
 	"sync"
@@ -35,8 +35,9 @@ func TestStopRoutine(t *testing.T) {
 	ch <- 3
 
 	func() {
-		close(ch)
+		close(ch) //
 		wg.Wait()
 		println("quit")
 	}()
+	t.Error("done")
 }

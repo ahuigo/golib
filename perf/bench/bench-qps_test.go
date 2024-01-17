@@ -67,6 +67,7 @@ func TestCustomQps(t *testing.T) {
 			defer wg.Done()
 			defer func() {
 				<-ch
+                succNum++
 			}()
 			// mock request
 			httpRequest(args.TaskName, i)

@@ -28,10 +28,6 @@ func BenchmarkCalc(b *testing.B) {
     }
 }
 
-func TestHelloWorld(t *testing.T) {
-    //t.Errorf("Oh! %q", "some error")
-    t.Log("hello world")
-}
 
 func BenchmarkAlloc(b *testing.B) {
     for i := 0; i < b.N; i++ {

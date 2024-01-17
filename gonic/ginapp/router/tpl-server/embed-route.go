@@ -7,13 +7,36 @@ import (
 	"html/template"
 	"net/http"
 	"os"
+	"reflect"
 	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
+/*
+{{ $data := . | structToMap }}
+{{ range $key, $value := $data }}
+
+	<tr>
+	    <th scope="col">{{ $key }}</th><td> {{ $value }}</td>
+	</tr>
+
+{{ end }}
+*/
+func structToMap(item interface{}) map[string]interface{} {
+	out := make(map[string]interface{})
+	v := reflect.ValueOf(item)
+
+	for i := 0; i < v.NumField(); i++ {
+		key := v.Type().Field(i).Name
+		value := v.Field(i).Interface()
+		out[key] = value
+	}
+	return out
+}
 func TplRouter(e *gin.Engine) {
 	funcMap := template.FuncMap{
+		"structToMap": structToMap,
 		"formatAsDate": func(t time.Time) string {
 			year, month, day := t.Date()
 			return fmt.Sprintf("%d%02d/%02d", year, month, day)

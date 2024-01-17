@@ -27,6 +27,7 @@ func sleep() {
 
 }
 
+// 可以用for　range　chan 实现给并行任务,发task
 func TestMultiRun(t *testing.T) {
 	fn := sleep
 	multi_run(5, fn)

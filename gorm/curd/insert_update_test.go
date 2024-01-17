@@ -26,14 +26,14 @@ func TestCreateUpdateAll(t *testing.T) {
 	}
 	db.Debug().
 		Clauses(clause.OnConflict{
-			// Columns:   []clause.Column{{Name: "groupname"}{Name:"username"}}, // 默认是primary key(仅限单主键，非联合主键)
+			// Columns:   []clause.Column{{Name: "groupname"},{Name:"username"}}, //指定联合主键, 默认是primary key(仅限单主键)
 			UpdateAll: true,
 		}).
 		Create(&users)
 }
 
 // gorm1 移除了： Set("gorm:insert_option", "ON CONFLICT (domain) DO UPDATE SET host= excluded.host,\"remark\"=excluded.remark").
-func TestCreateUpdateDo(t *testing.T) {
+func TestCreateUpdatePartial(t *testing.T) {
 	tt.Db.Debug().AutoMigrate(&City{})
 	db := tt.Db
 	// Update columns to default value on `id` conflict

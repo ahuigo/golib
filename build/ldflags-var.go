@@ -1,12 +1,12 @@
 // go run -ldflags="-X 'main.Version=v1.0.2'" ldflags-var.go
-package main
+package build
 
 import (
-    "fmt"
+	"fmt"
 )
 
 var Version = "development"
 
 func main() {
-    fmt.Println("Version:\t", Version)
+	fmt.Println("Version:\t", Version)
 }

@@ -15,6 +15,13 @@ type Config struct {
 	age  int
 }
 
+/*
+// https://geektutu.com/post/hpg-reflect.html
+BenchmarkSet-8                          1000000000               0.302 ns/op
+BenchmarkReflect_FieldSet-8             33913672                34.5 ns/op
+BenchmarkReflect_FieldByNameSet-8        3775234               316 ns/op // 查找下标O(n) 10倍
+// 普通的赋值操作，每次耗时约为 0.3 ns，reflect通过下标找到对应的字段再赋值，每次耗时约为 30 ns，通过名称找到对应字段再赋值，每次耗时约为 300 ns。
+*/
 func TestStructSet(t *testing.T) {
 	os.Setenv("CONFIG_SERVER_NAME", "10.0.0.1")
 	config := Config{}

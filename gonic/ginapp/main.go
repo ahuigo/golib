@@ -69,6 +69,7 @@ func main() {
 				log.Fatalf("listen: %s\n", err)
 			}
 		}()
+		log.Printf("curl -D- http://m:%s/status/400 \n", *port)
 		quit := make(chan os.Signal, 1)
 		signal.Notify(quit, os.Interrupt)
 		<-quit

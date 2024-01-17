@@ -16,6 +16,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type Handler struct {
+	method  string // http.MethodPut ....
+	path    string
+	handler gin.HandlerFunc
+}
+
+var (
+	handlers = []Handler{}
+)
+
 func Register(r *gin.Engine, staticFS bool, path404 string) {
 	if staticFS {
 		staticFsHandler(r, path404)
@@ -36,12 +46,16 @@ func Register(r *gin.Engine, staticFS bool, path404 string) {
 	r.GET("/gorm/insert", insertHandler)
 	r.GET("/f/r/*path", fileReadHandler)
 
+	// register handlers
+	for _, h := range handlers {
+		r.Handle(h.method, h.path, h.handler)
+	}
+
 	//curl m:4500/f/w -F 'file1=@go.mod' -F 'name=alex'
 	r.POST("/f/w", fileWriteHandler)
 	r.GET("/api/panic", panicApi)
 	r.GET("/dump/*anypath", DumpServer)
 	r.POST("/dump/*anypath", DumpServer)
-	r.GET("/status/:code", StatusServer)
 	r.GET("/redirect/:code", RedirectServer)
 	r.POST("/redirect/form", RedirectServer)
 	r.GET("/echo/:size", EchoServer)

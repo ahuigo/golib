@@ -2,9 +2,9 @@ module demo
 
 go 1.21
 
-require (
-	github.com/mackerelio/go-osstat v0.2.2
-	github.com/undefinedlabs/go-mpatch v1.0.7
-)
+require github.com/pkg/profile v1.7.0
 
-require golang.org/x/sys v0.0.0-20220412211240-33da011f77ad // indirect
+require (
+	github.com/felixge/fgprof v0.9.3 // indirect
+	github.com/google/pprof v0.0.0-20211214055906-6f57359322fd // indirect
+)

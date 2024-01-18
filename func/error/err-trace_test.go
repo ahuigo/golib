@@ -11,26 +11,26 @@ type stackTracer interface {
 	StackTrace() errors.StackTrace
 }
 
-func g() error {
+func f1() error {
 	err := errors.New("whoops")
 	return err
 }
-func f() error {
-	err := g()
+func f2() error {
+	err := f1()
 	err = errors.Wrapf(err, "wrap with func:%s", "f()")
 	return err
 }
 
 func TestTrace(t *testing.T) {
-	err := f()
-	fmt.Printf("err.(stackTracer)---------------------------\n")
+	err := f2()
+	fmt.Printf("1. err.(stackTracer): empty original error---------------------------\n")
 	if err, ok := err.(stackTracer); ok {
 		for _, e := range err.StackTrace() {
 			fmt.Printf("%+s:%d(%T)\n", e, e, e)
 		}
 	}
 
-	fmt.Printf("\nerr.(stackTracer) with cause(original)---------------------------\n")
+	fmt.Printf("\n2. err.(stackTracer): include cause(original)---------------------------\n")
 	if errors.Cause(err) != err {
 		if oerr, ok := errors.Cause(err).(stackTracer); ok {
 			for _, f := range oerr.StackTrace() {
@@ -39,16 +39,8 @@ func TestTrace(t *testing.T) {
 		}
 	}
 
-	fmt.Printf("\n\ntrace all--------------\n%+v", err)
-	// Example output:
-	// whoops
-	// github.com/pkg/errors_test.ExampleNew_printf
-	//         /home/dfc/src/github.com/pkg/errors/example_test.go:17
-	// testing.runExample
-	//         /home/dfc/go/src/testing/example.go:114
-	// testing.RunExamples
-	//         /home/dfc/go/src/testing/example.go:38
-	// testing.(*M).Run
-	//         /home/dfc/go/src/testing/testing.go:744
-	// main.main
+	fmt.Printf("\n\n3. trace all--------------\n%+v", err)
+
+	err2 := fmt.Errorf("wrap err2:%w", err)
+	fmt.Printf("\n\n4.fmt.wrap %%w err2-------------:\n%+v\n", errors.Unwrap(err2))
 }

@@ -16,7 +16,6 @@ func TestWhere(t *testing.T) {
 	assert.NoError(t, err)
 }
 
-
 func TestWhereDate(t *testing.T) {
 	p := struct {
 		StartTime time.Time `gorm:"start_time"`

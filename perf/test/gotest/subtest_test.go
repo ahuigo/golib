@@ -1,10 +1,10 @@
-package demo
+package gotest
 
 import "testing"
 
 func TestMul(t *testing.T) {
 	t.Run("pos", func(t *testing.T) {
-		if 6 != 6 {
+		if false {
 			t.Fatal("fail")
 		}
 

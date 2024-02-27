@@ -1,8 +1,8 @@
-package demo
+package gotest
 
 // test code
 import (
-	"io/ioutil"
+	"io"
 	"net"
 	"net/http"
 	"testing"
@@ -30,7 +30,7 @@ func TestConn(t *testing.T) {
 	handleError(t, err)
 
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	handleError(t, err)
 
 	if string(body) != "hello world" {

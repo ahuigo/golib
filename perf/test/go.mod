@@ -1,9 +1,9 @@
 module gotest1
 
-go 1.12
+go 1.21
 
 require (
-	github.com/ahuigo/requests v0.1.15
-	github.com/golang/mock v1.6.0
-	gopkg.in/h2non/gock.v1 v1.1.2
+	github.com/lib/pq v1.10.9
+	github.com/ory/dockertest/v3 v3.10.0
+	github.com/sirupsen/logrus v1.9.3
 )

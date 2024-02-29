@@ -8,16 +8,26 @@ import (
 
 type ErrorType string
 
+type HttpCode int
+
+// 只能是数字
+//
+//go:generate stringer -type HttpCode -linecomment
 const (
-	NetworkError ErrorType = "error-network"
-    NetworkTimeout ErrorType = "network-timeout"
-	URLError     ErrorType = "error-url"
+	HttpOK  HttpCode = 200 //正常
+	Http404 HttpCode = 403 //无权限
+)
+const (
+	NetworkError   ErrorType = "error-network"   //网络错误
+	NetworkTimeout ErrorType = "network-timeout" //网络超时
+	URLError       ErrorType = "error-url"       //URL错误
 )
 
 type Error struct {
-	ErrType ErrorType
-	Err     error
-	Data    interface{}
+	ErrType     ErrorType
+	HttpCodeTmp HttpCode
+	Err         error
+	Data        interface{}
 }
 
 func (e *Error) Error() string {
@@ -55,4 +65,3 @@ func Wrapf(errType ErrorType, err error, format string, args ...interface{}) *Er
 		Err:     err,
 	}
 }
-

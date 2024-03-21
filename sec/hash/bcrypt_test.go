@@ -1,5 +1,6 @@
-package sec
+package hash
 
+// refer: post/sec/sec-hash.md
 import (
 	"crypto/sha1"
 	"encoding/hex"

@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"testing"
+	"tt"
 
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"gorm.io/gorm"
 )
 
 type Product struct {
@@ -17,16 +18,8 @@ type Product struct {
 	Price uint `gorm:"AUTO_INCREMENT"`
 }
 
-func main() {
-	db, err := gorm.Open("postgres", "host=localhost user=role1 dbname=ahuigo sslmode=disable password=")
-	if err != nil {
-		println(err)
-		println(err.Error())
-		fmt.Println(err)
-		panic("连接数据库失败")
-	}
-	db.LogMode(true)
-
+func TestMigrate(t *testing.T) {
+	db := tt.Db
 	// 自动迁移模式
 	// db.DropTableIfExists(&Product{})
 	db.AutoMigrate(&Product{})
@@ -45,5 +38,4 @@ func main() {
 	// 更新 - 更新product的price为2000
 	db.Model(&product).Update("Price", 22)
 
-	defer db.Close()
 }

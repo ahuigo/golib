@@ -8,6 +8,7 @@ import (
 func TestUnmarshalRaw(t *testing.T) {
 	contents := []byte(`
 {
+	"$schema": "../../../.schema/relation_tuple.schema.json",
 	"key": "value",
 	"key2": [123456],
 	"age_a": "18",

@@ -1,4 +1,4 @@
-package sec
+package aes
 
 import (
 	"crypto/aes"

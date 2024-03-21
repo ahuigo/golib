@@ -1,5 +1,6 @@
-package sec
+package hash
 
+// refer: post/sec/sec-hash-kdf.md
 import (
 	"crypto/md5"
 	"crypto/rand"

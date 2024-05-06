@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"testing"
 	"time"
 
 	"go.uber.org/zap"
@@ -9,7 +10,7 @@ import (
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
-func main() {
+func TestZapRolllog(t *testing.T) {
 	hook := lumberjack.Logger{
 		Filename:   "./logs/spikeProxy1.log", // 日志文件路径
 		MaxSize:    128,                      // 每个日志文件保存的最大尺寸 单位：M

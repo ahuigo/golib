@@ -57,6 +57,7 @@ f:
 	err = UnmarshalYaml([]byte(data), &t)
 	fmt.Printf("case2: %v, err:%v\n", t, err)
 }
+
 func convertValue(src, target reflect.Value) {
 	switch src.Kind() {
 	case reflect.Map:
@@ -96,7 +97,6 @@ func convertValue(src, target reflect.Value) {
 		}
 		// 将转换后的切片设置为目标值
 		target.Set(targetSlice)
-
 	default:
 		target.Set(src)
 	}
@@ -151,6 +151,6 @@ f:
   g: 2
   h: [3, 4]
 `
-	println(isValidYaml([]byte(data)))
-	println(isValidYaml([]byte(`xxx: "sss`)))
+	println(1, isValidYaml([]byte(data)))
+	println(2, isValidYaml([]byte(`xxx: "sss`)))
 }

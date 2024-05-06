@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"testing"
 	"time"
 
 	"go.uber.org/zap"
@@ -12,7 +13,7 @@ func logTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 	enc.AppendString(t.Format("2006-01-02T15:04:05.000000Z0700"))
 }
 
-func main() {
+func TestZapConfig(t *testing.T) {
 	// 设置编码
 	encoderConfig := zapcore.EncoderConfig{
 		TimeKey:       "time",
@@ -33,12 +34,12 @@ func main() {
 	// 设置日志级别
 	atom := zap.NewAtomicLevelAt(zap.DebugLevel)
 	logger, err := zap.Config{
-		Level:            atom,                             // 日志级别
-		Development:      false,                            // 开发模式，堆栈跟踪
-		Encoding:         "console",                        // 输出格式 console 或 json
-		EncoderConfig:    encoderConfig,                    // 编码器配置
-		InitialFields:    map[string]interface{}{"uid": 9}, // 初始化字段，如：添加一个服务器名称
-		OutputPaths:      []string{"stdout","./stdout.log"},               // []string{"stdout", "./a.log"}
+		Level:            atom,                               // 日志级别
+		Development:      false,                              // 开发模式，堆栈跟踪
+		Encoding:         "console",                          // 输出格式 console 或 json
+		EncoderConfig:    encoderConfig,                      // 编码器配置
+		InitialFields:    map[string]interface{}{"uid": 9},   // 初始化字段，如：添加一个服务器名称
+		OutputPaths:      []string{"stdout", "./stdout.log"}, // []string{"stdout", "./a.log"}
 		ErrorOutputPaths: []string{"stderr"},
 	}.Build()
 	// logger = func(options ...zap.Option) *zap.Logger {

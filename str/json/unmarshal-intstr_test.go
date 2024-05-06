@@ -12,13 +12,12 @@ import (
 type IntStr struct {
 	value int
 }
+type StrInt int
 
 type Item struct {
 	Price IntStr `json:"price"`
 	Age   StrInt `json:"age"`
 }
-
-type StrInt int
 
 func (v *StrInt) UnmarshalJSON(b []byte) (err error) {
 	s, n := "", float64(0)

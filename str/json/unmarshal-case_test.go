@@ -2,10 +2,11 @@ package t
 
 import (
 	"encoding/json"
+	"fmt"
 	"testing"
 )
 
-func TestUnmarshalRaw(t *testing.T) {
+func TestUnmarshalCase(t *testing.T) {
 	contents := []byte(`
 {
 	"$schema": "../../../.schema/relation_tuple.schema.json",
@@ -29,7 +30,7 @@ func TestUnmarshalRaw(t *testing.T) {
 
 	customStructure := &Custom{}
 	err := json.Unmarshal(contents, customStructure)
-	t.Logf("%#v\n", customStructure)
+	fmt.Printf("%#v\n", customStructure)
 	if err != nil {
 		t.Logf("err:%s\n", err.Error())
 	} else {

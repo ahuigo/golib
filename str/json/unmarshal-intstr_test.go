@@ -12,22 +12,22 @@ import (
 type IntStr struct {
 	value int
 }
-type StrInt int
+type Int2 int
 
 type Item struct {
 	Price IntStr `json:"price"`
-	Age   StrInt `json:"age"`
+	Age   Int2   `json:"age"`
 }
 
-func (v *StrInt) UnmarshalJSON(b []byte) (err error) {
+func (v *Int2) UnmarshalJSON(b []byte) (err error) {
 	s, n := "", float64(0)
 	if err = json.Unmarshal(b, &s); err == nil {
 		intVar, _ := strconv.Atoi(s)
-		*v = StrInt(intVar)
+		*v = Int2(intVar)
 		return
 	}
 	if err = json.Unmarshal(b, &n); err == nil {
-		*v = StrInt(n)
+		*v = Int2(n)
 	}
 	return
 }

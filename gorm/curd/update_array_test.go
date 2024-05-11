@@ -5,6 +5,7 @@ import (
 	"tt"
 
 	"github.com/lib/pq"
+	"gorm.io/gorm"
 )
 
 func TestUpdateArray(t *testing.T) {
@@ -31,16 +32,21 @@ func TestUpdateArray(t *testing.T) {
 	}
 
 	/************* update **
-	这三种都会转成null:
+	以下这三种都会转成null, 所以:
 	 1. 不能用 []string(nil)
 	 2. 不能用 []string{}
 	 2. 不能用 pq.StringArray(nil)
-	这种才会转成空数组:
-		1. 只能用 pq.StringArray{}
+	这种才会转成空数组, 只能用真正的空数组:
+		1. pq.StringArray{}
+		2. gorm.Expr("ARRAY[]::varchar[]")
 	********************************************/
 	// 2. update empty
 	addrs := pq.StringArray{}
-	if err := tt.Db.Model(&Person{}).Debug().Where("username=?", p.Username).Update("addrs", addrs).Error; err != nil {
+	db := tt.Db.Model(&Person{}).Debug().Where("username=?", p.Username)
+	if err := db.Update("addrs", addrs).Error; err != nil {
+		t.Fatal(err)
+	}
+	if err := db.Update("addrs", gorm.Expr("ARRAY[]::varchar[]")).Error; err != nil {
 		t.Fatal(err)
 	}
 

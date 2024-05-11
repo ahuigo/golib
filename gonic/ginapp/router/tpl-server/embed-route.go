@@ -6,7 +6,6 @@ import (
 	"ginapp/tpl"
 	"html/template"
 	"net/http"
-	"os"
 	"reflect"
 	"time"
 
@@ -35,6 +34,7 @@ func structToMap(item interface{}) map[string]interface{} {
 	return out
 }
 func TplRouter(e *gin.Engine) {
+	// 1. funcMap
 	funcMap := template.FuncMap{
 		"structToMap": structToMap,
 		"formatAsDate": func(t time.Time) string {
@@ -48,9 +48,6 @@ func TplRouter(e *gin.Engine) {
 				return err.Error()
 			}
 		},
-	}
-	if _, err := os.Stat("./tpl/login/redirect.tmpl"); os.IsNotExist(err) {
-		panic("redirect.tmpl is not exist")
 	}
 	// 2. config
 	e.Delims("{{", "}}")

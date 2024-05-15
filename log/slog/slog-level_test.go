@@ -7,7 +7,10 @@ import (
 )
 
 func TestLevel(t *testing.T) {
-	handlerOpts := &slog.HandlerOptions{Level: slog.LevelDebug}
+	handlerOpts := &slog.HandlerOptions{
+		Level:     slog.LevelDebug,
+		AddSource: true,
+	}
 	logger := slog.New(slog.NewTextHandler(os.Stderr, handlerOpts))
 	logger2 := logger.With("url", "http://example.com/a/b/c")
 	slog.SetDefault(logger2)

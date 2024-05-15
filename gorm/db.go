@@ -16,8 +16,6 @@ var SqlDb *sql.DB
 
 func GetDb() *gorm.DB {
 	var err error
-	//dsn:="host=localhost user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai"
-	dsn := "host=localhost user=role1 password='' dbname=ahuigo port=5432 sslmode=disable TimeZone=Asia/Shanghai"
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
 		logger.Config{
@@ -29,6 +27,8 @@ func GetDb() *gorm.DB {
 	)
 	_ = newLogger
 
+	dsn := "host=localhost user=role1 password='' dbname=ahuigo port=5432 sslmode=disable TimeZone=Asia/Shanghai"
+	//dsn:="host=localhost user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai"
 	Db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
 		// Logger: newLogger,
 		// Logger: logger.Default.LogMode(logger.Info),

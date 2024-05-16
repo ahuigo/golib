@@ -31,6 +31,12 @@ func BindServer(c *gin.Context) {
 	}
 	fmt.Printf("user:%#v \n", user)
 	fmt.Printf("user.time:%v \n", user.Time)
+	uriObj := struct {
+		Anypath string `uri:"anypath"`
+	}{}
+	c.BindUri(&uriObj)
+	fmt.Printf("anypth: %v \n", c.Param("anypath"))
+	fmt.Printf("anypth2: %v \n", uriObj.Anypath)
 
 	// c.String(http.StatusOK, res)
 	c.JSON(http.StatusOK, user)

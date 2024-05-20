@@ -12,29 +12,17 @@ import (
 	"testing"
 )
 
-func TestRsaDecrypt(t *testing.T) {
-	// Generate an RSA key pair (private + public keys)
-	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
+func TestRsaEncrypt(t *testing.T) {
+	publicKeyPem, privateKeyPem, err := generateRsaKeyPemPair()
 	if err != nil {
 		log.Fatalf("Failed to generate key: %s", err)
 	}
 
-	// Extract the public key from the private key
-	publicKeyBytes, err := x509.MarshalPKIXPublicKey(&privateKey.PublicKey)
-	if err != nil {
-		log.Fatalf("Failed to extract public key: %s", err)
-	}
-
-	// Encode the public key into PEM format
-	publicKeyPem := pem.EncodeToMemory(&pem.Block{
-		Type:  "RSA PUBLIC KEY",
-		Bytes: publicKeyBytes,
-	})
-
 	fmt.Printf("Public Key (PEM):\n%s\n", publicKeyPem)
+	// fmt.Printf("Private Key:\n%s", privateKey)
 
 	plainText := "Hello, World!"
-	encryptedText, err := EncryptWithPublicKey([]byte(plainText), publicKeyPem)
+	encryptedText, err := encryptWithPublicKey([]byte(plainText), publicKeyPem)
 	if err != nil {
 		log.Fatalf("Failed to encrypt text: %s", err)
 	}
@@ -43,7 +31,7 @@ func TestRsaDecrypt(t *testing.T) {
 	fmt.Printf("\nPlain text: %s\n", plainText)
 	fmt.Printf("Encrypted text (base64): %s\n", encryptedBase64)
 
-	decryptedText, err := DecryptWithPrivateKey(encryptedText, privateKey)
+	decryptedText, err := decryptWithPrivateKey(encryptedText, privateKeyPem)
 	if err != nil {
 		log.Fatalf("Failed to decrypt text: %s", err)
 	}
@@ -51,7 +39,7 @@ func TestRsaDecrypt(t *testing.T) {
 	fmt.Printf("Decrypted text: %s\n", decryptedText)
 }
 
-func EncryptWithPublicKey(plainText, publicKeyPem []byte) ([]byte, error) {
+func encryptWithPublicKey(plainText, publicKeyPem []byte) ([]byte, error) {
 	block, _ := pem.Decode(publicKeyPem)
 	if block == nil || block.Type != "RSA PUBLIC KEY" {
 		return nil, fmt.Errorf("invalid public key")
@@ -81,7 +69,18 @@ func EncryptWithPublicKey(plainText, publicKeyPem []byte) ([]byte, error) {
 	return encryptedText, nil
 }
 
-func DecryptWithPrivateKey(encryptedText []byte, privateKey *rsa.PrivateKey) (string, error) {
+func decryptWithPrivateKey(encryptedText []byte, privateKeyPem []byte) (string, error) {
+	// Assume privateKeyPem is your PEM-encoded private key
+	block, _ := pem.Decode([]byte(privateKeyPem))
+	if block == nil {
+		panic("failed to parse PEM block containing the private key")
+	}
+
+	privateKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
+	if err != nil {
+		panic("failed to parse private key: " + err.Error())
+	}
+
 	decryptedBytes, err := rsa.DecryptOAEP(
 		sha256.New(),
 		rand.Reader,

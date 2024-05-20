@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/gin-gonic/gin v1.9.1
-	golang.org/x/net v0.17.0
+	golang.org/x/net v0.25.0
 	google.golang.org/grpc v1.56.3
 	google.golang.org/protobuf v1.30.0
 )

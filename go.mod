@@ -12,7 +12,6 @@ require (
 	github.com/petermattis/goid v0.0.0-20231207134359-e60b3f734c67
 	github.com/pkg/errors v0.9.1
 	go.uber.org/zap v1.26.0
-	golang.org/x/crypto v0.14.0
 	google.golang.org/grpc v1.59.0
 	google.golang.org/grpc/examples v0.0.0-20230216223317-abff344ead8f
 	google.golang.org/protobuf v1.33.0

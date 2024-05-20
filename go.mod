@@ -15,7 +15,7 @@ require (
 	golang.org/x/crypto v0.14.0
 	google.golang.org/grpc v1.59.0
 	google.golang.org/grpc/examples v0.0.0-20230216223317-abff344ead8f
-	google.golang.org/protobuf v1.31.0
+	google.golang.org/protobuf v1.33.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 )
 

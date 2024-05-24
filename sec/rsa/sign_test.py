@@ -1,6 +1,8 @@
 import rsa
 
-# Generate a RSA key pair
+
+# pubkey: rsa.PrivateKey = rsa.PublicKey.load_pkcs1(publicKeyPem)
+# privkey: rsa.PrivateKey = rsa.PrivateKey.load_pkcs1(privateKeyPem)
 (pubkey, privkey) = rsa.newkeys(512)
 
 # Message to be signed

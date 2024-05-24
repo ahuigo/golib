@@ -10,6 +10,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
+// gorm v1
 var db1 *gorm.DB
 
 // 创建

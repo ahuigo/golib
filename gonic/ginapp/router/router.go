@@ -63,6 +63,7 @@ func Register(r *gin.Engine, staticFS bool, path404 string) {
 	r.POST("/bind/*anypath", BindServer)
 	r.PUT("/bind/*anypath", BindFileServer)
 	r.GET("/sleep/:second", sleepFunc)
+	r.GET("/cookie", cookieServer)
 	r.GET("/cpu/:second", cpuFunc)
 	r.GET("/json/map", jsonMapFunc)
 	r.GET("/proxy/*path", ProxyServer)

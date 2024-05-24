@@ -10,6 +10,17 @@ import (
 	"testing"
 )
 
+func TestRsaSign(t *testing.T) {
+	publicKey, privateKey := generateRsaKeyPair()
+
+	data := []byte("Hello")
+	signature := rsaSign(data, privateKey)
+	fmt.Println("Signature:", signature)
+
+	valid := rsaSignVerify(data, signature, publicKey)
+	fmt.Println("Signature valid:", valid)
+}
+
 // sian demo: rsa2048 + sha256
 // rsaSign signs the data with a private key
 func rsaSign(data []byte, privateKey *rsa.PrivateKey) string {
@@ -18,6 +29,8 @@ func rsaSign(data []byte, privateKey *rsa.PrivateKey) string {
 	if err != nil {
 		panic(err)
 	}
+	// PSS 填充方式：使用随机数填充，更新更安全
+	// signature, err = rsa.SignPSS(rand.Reader, privateKey, crypto.SHA256, hashed[:], nil)
 	return hex.EncodeToString(signature)
 }
 
@@ -31,15 +44,4 @@ func rsaSignVerify(data []byte, signature string, publicKey *rsa.PublicKey) bool
 		return false
 	}
 	return true
-}
-
-func TestRsaSign(t *testing.T) {
-	publicKey, privateKey := generateRsaKeyPair()
-
-	data := []byte("Hello, world!")
-	signature := rsaSign(data, privateKey)
-	fmt.Println("Signature:", signature)
-
-	valid := rsaSignVerify(data, signature, publicKey)
-	fmt.Println("Signature valid:", valid)
 }

@@ -7,6 +7,7 @@ import (
 	"encoding/pem"
 	"fmt"
 	"log"
+	"strings"
 	"testing"
 )
 
@@ -19,23 +20,27 @@ func generateRsaKeyPemPair() (privateKeyPem, publicKeyPem []byte, err error) {
 	if err != nil {
 		log.Fatalf("Failed to generate key: %s", err)
 	}
-	// private key
+	// 1. private key:  PKCS#1, ASN.1 DER 形式的字节
 	privateKeyBytes := x509.MarshalPKCS1PrivateKey(privateKey)
 	privateKeyPem = pem.EncodeToMemory(&pem.Block{
 		Type:  "RSA PRIVATE KEY",
 		Bytes: privateKeyBytes,
 	})
-	// public key
+
+	// 2. public key
+	/**
+	1. PKIX 是一个公钥基础设施 (PKI) 的标准，它定义了证书和公钥的格式。PKIX 格式的公钥通常包含在 X.509 证书中(python的: PKCS1_OAEP)
+	2. PKCS#1 是 RSA 加密标准的一部分，它定义了 RSA 公钥和私钥的格式。
 	publicKeyBytes, err := x509.MarshalPKIXPublicKey(&privateKey.PublicKey)
-	if err != nil {
-		log.Fatalf("Failed to extract public key: %s", err)
-	}
+	*/
+	publicKeyBytes := x509.MarshalPKCS1PublicKey(&privateKey.PublicKey)
 	publicKeyPem = pem.EncodeToMemory(&pem.Block{
 		Type:  "RSA PUBLIC KEY",
 		Bytes: publicKeyBytes,
 	})
 
 	fmt.Printf("publicKeyPem:\n%s\n", publicKeyPem)
+	fmt.Printf("privateKeyPem:\n%s\n", privateKeyPem)
 	return publicKeyPem, privateKeyPem, err
 }
 
@@ -57,18 +62,21 @@ func generateRsaKeyPair() (*rsa.PublicKey, *rsa.PrivateKey) {
 
 	// 2. public key
 	block, _ = pem.Decode(publicKeyPem)
-	if block == nil || block.Type != "RSA PUBLIC KEY" {
+	if block == nil || !strings.HasSuffix(block.Type, "PUBLIC KEY") {
 		panic("invalid public key")
 	}
 
-	publicKey, err := x509.ParsePKIXPublicKey(block.Bytes)
-	if err != nil {
-		panic("failed to parse public key: " + err.Error())
-	}
+	rsaPublicKey, err := x509.ParsePKCS1PublicKey(block.Bytes)
+	if err != nil && strings.Contains(err.Error(), "use ParsePKIXPublicKey") {
+		var ok bool
+		publicKey1, err := x509.ParsePKIXPublicKey(block.Bytes)
+		if err != nil {
+			panic("failed to parse public key: " + err.Error())
+		}
+		if rsaPublicKey, ok = publicKey1.(*rsa.PublicKey); !ok {
+			panic("not an RSA public key")
+		}
 
-	rsaPublicKey, ok := publicKey.(*rsa.PublicKey)
-	if !ok {
-		panic("not an RSA public key")
 	}
 	return rsaPublicKey, privateKey
 }

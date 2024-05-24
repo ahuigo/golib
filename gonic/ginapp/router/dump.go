@@ -3,7 +3,7 @@ package router
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	neturl "net/url"
 	"strconv"
@@ -71,8 +71,8 @@ func sendBody(c *gin.Context) {
 	res += fmt.Sprintf("referer:%s\n", c.Request.Header.Get("referer"))
 
 	// dump body
-	buf, _ := ioutil.ReadAll(c.Request.Body)
-	c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(buf)) // important!!
+	buf, _ := io.ReadAll(c.Request.Body)
+	c.Request.Body = io.NopCloser(bytes.NewBuffer(buf)) // important!!
 	res += string(buf)
 
 	println(res)

@@ -60,6 +60,16 @@ func generateRsaKeyPair() (*rsa.PublicKey, *rsa.PrivateKey) {
 		panic("failed to parse private key: " + err.Error())
 	}
 
+	publicKeyPem = []byte(`-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkfkVfXMHL3mCP78rSc2p
+qOcVJZ2nSeM5O1p5k2nVA57PZIR90tZY28nCCKgRsM2yZzEcZPk4N3bJihJMhLOK
+qfYW9G+17GPBaXnG12FpCUVqSNktKCKLrXNXnmGNkS/pkPtf0AtYtc09w+OnubBS
+ujD1Mh6SBTkFD3Sa/Pcif01BwV5Z499EyMA8H+xpYbYIxupZloNMK5CnpNMMDSQQ
+0ZIGTT+J5q9Te1xUjRchNAkm9egrXXcDNQwRi75qE+j+wfUoqfP48hxHKbL2lvXo
+rIiYzrDBD9fhCXfbcuWJA8HBhxG9I5u51Ct9OSpVwBdvhgxQOKhyC8tKv7VIgxUm
+OwIDAQAB
+-----END PUBLIC KEY-----
+`)
 	// 2. public key
 	block, _ = pem.Decode(publicKeyPem)
 	if block == nil || !strings.HasSuffix(block.Type, "PUBLIC KEY") {
@@ -69,14 +79,17 @@ func generateRsaKeyPair() (*rsa.PublicKey, *rsa.PrivateKey) {
 	rsaPublicKey, err := x509.ParsePKCS1PublicKey(block.Bytes)
 	if err != nil && strings.Contains(err.Error(), "use ParsePKIXPublicKey") {
 		var ok bool
-		publicKey1, err := x509.ParsePKIXPublicKey(block.Bytes)
-		if err != nil {
-			panic("failed to parse public key: " + err.Error())
-		}
-		if rsaPublicKey, ok = publicKey1.(*rsa.PublicKey); !ok {
-			panic("not an RSA public key")
+		var publicKey1 any
+		publicKey1, err = x509.ParsePKIXPublicKey(block.Bytes)
+		if err == nil {
+			if rsaPublicKey, ok = publicKey1.(*rsa.PublicKey); !ok {
+				err = fmt.Errorf("not an RSA public key")
+			}
 		}
 
+	}
+	if err != nil {
+		panic("not an RSA public key")
 	}
 	return rsaPublicKey, privateKey
 }

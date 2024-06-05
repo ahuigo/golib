@@ -60,8 +60,9 @@ func sendBody(c *gin.Context) {
 		" proto:" + c.Request.Proto + " clientip:" +
 		c.ClientIP() + "\n"
 	res += dumpRequestHeader(c.Request) + "\n"
-	res += fmt.Sprintf("c.Request.URL.Scheme:%s\n", c.Request.URL.Scheme)
 	res += fmt.Sprintf("c.Request.Host(include port):%s\n", c.Request.Host)
+	res += fmt.Sprintf("c.Request.URL.Scheme:%s\n", c.Request.URL.Scheme)
+	res += fmt.Sprintf("c.Request.URL.Hostname():%s\n", c.Request.URL.Hostname())
 	res += fmt.Sprintf("c.Request.URL.Host(invalid):%s\n", c.Request.URL.Host)
 	res += fmt.Sprintf("c.Request.URL.PATH:%s\n", c.Request.URL.Path)
 	res += fmt.Sprintf("c.FullPath():%s\n", c.FullPath())

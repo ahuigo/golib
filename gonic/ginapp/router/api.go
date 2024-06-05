@@ -39,15 +39,16 @@ type User struct {
 	Time time.Time `json:"time" form:"time"`
 
 	// 这是city 说明
-	City  string      `form:"city" example:"Beijing"`
-	Citys []string    `form:"city" example:"Bj,Tj"`
+	City  string   `form:"city" example:"Beijing"`
+	Citys []string `form:"city" example:"Bj,Tj"`
+	// 这是extra扩展字段
 	Extra interface{} `json:"extra"`
 }
 
-// Param Type: query path header body formData
-// Refer to: https://github.com/swaggo/swag/blob/master/README.md#param-type
+/*Param Type: query path header body formData
+*Refer to: https://github.com/swaggo/swag/blob/master/README.md#param-type
+ */
 
-// @Param        name  query      int  true  "Account name" default("Alex")
 // @Summary      获取用户
 // @Description  获取用户详情
 // @Tags         user

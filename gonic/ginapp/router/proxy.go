@@ -3,6 +3,7 @@ package router
 import (
 	"net/http"
 	"net/http/httputil"
+	"net/url"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,6 +23,9 @@ func ProxyServer(c *gin.Context) {
 			r.Header.Del("Access-Control-Allow-Methods")
 			return nil
 		},
+	}
+	if false {
+		proxy = httputil.NewSingleHostReverseProxy(&url.URL{Scheme: "https", Host: "httpbin.org"})
 	}
 	proxy.ServeHTTP(c.Writer, c.Request)
 }

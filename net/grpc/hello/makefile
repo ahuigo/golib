@@ -1,5 +1,5 @@
 server:
-	go test -v server_test.go
+	go test -v -run '^TestHelloServerWithProxy' server_test.go
 client:
 	go test -v client_test.go
 #this will generate helloworld.pb.go helloworld_grpc.pb.go

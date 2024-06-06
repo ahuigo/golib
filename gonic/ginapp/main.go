@@ -17,11 +17,16 @@ import (
 )
 
 func main() {
-	conf := conf.GetConf()
+	config := conf.GetConf()
 	port := flag.String("p", "4500", "Public Server Port")
 	dir := flag.String("d", "", "change directory")
 	staticFS := flag.Bool("s", false, "static fs")
 	staticBasePath := flag.String("s4", "", "static 404 path, e.g.: /a/404.html")
+	usage := flag.Usage
+	flag.Usage = func() {
+		fmt.Println("Version: ", conf.BuildDate)
+		usage()
+	}
 	flag.Parse()
 
 	// chang directory
@@ -54,9 +59,9 @@ func main() {
 			*/
 			Handler: http.TimeoutHandler(engine, 60*time.Second, "Handler Timeout!\n"),
 			// ReadTimeout: the maximum duration for reading the entire request, including the body
-			ReadTimeout: conf.Http.ReadTimeout,
+			ReadTimeout: config.Http.ReadTimeout,
 			// WriteTimeout: the maximum duration before timing out writes of the response
-			WriteTimeout: conf.Http.WriteTimeout,
+			WriteTimeout: config.Http.WriteTimeout,
 			// IdleTimetout: the maximum amount of time to wait for the next request when keep-alive is enabled
 			IdleTimeout:       30 * time.Second,
 			ReadHeaderTimeout: 2 * time.Second,

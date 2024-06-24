@@ -20,6 +20,8 @@ func (w writer) Write(b []byte) (n int, err error) {
 
 func TestLogPrefix(t *testing.T) {
 	// With a flag
+    // 全局 log.SetFlags(log.Lshortfile)
+    //logger2 := log.New(os.Stdout, "[info] ", log.Lshortfile) // 增加filepath:lineno
 	logger2 := log.New(&writer{os.Stdout, "2006/01/02 15:04:05 "}, "[info] ", log.Lshortfile)
 	logger2.Println("Hello world!")
 	// 2016/07/14 16:50:31 [info] main.go:28: Hello world!

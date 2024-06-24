@@ -8,6 +8,7 @@ import (
 func TestMapNil(t *testing.T) {
 	// test nil[k] exists
 	var m1 map[string]int
+    println("get mapnil(key):", m1["key113"])
 
 	// fatal: 不过slice 可以 append(nil, 1)
 	// m1["kk"] = 1 // 写不行,读可以

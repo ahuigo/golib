@@ -11,9 +11,10 @@ func TestWrap2(t *testing.T) {
 		return err
 	}
 	err := f()
-	err = fmt.Errorf("wrap with func:%w", err)
+	err = fmt.Errorf("wrap with errorf %%w:%w", err)
 
-	fmt.Printf("error:\n%+v\n", err)
+	fmt.Printf("error:%+v\n", err)
+	fmt.Printf("err.Error():%s\n", err.Error())
 	// Example output:
 	// wrap with func:whoops
 }

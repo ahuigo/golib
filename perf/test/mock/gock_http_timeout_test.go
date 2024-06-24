@@ -51,3 +51,21 @@ func TestTimeoutRequests(t *testing.T) {
 	assert.ErrorContains(t, err, "net/http: timeout awaiting response headers")
 
 }
+
+func TestTimeoutRequestsRetry(t *testing.T) {
+	defer gock.Off()
+	// 只能触发一次
+	gock.New("http://m.com").
+		Get("/url").Persist().
+		ReplyError(&timeoutError{err: "net/http: timeout awaiting response headers", timeout: true})
+
+	r := requests.R().
+		SetRetryCount(3).
+		SetRetryCondition(func(resp *requests.Response, err error) bool {
+			// return false
+			return err != nil
+		})
+	_, err := r.Get("http://m.com/url")
+	assert.ErrorContains(t, err, "net/http: timeout awaiting response headers")
+
+}

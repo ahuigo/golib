@@ -1,8 +1,15 @@
-import "fmt"
-import "os"
+package demo
 
-func main() {
-    str := "Message"
+import (
+	"bytes"
+	"fmt"
+	"io"
+	"os"
+	"testing"
+)
+
+func TestWriterCopy(t *testing.T) {
+    str := "Message\n"
     fmt.Fprintln(os.Stderr, str)
     io.WriteString(os.Stderr, str)
     io.Copy(os.Stderr, bytes.NewBufferString(str))

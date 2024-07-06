@@ -9,7 +9,7 @@ import (
 	"syscall"
 
 	"github.com/creack/pty"
-	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/term"
 )
 
 func test() error {
@@ -38,11 +38,11 @@ func test() error {
 	ch <- syscall.SIGWINCH // Initial resize.
 
 	// Set stdin in raw mode.
-	oldState, err := terminal.MakeRaw(int(os.Stdin.Fd()))
+	oldState, err := term.MakeRaw(int(os.Stdin.Fd()))
 	if err != nil {
 		panic(err)
 	}
-	defer func() { _ = terminal.Restore(int(os.Stdin.Fd()), oldState) }() // Best effort.
+	defer func() { _ = term.Restore(int(os.Stdin.Fd()), oldState) }() // Best effort.
 
 	// Copy stdin to the pty and the pty to stdout.
 	go func() { _, _ = io.Copy(ptmx, os.Stdin) }()

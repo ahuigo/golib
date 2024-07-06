@@ -39,7 +39,8 @@ type User struct {
 	Time time.Time `json:"time" form:"time"`
 
 	// 这是city 说明
-	City  string   `form:"city" example:"Beijing"`
+	City string `form:"city" example:"Beijing"`
+	// form 接收多个值
 	Citys []string `form:"city" example:"Bj,Tj"`
 	// 这是extra扩展字段
 	Extra interface{} `json:"extra"`
@@ -54,10 +55,10 @@ type User struct {
 // @Tags         user
 // @Accept       json
 // @Produce      json
-// @Param 		 Cookie header string  false "token"     default(token=xxx)
-// @Param        id    	path      int  true  "Account ID" Enums(1, 2, 3)
-// @Param        name  	query      int  true  "Account name" default("Alex")
-// @Param        queryStr  query      User  true  "query struct" default("name=Alex&page=1")
+// @Param 		 Cookie header string  	false "token"     default(token=xxx)
+// @Param        id    	path      int  	true  "Account ID" Enums(1, 2, 3)
+// @Param        trace_id  	query string  true  "trace-id" default(tracd_id_10)
+// @Param        queryStr  query  User  true  "query struct" default("name=Alex&page=1")
 // @Success      200  {object}  User
 // @Header 		 200 {string} Token "qwerty"
 // @Failure      400  {object}  HTTPError
@@ -84,6 +85,8 @@ func GetUser(c *gin.Context) {
 
 // @Summary 添加用户
 // @Tags user
+// @Accept 		json
+// @Produce		json
 // @Param body-params body User true "Add user"
 // @Success 200 {object} User
 // @Failure 400  {object}  HTTPError
@@ -94,6 +97,17 @@ func AddUser(c *gin.Context) {
 		fmt.Println("bind error:", err)
 	}
 	c.JSON(http.StatusOK, user)
+}
+
+// multipart/form-data
+// @Tags user
+// @Accept		multipart/form-data
+// @Param myFormData   formData   TaskReq   true   "task form data"
+// @Success 200 {object} User
+// @Failure 400  {object}  HTTPError
+// @Router /user/upload [post]
+func UploadMultipartForm(c *gin.Context) {
+	c.String(http.StatusOK, "ok")
 }
 
 // @Summary Get用户List

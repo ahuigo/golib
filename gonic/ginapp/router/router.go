@@ -41,18 +41,17 @@ func Register(r *gin.Engine, staticFS bool, path404 string) {
 	r.Use(mid.LogTime, mid.CORS, mid.Error)
 	// staticFS
 	r.Static("/js", "./js")
-
-	// router
-	r.GET("/gorm/insert", insertHandler)
-	r.GET("/f/r/*path", fileReadHandler)
-
 	// register handlers
 	for _, h := range handlers {
 		r.Handle(h.method, h.path, h.handler)
 	}
 
-	//curl m:4500/f/w -F 'file1=@go.mod' -F 'name=alex'
-	r.POST("/f/w", fileWriteHandler)
+	// router
+	r.GET("/gorm/insert", insertHandler)
+	// curl m:4500/f/r/my/a.txt  -o a.txt
+	r.GET("/f/r/*path", fileReadHandler)
+	// curl m:4500/f/w/my/a.txt -F 'file1=@go.mod' -F 'name=alex'
+	r.POST("/f/w/*path", fileWriteHandler)
 	r.GET("/api/panic", panicApi)
 	r.GET("/dump/*anypath", DumpServer)
 	r.POST("/dump/*anypath", DumpServer)

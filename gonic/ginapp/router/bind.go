@@ -15,22 +15,35 @@ import (
 )
 
 // curl -H 'Content-Type: application/json' 'm:4500/bind/f' -d '{"extra":{"name":"ahui", "age":1}}'
+// curl -H 'Content-Type: multipart/form-data' 'm:4500/bind/f?a=1&b=2' -F city=beijing -F city=tianjin
 func BindServer(c *gin.Context) {
 	//backup
 	buf, _ := io.ReadAll(c.Request.Body)
 	// revert main
 	c.Request.Body = io.NopCloser(bytes.NewBuffer(buf)) // important!!
 
-	// bind
+	// 1. bind params
+	params := struct {
+		A []string `form:"a"` // 多个值
+	}{}
+	if err := c.BindQuery(&params); err == nil {
+		fmt.Println("bind params:", params)
+	}
+
+	// 2.bind user(json+form)
 	user := User{}
 	if err := c.ShouldBind(&user); err != nil {
 		fmt.Println("bind error:", err)
 	}
+	// 3. bind query
 	if user.Name == "" {
 		user.Name = c.Query("name")
+		user.Name = c.DefaultQuery("name", "default")
 	}
 	fmt.Printf("user:%#v \n", user)
 	fmt.Printf("user.time:%v \n", user.Time)
+
+	// 4. bind uri
 	uriObj := struct {
 		Anypath string `uri:"anypath"`
 	}{}

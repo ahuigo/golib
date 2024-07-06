@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"ginapp/conf"
 	"ginapp/fslib"
+	"ginapp/nettool"
 	"ginapp/router"
 	"log"
 	"net/http"
@@ -75,6 +76,7 @@ func main() {
 			}
 		}()
 		log.Printf("curl -D- http://m:%s/status/400 \n", *port)
+		log.Printf("curl -s %s:%s/f/w/my/a.log -F file1=@./test.log -F name=alex | jq\n", nettool.GetLocalIP(), *port)
 		quit := make(chan os.Signal, 1)
 		signal.Notify(quit, os.Interrupt)
 		<-quit

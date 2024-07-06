@@ -19,4 +19,5 @@ func TestMatch(t *testing.T) {
 	fmt.Println(regexp.MustCompile(`^\d+(\.\d+){3}$`).MatchString("1.23.1.34")) //true
 	fmt.Println(regexp.MustCompile(`a|b$`).MatchString("a1"))                   // true
 	fmt.Println(regexp.MustCompile(`(a|b)$`).MatchString("a1"))                 // false
+	fmt.Println(regexp.MustCompile(`//`).MatchString("a//b"))                 // true
 }

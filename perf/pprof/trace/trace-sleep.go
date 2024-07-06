@@ -8,7 +8,6 @@ import (
 	"runtime"
 	"runtime/pprof"
 	"runtime/trace"
-	"testing"
 	"time"
 )
 
@@ -38,7 +37,7 @@ func hello() {
 	fmt.Printf("hello world!\n")
 }
 
-func TestRuntimeProf(t *testing.T) {
+func main() {
 	flag.Parse()
 	if f, _ := os.Create(*traceprofile); f != nil {
 		// go tool trace -http=:9999 trace.pprof

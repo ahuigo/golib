@@ -1,11 +1,12 @@
-package main
+package demo
 
 import (
-    "os"
-    "os/exec"
+	"os"
+	"os/exec"
+	"testing"
 )
 
-func main() {
+func TestPipeFileAsStdout(t *testing.T) {
 
     cmd := exec.Command("echo", "'WHAT THE HECK IS UP'")
 

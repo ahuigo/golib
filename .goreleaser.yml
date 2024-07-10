@@ -1,5 +1,6 @@
 # https://goreleaser.com/customization/templates/
 builds:
+  - dir: ./pkg/cmd/
   - goos:
       - linux
       - windows
@@ -11,7 +12,6 @@ builds:
       - -s -w -X "main.GoVersion={{.Env.GOVERSION}}"
       - -s -w -X "main.BuildVersion={{.Version}}"
       - -s -w -X "main.BuildDate={{.Env.BuildDate}}"
-
     env:
       - CGO_ENABLED=0
 archives:

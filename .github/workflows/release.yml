@@ -24,10 +24,10 @@ jobs:
           echo "GOVERSION=$(go version | sed -r 's/go version go(.*)\ .*/\1/')" >> $GITHUB_ENV
           echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
           echo "BuildDate=$(date -Iseconds)" >> $GITHUB_ENV
-      - name: Change directory 
-        run: cd gonic/ginapp
+      # - name: Change directory 
+      #   run: cd gonic/ginapp
       - name: Show version
-        run: echo ${{ env.GOVERSION }} ${{ env.VERSION }} | ls
+        run: echo ${{ env.GOVERSION }} ${{ env.VERSION }} | pwd
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6

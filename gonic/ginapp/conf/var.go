@@ -5,4 +5,5 @@ var (
 	BuildCommitId = "000"
 	BuildBranch   = ""
 	BuildDate     = ""
+	BuildVersion  = ""
 )

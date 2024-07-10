@@ -1,0 +1,21 @@
+# https://goreleaser.com/customization/templates/
+builds:
+  - goos:
+      - linux
+      - windows
+      - darwin
+    ignore:
+      - goos: darwin
+        goarch: 386
+    ldflags:
+      - -s -w -X "main.GoVersion={{.Env.GOVERSION}}"
+      - -s -w -X "main.BuildVersion={{.Version}}"
+      - -s -w -X "main.BuildDate={{.Env.BuildDate}}"
+
+    env:
+      - CGO_ENABLED=0
+archives:
+  - id: tar.gz
+    format: tar.gz
+  - id: binary
+    format: binary

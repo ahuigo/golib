@@ -25,7 +25,7 @@ func main() {
 	staticBasePath := flag.String("s4", "", "static 404 path, e.g.: /a/404.html")
 	usage := flag.Usage
 	flag.Usage = func() {
-		fmt.Println("Version: ", conf.BuildDate)
+		fmt.Printf("date: %s, version: %s\n", conf.BuildDate, conf.BuildVersion)
 		usage()
 	}
 	flag.Parse()

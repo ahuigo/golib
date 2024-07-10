@@ -2,14 +2,14 @@ name: Release
 
 on:
   push: 
-    tags: 'ginapp*'
+    tags: 'v*'
   # pull_request:
   #   branches: [main]
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/ginapp')
+    if: startsWith(github.ref, 'refs/tags/v')
     permissions: 
       contents: write
     steps:

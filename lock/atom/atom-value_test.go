@@ -6,7 +6,7 @@ import (
 )
 
 func TestValue(t *testing.T) {
-	var v Value
+	var v Value // atomic.Value
 	if v.Load() != nil {
 		t.Fatal("initial Value is not nil")
 	}

@@ -1,8 +1,9 @@
 # https://goreleaser.com/customization/templates/
 version: 2
 builds:
-  - dir: ./pkg/cmd/
-  - goos:
+  - dir: ./gonic/ginapp
+    id: "ginapp"
+    goos:
       - linux
       - windows
       - darwin

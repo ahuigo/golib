@@ -15,8 +15,10 @@ func TransformInPlace(slice, function interface{}) interface{} {
 	return transform(slice, function, true)
 }
 
-/**
+/*
+*
 额外展示了ref_func 的方法
+
 	refn.Call([]reflect.Value{...})[0]
 */
 func transform(slice, function interface{}, inPlace bool) interface{} {
@@ -34,7 +36,7 @@ func transform(slice, function interface{}, inPlace bool) interface{} {
 		panic("trasform: function must be of type func(" + sliceInType.Type().Elem().String() + ") outputElemType")
 	}
 
-    // MakeSlice
+	// MakeSlice
 	sliceOutTypeVal := sliceInType
 	if !inPlace {
 		sliceOutTypeRef := reflect.SliceOf(fn.Type().Out(0)) // string ->  []string
@@ -80,5 +82,5 @@ func TestFnCallMap(t *testing.T) {
 	list2 := Transform(list, func(a string) string {
 		return a + a + a
 	})
-	fmt.Printf("list2:%#v\n", list2)
+	fmt.Printf("list2(%T):%#v\n", list2, list2)
 }

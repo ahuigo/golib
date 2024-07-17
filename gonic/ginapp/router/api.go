@@ -83,7 +83,7 @@ func GetUser(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
-// @Summary 添加用户
+// @Summary 添加用户(body)
 // @Tags user
 // @Accept 		json
 // @Produce		json
@@ -102,7 +102,7 @@ func AddUser(c *gin.Context) {
 // multipart/form-data
 // @Tags user
 // @Accept		multipart/form-data
-// @Param myFormData   formData   TaskReq   true   "task form data"
+// @Param myFormData   formData   User   true   "task form data"
 // @Success 200 {object} User
 // @Failure 400  {object}  HTTPError
 // @Router /user/upload [post]
@@ -110,7 +110,7 @@ func UploadMultipartForm(c *gin.Context) {
 	c.String(http.StatusOK, "ok")
 }
 
-// @Summary Get用户List
+// @Summary Get用户List(query)
 // @Tags user
 // @Param body-params query User true "user list query"
 // @Success 200 {object} User

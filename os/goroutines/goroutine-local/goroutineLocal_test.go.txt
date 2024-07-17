@@ -1,0 +1,21 @@
+package goroutinelocal
+
+import (
+	"fmt"
+	"runtime"
+	"testing"
+)
+
+func TestGoroutineLocal(t *testing.T) {
+	type key int
+	
+	const myKey key = iota
+	
+		runtime.SetGoroutineLocal(myKey, "myValue")
+	
+		go func() {
+			fmt.Println(runtime.GetGoroutineLocal(myKey)) // prints: <nil>
+		}()
+	
+		fmt.Println(runtime.GetGoroutineLocal(myKey)) // prints: myValue
+}

@@ -2,8 +2,9 @@ package router
 
 import (
 	"fmt"
-	"io/ioutil"
+	"ginapp/conf"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -12,7 +13,7 @@ import (
 
 func panicApi(c *gin.Context) {
 	filepath := c.DefaultQuery("path", "tmp/a.txt")
-	buf, err := ioutil.ReadFile(filepath)
+	buf, err := os.ReadFile(filepath)
 	if err != nil {
 		err = errors.Wrap(err, "bad file argument!")
 		panic(err)
@@ -21,6 +22,9 @@ func panicApi(c *gin.Context) {
 	res := string(buf)
 	c.String(http.StatusOK, res)
 
+}
+func confApi(c *gin.Context) {
+	c.JSON(http.StatusOK, conf.GetConf())
 }
 
 type HTTPError struct {

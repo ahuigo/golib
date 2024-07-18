@@ -1,6 +1,8 @@
 package conf
 
 import (
+	"bytes"
+	"ginapp/config"
 	"ginapp/fslib"
 	"log"
 	"os"
@@ -43,11 +45,11 @@ type Http struct {
 	WriteTimeout time.Duration `mapstructure:"write_timeout"`
 }
 
-var _config = &Config{}
+var _config *Config
 
 func GetConf() *Config {
 	if _config == nil {
-		_loadConfig("conf")
+		_loadConfig()
 		if err := viper.Unmarshal(&_config); err != nil {
 			panic(err)
 		}
@@ -56,13 +58,16 @@ func GetConf() *Config {
 }
 
 // LoadConfig 载入配置
-func _loadConfig(in string) {
-	if !fslib.IsValidPath("./config") {
-		return
+func _loadConfig() {
+	var err error
+	if fslib.IsValidPath("./config/conf.yaml") {
+		viper.SetConfigName("conf")
+		viper.AddConfigPath("config/")
+		err = viper.ReadInConfig()
+	} else if config.ConfEmbedBytes != nil {
+		viper.SetConfigType("yaml") // or viper.SetConfigType("YAML")
+		err = viper.ReadConfig(bytes.NewBuffer(config.ConfEmbedBytes))
 	}
-	viper.SetConfigName(in)
-	viper.AddConfigPath("config/")
-	err := viper.ReadInConfig()
 
 	if err != nil {
 		log.Fatal("fail to load config file:", err)

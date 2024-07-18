@@ -53,6 +53,7 @@ func Register(r *gin.Engine, staticFS bool, path404 string) {
 	// curl m:4500/f/w/my/a.txt -F 'file1=@go.mod' -F 'name=alex'
 	r.POST("/f/w/*path", fileWriteHandler)
 	r.GET("/api/panic", panicApi)
+	r.GET("/api/conf", confApi)
 	r.GET("/dump/*anypath", DumpServer)
 	r.POST("/dump/*anypath", DumpServer)
 	r.GET("/redirect/:code", RedirectServer)

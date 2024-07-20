@@ -18,7 +18,7 @@ func (ps PtrSeen) Add(rv reflect.Value) uintptr {
 	return ptr
 }
 
-func ConvertObjectByte2String(o interface{}) interface{} {
+func ConvertObjectsByte2String(o interface{}) interface{} {
 	refV := reflect.ValueOf(o)
 	// var out interface{}
 	ps := PtrSeen{}

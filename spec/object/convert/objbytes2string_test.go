@@ -10,7 +10,7 @@ func TestConvertMapBytes(t *testing.T) {
 		"k1": []byte("v1"),
 		"k2": []byte("v2"),
 	}
-	obj := ConvertObjectByte2String(mm)
+	obj := ConvertObjectsByte2String(mm)
 	if out, err := json.Marshal(obj); err != nil {
 		t.Fatal(err)
 	} else {
@@ -30,7 +30,7 @@ func TestConvertOmitEmpty(t *testing.T) {
 	obj := HistoryEvent{
 		EventId: &i,
 	}
-	if out, err := json.Marshal(ConvertObjectByte2String(obj)); err != nil {
+	if out, err := json.Marshal(ConvertObjectsByte2String(obj)); err != nil {
 		t.Fatal(err)
 	} else {
 		expectedOut := `{"eventId":1}`

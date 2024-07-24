@@ -18,7 +18,7 @@ import (
 func initGcConf() {
 	debug.SetGCPercent(1000)
 	runtime.GOMAXPROCS(runtime.NumCPU())
-	log.Println("max procs:", runtime.GOMAXPROCS(0))
+	log.Println("max procs:", runtime.GOMAXPROCS(0), runtime.NumCPU())
 }
 func init() {
 	initGcConf()

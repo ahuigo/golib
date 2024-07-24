@@ -1,4 +1,4 @@
-# 不同语言对[]byte的处理
+# 不同语言json 对[]byte的处理
 json　本身无法区分string 和 `[]byte`，只有string。
 
 1. php 自己本身就没有`[]byte`，甚至连dict/array 都不区分。直接回避了问题
@@ -12,7 +12,7 @@ json.Marshal 方法:
 1. 但是 json.RawMessage  本身带的json encoder，不会对bytes做任何处理，如果bytes不是json格式，就会报编码出错
 
 某些golang　库实现，可能出于减少值复制，喜欢用bytes去表达string，序列化时就只能是base64　string了。
-如果接收者不要based string json, 解决办法有：
+如果接收者不要base64 string json, 解决办法有：
 1. 自己先定义一个相应string struct，再将bytes struct转成string struct，最后json　序列化自然就不是base64了
-1. 通过反射将 string struct 转成　string map 再json. 参考：https://github.com/ahuigo/golib/tree/main/spec/object/convert/objbytes2string_test.go
+1. 通过反射将 string struct/map 转成　string map 再json. 参考：https://github.com/ahuigo/golib/tree/main/spec/object/convert/objbytes2string_test.go
 

@@ -12,7 +12,7 @@ import (
 	tpls "ginapp/router/tpl-server"
 
 	"github.com/DeanThompson/ginpprof"
-	"github.com/ahuigo/gonic-tools/stat"
+	"github.com/ahuigo/goos-tools/gonic"
 	"github.com/gin-gonic/gin"
 )
 
@@ -68,8 +68,8 @@ func Register(r *gin.Engine, staticFS bool, path404 string) {
 	r.GET("/json/map", jsonMapFunc)
 	r.GET("/proxy/*path", ProxyServer)
 	r.GET("/stream", streamApi)
-	r.GET("/stat/os", stat.OsStat)
-	r.GET("/stat/net", stat.NetStat)
+	r.GET("/stat/os", gonic.OsStat)
+	r.GET("/stat/net", gonic.NetStat)
 	r.GET("/stat/os/cosume-mem", statHandler.ConsumeMemory)
 	// r.Any("/bind/*anypath", BindServer)
 }

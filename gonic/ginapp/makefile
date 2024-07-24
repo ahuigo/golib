@@ -1,7 +1,7 @@
 start:
+	go run .
 	#arun sh -c 'swag init -g pkg/main.go && go run ./pkg'
 	#sh -c 'swag init --parseDependency --parseInternal --parseDepth 1 && go run .'
-	go run .
 
 init: 
 	#go install github.com/swaggo/swag/cmd/swag@latest -insecure

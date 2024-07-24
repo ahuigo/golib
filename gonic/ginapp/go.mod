@@ -7,7 +7,6 @@ toolchain go1.22.1
 require (
 	github.com/DeanThompson/ginpprof v0.0.0-20201112072838-007b1e56b2e1
 	github.com/ahuigo/gohttptool v0.0.6
-	github.com/ahuigo/gonic-tools v0.0.8
 	github.com/ahuigo/requests v1.0.29
 	github.com/gin-gonic/gin v1.9.1
 	github.com/pkg/errors v0.9.1
@@ -22,7 +21,7 @@ require (
 
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
-	github.com/ahuigo/goos-tools v0.0.3 // indirect
+	github.com/ahuigo/goos-tools v0.0.16
 	github.com/alessio/shellescape v1.4.1 // indirect
 	github.com/bytedance/sonic v1.10.2 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20230717121745-296ad89f973d // indirect
@@ -81,3 +80,5 @@ require (
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/ahuigo/goos-tools v0.0.16 => ../goos-tools

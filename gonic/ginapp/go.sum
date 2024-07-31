@@ -4,6 +4,8 @@ github.com/KyleBanks/depth v1.2.1 h1:5h8fQADFrWtarTdtDudMmGsC7GPbOAu6RVB3ffsVFHc
 github.com/KyleBanks/depth v1.2.1/go.mod h1:jzSb9d0L43HxTQfT+oSA1EEp2q+ne2uh6XgeJcm8brE=
 github.com/ahuigo/gohttptool v0.0.6 h1:9qCQF9bHdZ+o1VSnTeUbjtPFgkGgoAWrbX6ytZw5s28=
 github.com/ahuigo/gohttptool v0.0.6/go.mod h1:R4J/N7gF/ozknJUh4EbBoGufvjcC4V7v5wOcpkSfrXI=
+github.com/ahuigo/goos-tools v0.0.16 h1:h8DSBGnYTDfYBAG5krEKUlxWCkgd+nP0CRKrcRgJI8Q=
+github.com/ahuigo/goos-tools v0.0.16/go.mod h1:bL1nKGcfjW7Tq8ixzwsdDrljVJaqfDoGrJTvIKXKc9Y=
 github.com/ahuigo/requests v1.0.29 h1:m4YMCcQFZlcM32gGGmVb2kc2IW9N2oyns6/2YvkOSzQ=
 github.com/ahuigo/requests v1.0.29/go.mod h1:+Hi6pffZQOf0g+pEM+xKxZWneSeryYk3QJzj/+Pjku8=
 github.com/alessio/shellescape v1.4.1 h1:V7yhSDDn8LP4lc4jS8pFkt0zCnzVJlG5JXy9BVKJUX0=

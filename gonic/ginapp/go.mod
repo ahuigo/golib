@@ -81,4 +81,4 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/ahuigo/goos-tools v0.0.16 => ../goos-tools
+// replace github.com/ahuigo/goos-tools v0.0.16 => ../goos-tools

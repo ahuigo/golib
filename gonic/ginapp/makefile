@@ -1,3 +1,4 @@
+############################ develop #############################################
 start:
 	go run .
 	#arun sh -c 'swag init -g pkg/main.go && go run ./pkg'
@@ -21,16 +22,33 @@ doc:
 	# swag init --parseDependency --parseInternal --parseDepth 1 #&& open http://m:4500/swagger/index.html
 	swag init  #&& open http://m:4500/swagger/index.html
 
+############################# k8s ###############################################
+docker:
+	docker build -t ginapp .
+	docker run -p 4501:4500 --name gin1 --rm -it  ginapp ./main -p 4500
+
+deploy-step:
+	# 创建 Deployment
+	kubectl apply -f k8s/deployment.yaml
+	kubectl get deployments
+	kubectl get deployments --all-namespaces
+
+	# 设置port 暴露服务
+	kubectl apply -f k8s/service.yaml
+
+	# 获取这个 Service 的 URL,  minikube也可以用: minikube service ginapp --url
+	kubectl get service ginapp
+	# 如果服务是通过ingress 暴露的，可以通过下面的命令获取
+	kubectl get ingress ginapp
+
+######################### bench/perf #################################
 benchcpu:
 	go-wrk  -d=50 -c=50  http://localhost:4500/cpu/5
 
 profcpu:
 	go tool pprof http://127.0.0.1:4500/debug/pprof/profile
 
-docker:
-	docker build -t ginapp .
-	docker run -p 4502:4501 --rm -it  ginapp ./main -p 4501
-
+######################### test ##########################################
 ALL_SRC := $(shell find . -name "*_test.go" | grep -v \
 	-e ".*/\..*" \
 	-e ".*/_.*" \

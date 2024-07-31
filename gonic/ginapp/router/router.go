@@ -67,6 +67,7 @@ func Register(r *gin.Engine, staticFS bool, path404 string) {
 	r.GET("/cpu/:second", cpuFunc)
 	r.GET("/json/map", jsonMapFunc)
 	r.GET("/proxy/*path", ProxyServer)
+	r.POST("/proxy/*path", ProxyServer)
 	r.GET("/stream", streamApi)
 	r.GET("/stat/os", gonic.OsStat)
 	r.GET("/stat/net", gonic.NetStat)

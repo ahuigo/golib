@@ -1,4 +1,5 @@
-FROM golang:1.17
+FROM golang:1.22.5-bullseye
+# FROM golang:1.22.5-alpine
 
 WORKDIR /ginapp
 COPY . .

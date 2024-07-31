@@ -4,10 +4,6 @@ github.com/KyleBanks/depth v1.2.1 h1:5h8fQADFrWtarTdtDudMmGsC7GPbOAu6RVB3ffsVFHc
 github.com/KyleBanks/depth v1.2.1/go.mod h1:jzSb9d0L43HxTQfT+oSA1EEp2q+ne2uh6XgeJcm8brE=
 github.com/ahuigo/gohttptool v0.0.6 h1:9qCQF9bHdZ+o1VSnTeUbjtPFgkGgoAWrbX6ytZw5s28=
 github.com/ahuigo/gohttptool v0.0.6/go.mod h1:R4J/N7gF/ozknJUh4EbBoGufvjcC4V7v5wOcpkSfrXI=
-github.com/ahuigo/gonic-tools v0.0.8 h1:+3yFjzYZZjx/tLplHw75s2CcS/hdTT4zmu/k6YEG1LE=
-github.com/ahuigo/gonic-tools v0.0.8/go.mod h1:mDNd3yy3NFAQTSC+qHVVJctdZ1dGckw0lZghR+1Rbyc=
-github.com/ahuigo/goos-tools v0.0.3 h1:ewZTLdo01G0ESq7IyXOJ3ctCULs2N5WWCThizNp9rVo=
-github.com/ahuigo/goos-tools v0.0.3/go.mod h1:t8RvEo8S+B+IOVJoqczmDjSpKZIYd8XQxQgxAuJP0B4=
 github.com/ahuigo/requests v1.0.29 h1:m4YMCcQFZlcM32gGGmVb2kc2IW9N2oyns6/2YvkOSzQ=
 github.com/ahuigo/requests v1.0.29/go.mod h1:+Hi6pffZQOf0g+pEM+xKxZWneSeryYk3QJzj/+Pjku8=
 github.com/alessio/shellescape v1.4.1 h1:V7yhSDDn8LP4lc4jS8pFkt0zCnzVJlG5JXy9BVKJUX0=
@@ -131,8 +127,8 @@ github.com/sagikazarmark/locafero v0.4.0 h1:HApY1R9zGo4DBgr7dqsTH/JJxLTTsOt7u6ke
 github.com/sagikazarmark/locafero v0.4.0/go.mod h1:Pe1W6UlPYUk/+wc/6KFhbORCfqzgYEpgQ3O5fPuL3H4=
 github.com/sagikazarmark/slog-shim v0.1.0 h1:diDBnUNK9N/354PgrxMywXnAwEr1QZcOr6gto+ugjYE=
 github.com/sagikazarmark/slog-shim v0.1.0/go.mod h1:SrcSrq8aKtyuqEI1uvTDTK1arOWRIczQRv+GVI1AkeQ=
-github.com/samber/lo v1.38.1 h1:j2XEAqXKb09Am4ebOg31SpvzUTTs6EN3VfgeLUhPdXM=
-github.com/samber/lo v1.38.1/go.mod h1:+m/ZKRl6ClXCE2Lgf3MsQlWfh4bn1bz6CXEOxnEXnEA=
+github.com/samber/lo v1.39.0 h1:4gTz1wUhNYLhFSKl6O+8peW0v2F4BCY034GRpU9WnuA=
+github.com/samber/lo v1.39.0/go.mod h1:+m/ZKRl6ClXCE2Lgf3MsQlWfh4bn1bz6CXEOxnEXnEA=
 github.com/sourcegraph/conc v0.3.0 h1:OQTbbt6P72L20UqAkXXuLOj79LfEanQ+YQFNpLA9ySo=
 github.com/sourcegraph/conc v0.3.0/go.mod h1:Sdozi7LEKbFPqYX2/J+iBAM6HpqSLTASQIKqDmF7Mt0=
 github.com/spf13/afero v1.11.0 h1:WJQKhtpdm3v2IzqG8VMqrr6Rf3UYpEF239Jy9wNepM8=

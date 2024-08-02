@@ -39,7 +39,7 @@ func TestSyncPollBufferNoRelease(t *testing.T) {
 }
 
 // get reset put
-func TestSyncPollBufferBadRelease(t *testing.T) {
+func TestSyncPollBufferBadCaseRelease(t *testing.T) {
 	var bufPool = sync.Pool{
 		New: func() interface{} {
 			// The Pool's New function should generally only return pointer
@@ -50,6 +50,7 @@ func TestSyncPollBufferBadRelease(t *testing.T) {
 		return bufPool.Get().(*bytes.Buffer)
 	}
 	releaseBuffer := func(buf *bytes.Buffer) {
+		// 只有不再使用 buf 后，才能重置并放回 bufPool
 		if buf != nil {
 			buf.Reset()
 			bufPool.Put(buf)
@@ -74,8 +75,8 @@ func TestSyncPollBufferBadRelease(t *testing.T) {
 	/*
 		sync.Pool 两种做法：
 		1.　要么只get，不reset+put放回。等引用消失后gc会自动回收
-		1.　要么只get，使用完后, 再reset+put放回
-		3.　不能是get，再reset+put放回，再继续使用
+		1.　要么1.get，2.使用完后, 3.reset+put放回
+		3.　不能1.get，2.再reset+put放回，3.再继续使用(共享冲突)
 	*/
 
 }

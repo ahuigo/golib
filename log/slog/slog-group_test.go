@@ -46,6 +46,7 @@ func TestGroup(t *testing.T) {
 			slog.String("url", "/login"),
 		),
 		slog.Int("status", 200),
+		slog.Any("err", fmt.Errorf("error")),
 		slog.Duration("duration", time.Second),
 		"count", 3,
 	)

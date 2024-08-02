@@ -26,7 +26,6 @@ func RespBody(c *gin.Context) {
 	header := dumpHeader(w.Header())
 	fmt.Printf("response header:\n%s\n", header)
 	fmt.Printf("response body len:%d\n", len(body))
-
 }
 
 func dumpHeader(header http.Header) string {

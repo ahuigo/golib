@@ -12,18 +12,26 @@ func init() {
 	Slogger = getSlogger(false)
 }
 func getSlogger(isJson bool) (logger *slog.Logger) {
+	handlerOpts := &slog.HandlerOptions{
+		Level:     slog.LevelDebug,
+		AddSource: true,
+	}
 	if isJson {
-		logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
+		logger = slog.New(slog.NewJSONHandler(os.Stdout, handlerOpts))
 	} else {
-		logger = slog.New(slog.NewTextHandler(os.Stderr, nil))
+		logger = slog.New(slog.NewTextHandler(os.Stderr, handlerOpts))
 	}
 	// logger2 := logger.With("url", "http://example.com/a/b/c")
 	return logger
-	// logger.Info("hello", "count", 3)
-	// time=2022-11-08T15:28:26.000-05:00 level=INFO msg=hello count=3
 }
+
 func TestSlogger(t *testing.T) {
 	logger := getSlogger(false)
 	logger.Info("hello", "count", 3)
-	// {"time":"2022-11-08T15:28:26.000000000-05:00","level":"INFO","msg":"hello","count":3}
+	// time=2024-08-02T21:30:55.812+08:00 level=INFO source=/main_test.go:30 msg=hello count=3
+
+	logger = getSlogger(true)
+	logger.Info("hello", "count", 3)
+	// {"time":"2024-08-02T21:30:55.812395+08:00","level":"INFO","source":{"function":"go-lib/log/slog.TestSlogger","file":"/main_test.go","line":34},"msg":"hello","count":3}
+
 }

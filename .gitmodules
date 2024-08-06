@@ -10,3 +10,6 @@
 [submodule "app/selfhttps"]
 	path = app/selfhttps
 	url = git@github.com:ahuigo/selfhttps.git
+[submodule "gonic/ginapp"]
+	path = gonic/ginapp
+	url = git@github.com:ahuigo/ginapp.git

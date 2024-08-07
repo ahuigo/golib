@@ -25,7 +25,7 @@ func TestHasOne(t *testing.T) {
 		MemberNumber sql.NullString
 		ActivatedAt  sql.NullTime
 		ChildID      uint
-		BelongChild  BelongChild `gorm:"foreignKey:child_id;references:pid;"` // BelongParent(child_id) has one child
+		BelongChild  BelongChild `gorm:"foreignKey:child_id;references:pid;"` // BelongParent(child_id) has one BelongChild(pid)
 		// BelongChild   BelongChild `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	}
 

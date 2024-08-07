@@ -7,6 +7,7 @@ import (
 
 // doc: https://gorm.io/docs/many_to_many.html#Override-Foreign-Key
 // usage: https://github.com/go-gorm/gorm/issues/6482
+// 自动生成中间表：StuCompany
 /**
 companies		->		stu_companys					-->						stus
 Name(foreignKey)		CompanyName(joinForeignKey)/Stuname(joinReferences)		Stuname(References)
@@ -26,7 +27,7 @@ Name(References)		CompanyName(joinReferences)/Stuname(joinForeignKey)		Stuname(f
 type Stu struct {
 	ID      int    `gorm:"primarykey"`
 	Stuname string `gorm:"index:,unique"`
-	// Companies []Company `gorm:"many2many:stu_companys;"` // default join key is "stu_id",ERROR: column "stu_id" of "stu_compannys" does not exist
+	// Companies []Company `gorm:"many2many:stu_companys;"` // default join key is "stu_id",ERROR: column "stu_id" of "stu_companys" does not exist
 	Companies []Company `gorm:"many2many:stu_companys;foreignKey:Stuname;joinForeignKey:Stuname;joinReferences:CompanyName;References:Name;"`
 }
 

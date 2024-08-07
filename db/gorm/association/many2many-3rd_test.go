@@ -5,6 +5,7 @@ import (
 	"tt"
 )
 
+// 直接定义Membership 作为中间表
 // 外键表
 type Student struct {
 	ID          int `gorm:"primarykey"`

@@ -15,7 +15,7 @@ func TestHasmany(t *testing.T) {
 	type User struct {
 		ID       int `gorm:"primarykey"`
 		Username string
-		Orders   []Order `gorm:"foreignKey:user_id;references:id;"` // orders(user_id) has one user, user has many orders
+		Orders   []Order `gorm:"foreignKey:user_id;references:id;"` // orders(user_id) has one user, user(id) has many orders(user_id)
 	}
 	/*
 		CREATE TABLE "orders" ("id" bigserial,"user_id" bigint,"price" decimal,PRIMARY KEY ("id"),

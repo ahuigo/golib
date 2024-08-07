@@ -21,6 +21,13 @@ func TestHasmanyCustomId(t *testing.T) {
 	db := tt.Db
 	// init
 	db.Migrator().DropTable(&Order{}, &User{})
+	/*
+		CREATE TABLE "orders" (
+			"id" bigserial,PRIMARY KEY ("id"),
+			"user_id" bigint,"price" decimal,
+			CONSTRAINT "fk_users_orders" FOREIGN KEY ("user_id") REFERENCES "users"("uid")
+		)
+	*/
 	db.Debug().AutoMigrate(&Order{}, &User{})
 	db.Debug().Create(&User{Uid: 1, Username: "Alex1",
 		Orders: []Order{

@@ -17,10 +17,13 @@ func TestBelongToCard(t *testing.T) {
 	type User struct {
 		ID         int `gorm:"primarykey"`
 		Username   string
-		CreditCard CreditCard `gorm:"foreignKey:user_id;references:id;"` //可省略, 等价于hasOne: Card(user_id) has one User
+		CreditCard CreditCard `gorm:"foreignKey:user_id;references:id;"` //可省略, 等价于hasOne: Card(user_id) has one User(id)
 	}
 	/*
-		CREATE TABLE "credit_cards" ("id" bigserial,"number" text,"user_id" bigint,PRIMARY KEY ("id"),
+		CREATE TABLE "credit_cards" (
+			"id" bigserial, PRIMARY KEY ("id"),
+			"number" text,
+			"user_id" bigint,
 			CONSTRAINT "fk_users_credit_card" FOREIGN KEY ("user_id") REFERENCES "users"("id"))
 		# \d credit_cards
 		Foreign-key constraints:

@@ -3,7 +3,6 @@ module go-lib
 go 1.19
 
 require (
-	github.com/ahuigo/requests v1.0.33
 	github.com/creack/pty v1.1.18
 	github.com/davecgh/go-spew v1.1.1
 	github.com/go-sql-driver/mysql v1.7.1
@@ -21,7 +20,6 @@ require (
 )
 
 require (
-	github.com/alessio/shellescape v1.4.2 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/hailocab/go-hostpool v0.0.0-20160125115350-e80d13ce29ed // indirect
 	github.com/kr/pretty v0.3.0 // indirect

@@ -22,10 +22,11 @@ func NewForTest(tb testing.TB, opts ...fx.Option) *fx.App {
 	return fx.New(opts...)
 }
 
-/**
+/*
+*
 Annotate lets you annotate a function's parameters and returns without you having to declare separate struct definitions for them.
 
-    func Annotate(t interface{}, anns ...Annotation) interface{}
+	func Annotate(t interface{}, anns ...Annotation) interface{}
 */
 type Conn struct {
 }
@@ -40,7 +41,7 @@ func (as *asStringer) String() string {
 
 type in struct {
 	fx.In
-	S fmt.Stringer `name:"goodStringer"`
+	S fmt.Stringer `name:"goodStringer"` // 使用时，自动寻找标签名goodStringer
 	// S *asStringer //  `name:"goodStringer"`
 }
 
@@ -54,9 +55,9 @@ func TestAnnotateResultName(t *testing.T) {
 				func() *asStringer {
 					return &asStringer{name: "stringer"}
 				},
-				fx.ResultTags(`name:"goodStringer"`),
-				fx.As(new(fmt.Stringer)),
-			), //type: fmt.Stringer[name="goodStringer"]
+				fx.ResultTags(`name:"goodStringer"`), // 声明要注入数据标签: name:"goodStringer"
+				fx.As(new(fmt.Stringer)),             // 声明转换成数据类型: fmt.Stringer[name="goodStringer"]
+			),
 		),
 		invoke: func(i in) {
 			assert.Equal(t, "stringer", i.S.String())
@@ -72,15 +73,19 @@ func TestAnnotateResultName(t *testing.T) {
 }
 func TestAnnotateParamOptional(t *testing.T) {
 	type a struct{}
-	type b struct{ a *a }
+	type b struct {
+		a  *a
+		a2 *a
+	}
 	type c struct{ b *b }
 	newA := func() *a {
 		return &a{}
 	}
 	newB := func(a *a, a2 *a) *b {
-		return &b{a}
+		return &b{a, a2}
 	}
 	newC := func(b *b) *c {
+		t.Logf("b:%v\n", b)
 		return &c{b}
 	}
 	app := fxtest.New(t,
@@ -89,7 +94,7 @@ func TestAnnotateParamOptional(t *testing.T) {
 				newA,
 				fx.ResultTags(`name:"arge2"`),
 			),
-			fx.Annotate(newB, fx.ParamTags(`name:"arg1" optional:"true"`, `name:"arge2"`)), // b{a:nil}
+			fx.Annotate(newB, fx.ParamTags(`name:"arg1" optional:"true"`, `name:"arge2"`)), // 声明第一个输入参数：arg1 是可选的, 找不到就是nil, 即b{a:nil,a2:xx}
 		),
 		fx.Invoke(newC),
 	)
@@ -97,7 +102,8 @@ func TestAnnotateParamOptional(t *testing.T) {
 	assert.Equal(t, app.Err(), nil)
 }
 
-/**
+/*
+*
 example:
 
 	type Gateway struct {
@@ -120,28 +126,34 @@ example:
 
 Is some like equivalent to,
 
-    type params struct {
-      fx.In
+	type params struct {
+	  fx.In
 
-      RO *db.Conn `name:"ro" optional:"true"`
-      RW *db.Conn `name:"rw"`
-    }
+	  RO *db.Conn `name:"ro" optional:"true"`
+	  RW *db.Conn `name:"rw"`
+	}
 
-    type result struct {
-      fx.Out
-      GW *Gateway `name:"foo"`
-    }
+	type result struct {
+	  fx.Out
+	  GW *Gateway `name:"foo"`
+	}
 
-     fx.Provide(func(p params) result {
-       return result{GW: NewGateway(p.RO, p.RW)}
-     })
-**/
+	 fx.Provide(func(p params) result {
+	   return result{GW: NewGateway(p.RO, p.RW)}
+	 })
+
+*
+*/
 func TestAnnotateParamTag(t *testing.T) {
+	// AnnotateParamTag 声明要寻找的provide 的name 标签
 	type b struct{}
-	type a struct{ b *b }
+	type a struct {
+		b  *b
+		b2 *b
+	}
 	type sliceA struct{ sa []*a }
 	newA := func(b *b, b2 *b) *a {
-		return &a{b}
+		return &a{b, b2}
 	}
 	newSliceA := func(sa []*a) *sliceA {
 		return &sliceA{sa}
@@ -166,7 +178,7 @@ func TestAnnotateParamTag(t *testing.T) {
 		fx.Populate(&got),
 	)
 	assert.Equal(t, len(got.sa), 2)
-
+	t.Logf("sa:%v\n", got.sa[0])
 }
 
 func TestAnnotateAs(t *testing.T) {
@@ -184,13 +196,13 @@ func TestAnnotateAs(t *testing.T) {
 
 	app := fx.New(
 		fx.Provide(
-			fx.Annotate(newAsStringer, fx.As(new(fmt.Stringer))),
-			fx.Annotate(newAsStringer, fx.As(new(myStringer))),
+			fx.Annotate(newAsStringer, fx.As(new(fmt.Stringer))), // 声明注入的数据类型: fmt.Stringer
+			fx.Annotate(newAsStringer, fx.As(new(myStringer))),   // 声明注入的数据类型: myStringer
 			fx.Annotate(
 				func() (string, error) {
 					return "str", nil
 				},
-				fx.As(new(I)), fx.As(new(J)),
+				fx.As(new(I)), fx.As(new(J)), // 声明注入的数据类型: I, J
 			),
 		),
 		fx.Invoke(func(s fmt.Stringer, s2 myStringer) {

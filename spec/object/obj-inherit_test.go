@@ -5,29 +5,31 @@ import (
 	"testing"
 )
 
-type PetInheritBase struct {
+type AnimalBase struct {
 	age int
 }
 
-func (p *PetInheritBase) Play() {
+func (p *AnimalBase) Play() {
 	fmt.Println("showc age:", p.age)
 }
+func (p *AnimalBase) Info() {
+	fmt.Printf("data: %#v\n", p)
+}
 
-// PetX 继承PetInheritBase
+// PetX 继承AnimalBase
 type PetX struct {
-	PetInheritBase
-	name string
+	AnimalBase
+	Name string
 }
 
 func TestInherit(t *testing.T) {
-
 	pf := fmt.Printf
+	petx := PetX{AnimalBase: AnimalBase{10}, Name: "DogAlex"}
+	petx.AnimalBase.age = 1
+	petx.age = 2 // 类型js prototype(实际修改的是 AnimalBase.age)
 
-	petx := PetX{PetInheritBase{20}, "Alex"}
-	petx.PetInheritBase.age = 1
-	petx.age = 2 // 类型js prototype
-
-	pf("%#v,%#v\n", petx.PetInheritBase.age, petx.age) // 2,2
+	pf("age: %#v,%#v\n", petx.AnimalBase.age, petx.age) // 2,2
 	petx.Play()
+	petx.Info() // 显示的是 AnimalBase 的数据, 不是PetX 的数据
 
 }

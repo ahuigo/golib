@@ -9,7 +9,7 @@ import (
 func TestOutInName(t *testing.T) {
 	type result struct {
 		fx.Out
-		Connection1 *Connection `name:"ro"`
+		Connection1 *Connection `name:"ro"` // 声明要注入的数据标签：name:"ro"
 		Connection2 *Connection `name:"rw"`
 	}
 	NewReadOnlyConnection := func() (*Connection, error) {
@@ -20,7 +20,7 @@ func TestOutInName(t *testing.T) {
 	// In
 	type InData struct {
 		fx.In
-		RoConn *Connection `name:"ro"`
+		RoConn *Connection `name:"ro"` // 声明要调用的数据标签：name:"ro"
 		RwConn *Connection `name:"rw"`
 	}
 
@@ -49,14 +49,14 @@ func TestAnnotatedName(t *testing.T) {
 	// In
 	type InData struct {
 		fx.In
-		RoConn *Connection `name:"ro"`
+		RoConn *Connection `name:"ro"` // 声明要调用的标签：name:"ro"
 		RwConn *Connection `name:"rw"`
 	}
 
 	app := fx.New(
 		fx.Provide(fx.Annotated{
 			Name:   "ro",
-			Target: NewReadOnlyConnection,
+			Target: NewReadOnlyConnection, // 声明要注入的标签：name:"ro"
 		}),
 		fx.Provide(fx.Annotated{
 			Name:   "rw",

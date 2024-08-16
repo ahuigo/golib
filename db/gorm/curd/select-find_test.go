@@ -39,7 +39,6 @@ func selectFind() {
 		panic(err)
 	}
 	fmt.Printf("stocks:%v\n", stocks)
-
 }
 func selectPluck() {
 	stock := &Stock{}

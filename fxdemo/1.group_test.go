@@ -31,9 +31,12 @@ func TestDigGroupInvokeIn(t *testing.T) {
 	//invoke dig.In with group
 	type inParams struct {
 		dig.In
-		StudentList []*Student `group:"stu"`
+		StudentList []*Student `group:"stu"` //dig.In 告诉dig StudentList的值由group:stu 提供
 	}
 	Info := func(params inParams) error {
+		if len(params.StudentList) == 0 {
+			t.Fatalf("StudentList is empty")
+		}
 		for _, u := range params.StudentList {
 			t.Log(u.Name, u.Age)
 		}

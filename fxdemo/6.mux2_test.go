@@ -23,7 +23,7 @@ func NewLogger(lc fx.Lifecycle) *log.Logger {
 			return nil
 		},
 		OnStop: func(ctx context.Context) error {
-			logger.Print("Stopp logger.")
+			logger.Print("Stop logger.")
 			return nil
 		},
 	})

@@ -9,10 +9,12 @@ import (
 )
 
 func TestWhere(t *testing.T) {
-	p := Stock{Code: "L1217", Price: 19}
-	p2 := Stock{Code: "L1218", Price: 20}
-	tt.Db.Debug().Model(&p).Find(&p2, &p)
-	err := tt.Db.Debug().Model(&p).Where("code=?", "1").Where("price>? or price<?", 1, 100).Updates(&p).Error
+	cond := Stock{Code: "L1217", Price: 19}
+	dest := Stock{Code: "L1218", Price: 20}
+	// 1. where: bind conds: &cond + &dest.PK 共同作为查询条件(忽略0、""等默认值)
+	tt.Db.Debug().Model(&Stock{}).Find(&dest, &cond)
+	// // 2. where: query fields
+	err := tt.Db.Debug().Model(&Stock{}).Where("code=?", "1").Where("price>? or price<?", 1, 100).Updates(&cond).Error
 	assert.NoError(t, err)
 }
 

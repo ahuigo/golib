@@ -4,13 +4,23 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"testing"
 	"time"
 
 	"github.com/bsm/redislock"
 	"github.com/go-redis/redis/v8"
 )
 
-func main() {
+/**
+原理：
+	SET k1 "v1" NX EX 300
+	相当于SETNX k1 "v1" + EXPIRE 300 两个命令原子化
+解释：
+	NX：if Not eXists, 只有键不存在时才设置
+	PX: Pexpire 设置键的过期时间，单位是毫秒
+*/
+
+func TestRedisLock(t *testing.T) {
 	// Connect to redis.
 	client := redis.NewClient(&redis.Options{
 		Network: "tcp",

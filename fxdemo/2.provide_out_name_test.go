@@ -18,18 +18,18 @@ func TestProvideNameWrap(t *testing.T) {
 	c := dig.New()
 
 	// provide name 1
-	p1 := func() (*DSN, error) {
+	newPrimaryDb := func() (*DSN, error) {
 		return &DSN{Addr: "primary DSN"}, nil
 	}
-	if err := c.Provide(p1, dig.Name("primary")); err != nil {
+	if err := c.Provide(newPrimaryDb, dig.Name("primary")); err != nil {
 		t.Fatal(err)
 	}
 
 	// provide name 2
-	p2 := func() (*DSN, error) {
+	newSecondaryDb := func() (*DSN, error) {
 		return &DSN{Addr: "secondary DSN"}, nil
 	}
-	if err := c.Provide(p2, dig.Name("secondary")); err != nil {
+	if err := c.Provide(newSecondaryDb, dig.Name("secondary")); err != nil {
 		t.Fatal(err)
 	}
 
@@ -48,7 +48,8 @@ func TestProvideNameWrap(t *testing.T) {
 	}
 }
 
-/**
+/*
+*
 更通用的方法：dig.Out + Name
 一般我们是有一个结构体来实现，dig也有相应的支持，用一个结构体嵌入dig.out来实现，
 相同类型的字段在tag里设置不同的name来实现

@@ -33,5 +33,6 @@ func TestFx(t *testing.T) {
 
 	fmt.Println("3. exec start...")
 	_ = app
-	// app.Run() //daemon
+	// app.Run() //Run() 阻塞, Start() 不阻塞
+	fmt.Println("4. done...")
 }

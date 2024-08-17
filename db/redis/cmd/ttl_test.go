@@ -9,19 +9,13 @@ import (
 
 func TestTTL(t *testing.T) {
 	client := rds.RDB()
-	// test get error
-	val, err := client.Get("ahuikey1").Result()
-	if err != nil {
-		fmt.Printf("get err:%v, val:%v\n", err.Error(), val)
-	}
-
 	// test ttl
-	err = client.Set("key", "value", time.Duration(1000*1000)).Err()
+	err := client.Set("key", "value", 10*time.Second).Err()
 	if err != nil {
 		println("set err:", err.Error())
 	}
 
-	ttl, err := client.TTL("key").Result() //-1 if no ttl, -2 if expired
+	ttl, err := client.TTL("key").Result() //-1 if no ttl, -2 if expired(or not existed)
 	if err != nil {
 		panic(err)
 	}

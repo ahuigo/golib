@@ -28,6 +28,7 @@ type Stock struct {
 	Code  string `gorm:"primary_key" `
 	Price uint
 	Num   int
+	Count *uint `json:"count"  gorm:"default:2"`
 }
 
 type User struct {

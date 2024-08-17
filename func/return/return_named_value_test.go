@@ -10,7 +10,7 @@ import (
 func returnNamedValue1() (err error) {
 	if fh, err := os.Open("abc"); err != nil {
 		println("open failed: ", err.Error())
-		return err //必须
+		return err //必须(不同的scope)
 	} else {
 		_ = fh
 		println("open success")
@@ -18,7 +18,7 @@ func returnNamedValue1() (err error) {
 	return
 }
 func returnNamedValue2() (err error) {
-	fh, err := os.Open("abc")
+	fh, err := os.Open("abc") // 相同的scope
 	_ = fh
 	return
 }

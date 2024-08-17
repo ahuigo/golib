@@ -31,7 +31,7 @@ func TestMigrateProductPrimary(t *testing.T) {
 }
 
 // https://gorm.io/docs/indexes.html
-type User struct {
+type User2 struct {
 	// index
 	Name string `gorm:"index;not null;default:inited"`
 
@@ -41,9 +41,11 @@ type User struct {
 
 	// custom index
 	Name2 string `gorm:"index:idx_name,unique"`
-	Name3 string `gorm:"index:,sort:desc,collate:utf8,type:btree,length:10,where:name3 != 'jinzhu'"`
-	Age   int64  `gorm:"index:,class:FULLTEXT,comment:hello \\, world,where:age > 10"`
+	Name3 string `gorm:"index:,sort:desc,type:btree,length:10,where:name3 != 'jinzhu'"`
+	Age   int64  `gorm:"index:,comment:hello \\, world,where:age > 10"`
 	Age2  int64  `gorm:"index:,expression:ABS(age)"`
+	// "idx_user2_status" btree (status) WHERE status = ANY (ARRAY['active'::text, 'archived'::text])
+	Status string `gorm:"index:,where: status in ('active'\\,'archived')"`
 }
 
 // Composite Indexes, for example:
@@ -54,6 +56,17 @@ type UserCompositeIndexes struct {
 
 	Name   string `gorm:"index:idx_member"`
 	Number string `gorm:"index:idx_member"`
+}
+
+func TestUser2Index(t *testing.T) {
+	db := tt.Db
+	db.Migrator().DropTable(&User2{})
+	err := db.Debug().AutoMigrate(
+		&User2{},
+	)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func TestUserCompositeIndexes(t *testing.T) {

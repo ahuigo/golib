@@ -42,13 +42,13 @@ func TestGet(t *testing.T) {
 	}
 
 	// 4. get value
-	val, err = client.Get("key").Result()
+	age, err := client.Get("key").Int64()
 	if err == redis.Nil {
 		t.Fatal("key does not exist")
 	} else if err != nil {
 		panic(err)
 	} else {
-		t.Logf("Get val:%#v, err:%v\n", val, err)
+		t.Logf("Get val:%#v, err:%v\n", age, err)
 	}
 
 }

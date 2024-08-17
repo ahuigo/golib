@@ -11,6 +11,9 @@ import (
 	"gorm.io/gorm/clause"
 )
 
+/*
+* refer: post/db/pg/pg-lock.md
+ */
 func TestUpdateLock(t *testing.T) {
 	var err error
 	var wg sync.WaitGroup

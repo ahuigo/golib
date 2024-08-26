@@ -31,6 +31,7 @@ func TestMigrateProductPrimary(t *testing.T) {
 }
 
 // https://gorm.io/docs/indexes.html
+// type: primary_key, index, uniqueIndex, ...
 type User2 struct {
 	// index
 	Name string `gorm:"index;not null;default:inited"`

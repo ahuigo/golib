@@ -9,15 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func TestCreate(t *testing.T) {
-	tt.Db.AutoMigrate(&Product{})
-
-	p := Product{Code: "L1217", Price: 17, Model: gorm.Model{ID: 1}}
-	err := tt.Db.Debug().Omit("ID").Create(&p).Error
-	fmt.Printf("id:%v, err:%v\n", p.ID, err)
-}
-
-func TestCreateList(t *testing.T) {
+func TestCreateBatch(t *testing.T) {
 	tt.Db.AutoMigrate(&Product{})
 
 	ps := []Product{
@@ -29,6 +21,13 @@ func TestCreateList(t *testing.T) {
 	// batch size 100
 	// db.CreateInBatches(ps, 100)
 	fmt.Printf("err:%v\n", err)
+}
+func TestCreate(t *testing.T) {
+	tt.Db.AutoMigrate(&Product{})
+
+	p := Product{Code: "L1217", Price: 17, Model: gorm.Model{ID: 1}}
+	err := tt.Db.Debug().Omit("ID").Create(&p).Error
+	fmt.Printf("id:%v, err:%v\n", p.ID, err)
 }
 
 func (u *Product) BeforeCreate(tx *gorm.DB) (err error) {

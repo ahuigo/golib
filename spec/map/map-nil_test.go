@@ -23,5 +23,11 @@ func TestMapNil(t *testing.T) {
 	if _, ok := m1["a"]; !ok {
 		fmt.Println("nil[a] not exists. ")
 	}
+    // 3. all is nil
+    fmt.Printf("nil?=%v\n", m1==nil)
+    fmt.Printf("nil?=%v\n", map[string]string(nil)==nil)
+    fmt.Printf("nil?=%v\n", []byte(nil)==nil)
+    // 3.2 this is not nil
+    fmt.Printf("[]uint8{} !=nil, %v\n", []uint8{}==nil)
 
 }

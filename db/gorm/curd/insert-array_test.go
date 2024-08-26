@@ -9,6 +9,7 @@ import (
 )
 
 func TestInsertArray(t *testing.T) {
+	// tt.Db.Migrator().DropTable(&Person{})
 	tt.Db.AutoMigrate(&Person{})
 	p := Person{
 		Addrs: pq.StringArray{"a2", "b2"},

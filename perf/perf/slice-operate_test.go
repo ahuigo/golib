@@ -6,6 +6,7 @@ import (
 )
 
 // 参考：post/go/go-array.md
+// https://geektutu.com/post/hpg-slice.html
 func TestSliceCopy(t *testing.T) {
 	a := []int{1, 2, 3, 4, 5}
 	b := make([]int, 3)

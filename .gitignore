@@ -14,6 +14,7 @@ test.db
 *.pprof
 *.profile
 go.sum
+/app/2wayssl-generator/
 
 #go-debug/delve/debug
 __debug_bin

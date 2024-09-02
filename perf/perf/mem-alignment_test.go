@@ -9,6 +9,8 @@ import (
 // 内存对齐　https://geektutu.com/post/hpg-struct-alignment.html
 /*
 *
+
+对齐作用：避免数据跨越边界字长时，处理器可能需要进行额外的内存访问操作
 对齐保证(align guarantee), 对齐倍数：
 
 	对于任意类型的变量 x ，unsafe.Alignof(x) 至少为 1。
@@ -45,13 +47,13 @@ func TestArgSize(t *testing.T) {
 
 	// struct{} 大小为 0，作为其他 struct 的字段时，一般不需要内存对齐。但是有一种情况除外：即当 struct{} 作为结构体最后一个字段时，需要内存对齐。因为如果有指针指向该字段, 返回的地址将在结构体之外，如果此指针一直存活不释放对应的内存，就会有内存泄露的问题
 	type demo3 struct {
-		c int32
-		a struct{}
-	}
+		c int32    // 4
+		a struct{} // 0(+4)
+	} // size: 4+4=8
 
 	type demo4 struct {
 		a struct{}
-		c int32
+		c int32 //4
 	}
 
 	fmt.Println(unsafe.Sizeof(demo3{})) // 8

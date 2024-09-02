@@ -24,7 +24,8 @@ func selectScan() {
 	fmt.Printf("scan stocks:%v, err:%v\n", stocks, result.Error)
 }
 
-func selectFind() {
+func selectFindAndSelect() {
+	// select stock
 	stock := &Stock{}
 	err := tt.Db.Where("price%20>=?", 1).Select([]string{"code"}).Limit(10).Find(stock).Error
 	if err != nil {
@@ -32,9 +33,9 @@ func selectFind() {
 	}
 	fmt.Printf("stock:%v\n", stock)
 
-	// select stocks
+	// select stock list
 	stocks := []Stock{}
-	err = tt.Db.Where("price%20>=?", 1).Select([]string{"code"}).Limit(10).Find(&stocks).Error
+	err = tt.Db.Debug().Where("price%20>=?", 1).Select("code,price").Limit(10).Find(&stocks).Error
 	if err != nil {
 		panic(err)
 	}
@@ -56,7 +57,7 @@ func TestSelectFind(t *testing.T) {
 	tt.Db.AutoMigrate(&Product{})
 	tt.Db.AutoMigrate(&Stock{})
 	selectPluck()
-	selectFind()
+	selectFindAndSelect()
 	selectScan()
 
 }

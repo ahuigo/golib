@@ -28,10 +28,10 @@ func TestExamType(t *testing.T) {
 	structType := reflect.TypeOf(f)
 	structPtrType := reflect.TypeOf(structPtr)
 
-	examiner(sliceType, 0)
-	examiner(sliceStrType, 0)
 	examiner(strType, 0)
 	examiner(strPtrType, 0)
+	examiner(sliceType, 0)
+	examiner(sliceStrType, 0)
 
 	mapType := reflect.TypeOf(map[string]int{"age": 1, "height": 1})
 	//interfaceType := reflect.TypeOf(map[string]interface{}{"age": 1, "name": "ahui"})
@@ -41,8 +41,13 @@ func TestExamType(t *testing.T) {
 	examiner(structPtrType, 0)
 }
 
+/*
+type.Name: string, "", StructName,..
+type.Kind: string, slice, struct,..
+type.Elem(): 获取ptr 实际的类型
+*/
 func examiner(t reflect.Type, depth int) {
-	fmt.Println(strings.Repeat("\t", depth)+"Type:", t.Name(), ",Kind:", t.Kind())
+	fmt.Println(strings.Repeat("\t", depth)+"TypeName:", t.Name(), ",Kind:", t.Kind())
 	switch t.Kind() {
 	case reflect.Array, reflect.Chan, reflect.Ptr, reflect.Slice:
 		fmt.Println(strings.Repeat("\t", depth+1) + "---Elem type----")

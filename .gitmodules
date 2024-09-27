@@ -13,3 +13,6 @@
 [submodule "gonic/ginapp"]
 	path = gonic/ginapp
 	url = git@github.com:ahuigo/ginapp.git
+[submodule "algo/gods"]
+	path = algo/gods
+	url = git@github.com:emirpasic/gods.git

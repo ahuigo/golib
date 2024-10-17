@@ -8,7 +8,9 @@ import (
 	"testing"
 	"tt"
 
+	"github.com/jackc/pgtype"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type JSONB map[string]interface{}
@@ -20,6 +22,11 @@ func (j JSONB) Value() (driver.Value, error) {
 		return nil, err
 	}
 	return value, nil
+}
+
+// 很重要
+func (j JSONB) GormDataType() string {
+	return "jsonb"
 }
 
 // Scan makes `JSONB` satisfy the `sql.Scanner` interface.
@@ -37,7 +44,8 @@ func (j *JSONB) Scan(value interface{}) error {
 
 type JsonbTable struct {
 	gorm.Model
-	Data *JSONB `json:"data" gorm:"not null;type:jsonb;default:'{}'"`
+	Data        *JSONB       `json:"data" gorm:"not null;type:jsonb;default:'{}'"`
+	EventDetail pgtype.JSONB `json:"event_detail" gorm:"type:jsonb;default:'[]';not null"`
 }
 
 func TestJsonb(t *testing.T) {
@@ -48,10 +56,32 @@ func TestJsonb(t *testing.T) {
 		{Data: &JSONB{"a": 2, "b": 3}},
 		{},
 	}
+
+	// 1. create
 	err := tt.Db.Debug().Create(&datas).Error
 	if err != nil {
 		t.Errorf("err:%v", err)
 	}
+
+	// 2. update(Note:无法insert更新json, 且会覆盖data的值)
+	data := datas[0]
+	data.Data = &JSONB{"a": 300, "b": 4}
+	data2 := data.Data // 必须备份
+	err = tt.Db.Debug().Clauses(clause.OnConflict{
+		// Columns:   []clause.Column{{Name: "requirement_id"}, {Name: "task_type"}},
+		UpdateAll: true,
+	}).Create(&data).Error
+	if err != nil {
+		t.Errorf("err:%v", err)
+	}
+	// 2.2 update(更新json)
+	err = tt.Db.Debug().Model(&data).Where("id", data.ID).
+		Update("data", data2).Error
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// 3. query
 	res := []JsonbTable{}
 	err = tt.Db.Debug().Find(&res).Error
 	if err != nil {

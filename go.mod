@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/creack/pty v1.1.18
 	github.com/davecgh/go-spew v1.1.1
+	github.com/emirpasic/gods v1.18.1
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/gocql/gocql v1.6.0
 	github.com/golang/protobuf v1.5.3

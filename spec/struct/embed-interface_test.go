@@ -1,4 +1,4 @@
-package demo
+package main
 
 import (
 	"io"
@@ -43,7 +43,7 @@ type Employee struct {
 	Worker
 }
 
-func TestEmbedStruct(t *testing.T) {
+func TestEmbedInterface(t *testing.T) {
 	// Employee 和 interface(Animal/Worker) 没有实现任何方法
 	// 1. Employee embeds Person:
 	p := Person{name: "Alex"}

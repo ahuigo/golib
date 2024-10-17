@@ -12,6 +12,7 @@ func TestCopyStructToStruct(t *testing.T) {
 		Name string
 		Role string
 		Age  int32
+        flag int // ignore when copy
 	}
 
 	type Employee struct {
@@ -19,8 +20,9 @@ func TestCopyStructToStruct(t *testing.T) {
 		Age       int32
 		DoubleAge int32
 		SuperRole string
+        flag int
 	}
-	user := User{Name: "Jinzhu", Age: 18, Role: "Admin"}
+    user := User{Name: "Jinzhu", Age: 18, Role: "Admin", flag:1}
 	employee := Employee{}
 
 	copier.Copy(&employee, &user)

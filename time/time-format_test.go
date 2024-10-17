@@ -23,6 +23,8 @@ func TestFormat(t *testing.T) {
 	println("with original zone", t1.Format(time.RFC3339Nano))
 	loc, _ := time.LoadLocation("Asia/Shanghai")
 	println("with shanghai zone", t1.In(loc).Format(time.RFC3339Nano))
+	loc, _ = time.LoadLocation("UTC")
+	println("with UTC zone\t", t1.In(loc).Format(time.RFC3339Nano))
 
 	println("now", time.Now().Format(time.RFC3339Nano))
 

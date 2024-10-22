@@ -7,9 +7,9 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	log.Println("Do stuff BEFORE the tests!")
+	log.Println("Do tearUp BEFORE the tests!")
 	exitVal := m.Run()
-	log.Println("Do stuff AFTER the tests!")
+	log.Println("Do tearDown AFTER the tests!")
 
 	os.Exit(exitVal)
 }

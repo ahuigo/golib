@@ -15,6 +15,7 @@ func TestUnmarshalCase(t *testing.T) {
 	"age_a": "18",
 	"age_b": "19",
 	"AgE_c": "19",
+    "has": null,
 	"AgE_d": "19"
 }
 `)
@@ -26,11 +27,13 @@ func TestUnmarshalCase(t *testing.T) {
 		Age_B int `json:",string"`
 		Age_C int `json:",string"`
 		AgeD  int `json:",string"` // only　this　one　can not　be　unmarshaled
+		Has  *bool `json:"has"`
 	}
 
 	customStructure := &Custom{}
 	err := json.Unmarshal(contents, customStructure)
 	fmt.Printf("%#v\n", customStructure)
+    fmt.Printf("has:%#v, isNil:%v\n", customStructure.Has, customStructure.Has==nil)
 	if err != nil {
 		t.Logf("err:%s\n", err.Error())
 	} else {

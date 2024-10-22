@@ -5,8 +5,17 @@ import (
 	"os"
 	"testing"
 	"time"
+    "encoding/json"
 )
 
+func TestFormatJson(t *testing.T) {
+    now := time.Now()
+    b,err:=json.Marshal(now)
+    if err!=nil{
+        t.Fatal(err)
+    }
+    fmt.Printf("%s", string(b))
+}
 func TestFormat(t *testing.T) {
 	println("chang zone to Africa...")
 	os.Setenv("TZ", "Europe/Berlin")

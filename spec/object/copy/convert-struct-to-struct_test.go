@@ -16,6 +16,7 @@ func TestCopyStructToStruct(t *testing.T) {
 	}
 
 	type Employee struct {
+        Rerserve int
 		Name      *string
 		Age       int32
 		DoubleAge int32
@@ -23,7 +24,7 @@ func TestCopyStructToStruct(t *testing.T) {
         flag int
 	}
     user := User{Name: "Jinzhu", Age: 18, Role: "Admin", flag:1}
-	employee := Employee{}
+    employee := Employee{Rerserve: 99}
 
 	copier.Copy(&employee, &user)
 	fmt.Printf("%#v\n", employee)

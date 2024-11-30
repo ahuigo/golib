@@ -7,6 +7,7 @@ type Stu struct {
 type obj struct {
 	val  int
 	stu  *Stu
+	stu2  Stu
 	Name string
 }
 

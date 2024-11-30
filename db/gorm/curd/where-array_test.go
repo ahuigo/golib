@@ -24,6 +24,7 @@ func TestWhereElemInQueryArray(t *testing.T) {
 	_ = tt.Db.Debug().Model(&p).Where("code = any(?)", pq.StringArray([]string{"L21"})).Updates(&p).Error
 	// WHERE code in ('L21') AND "code" = 'L1217'
 	_ = tt.Db.Debug().Model(&p).Where("code in (?)", []string{"L21"}).Updates(&p).Error
+	// _ = tt.Db.Debug().Model(&p).Where("code = any(?)", []string{"L21"}).Updates(&p).Error //  error: malformed array literal: "L21"
 }
 
 func TestWhereArrayAny(t *testing.T) {

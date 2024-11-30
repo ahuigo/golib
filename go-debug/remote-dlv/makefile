@@ -1,3 +1,4 @@
+# doc: post/go/go-debug-vscode.md#docker debug
 image:
 	docker build -t micro-service-example .
 stop:

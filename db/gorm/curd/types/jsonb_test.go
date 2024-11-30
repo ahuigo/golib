@@ -1,4 +1,4 @@
-package curd
+package types
 
 import (
 	"database/sql/driver"
@@ -44,11 +44,25 @@ func (j *JSONB) Scan(value interface{}) error {
 
 type JsonbTable struct {
 	gorm.Model
-	Data        *JSONB       `json:"data" gorm:"not null;type:jsonb;default:'{}'"`
-	EventDetail pgtype.JSONB `json:"event_detail" gorm:"type:jsonb;default:'[]';not null"`
+	Data  *JSONB       `json:"data" gorm:"not null;type:jsonb;default:'{}'"`
+	Data2 pgtype.JSONB `json:"data2" gorm:"type:jsonb;default:'[]';not null"`
 }
 
 func TestJsonb(t *testing.T) {
+	o := pgtype.JSONB{}
+	json.Unmarshal([]byte(`{"a":1}`), &o)
+	o2 := struct {
+		A pgtype.JSONB `json:"a"`
+	}{
+		A: o,
+	}
+	res, err := json.Marshal(o2)
+	if err != nil {
+		t.Fatal(err)
+	}
+	println(string(res))
+}
+func TestMyJsonb(t *testing.T) {
 	tt.Db.AutoMigrate(&JsonbTable{})
 
 	datas := []JsonbTable{
@@ -63,7 +77,7 @@ func TestJsonb(t *testing.T) {
 		t.Errorf("err:%v", err)
 	}
 
-	// 2. update(Note:无法insert更新json, 且会覆盖data的值)
+	// 2. upsert(Note:无法insert更新json(因为包括default), 且会覆盖data的值)
 	data := datas[0]
 	data.Data = &JSONB{"a": 300, "b": 4}
 	data2 := data.Data // 必须备份

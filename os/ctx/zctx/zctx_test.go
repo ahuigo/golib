@@ -1,5 +1,5 @@
 package zctx
-
+// 演示context: 支持cancelFns + error
 import (
 	"context"
 	"errors"

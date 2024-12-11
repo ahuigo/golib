@@ -76,13 +76,6 @@ func TestReflectStructUnexported(t *testing.T) {
 		fieldType := v.Type().Field(i)
 		field := v.Field(i)
 
-		/* error: reflect.Value.UnsafeAddr of unaddressable value (xx)
-		   1. 只有指针类型的值才能获取其字段的地址。非指针类型的值是不可寻址的
-		   2. 转成pointer　才能访问通过UnsafeAddr访问到 unexported field
-		*/
-		// pv := reflect.NewAt(fieldType.Type, unsafe.Pointer(field.UnsafeAddr())).Elem().Interface()
-		// _ = pv
-
 		// method2(recommended): Get the field, returns https://golang.org/pkg/reflect/#Value
 		rv := "<unknown>"
 		switch field.Kind() {
@@ -95,6 +88,12 @@ func TestReflectStructUnexported(t *testing.T) {
 				fi := field.Interface()
 				rv = fmt.Sprintf("%#v", fi)
 			} else {
+				/* error: reflect.Value.UnsafeAddr of unaddressable value (xx)
+				1. 只有指针类型的值才能获取其字段的地址。非指针类型的值是不可寻址的
+				2. 转成pointer　才能访问通过UnsafeAddr访问到 unexported field
+				*/
+				// fi := reflect.NewAt(fieldType.Type, unsafe.Pointer(field.UnsafeAddr())).Elem().Interface()
+				// rv = fmt.Sprintf("%#v", fi)
 				rv = "<cannot return value from unexported field or method>"
 			}
 

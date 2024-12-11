@@ -21,8 +21,8 @@ type Product struct {
 func TestMigrate(t *testing.T) {
 	db := tt.Db
 	// 自动迁移模式
-	// db.DropTableIfExists(&Product{})
-	db.AutoMigrate(&Product{})
+	db.Migrator().DropTable(&Product{})
+	db.Debug().AutoMigrate(&Product{})
 
 	// 创建
 	db.Create(&Product{Code: "L1217", Price: 17})

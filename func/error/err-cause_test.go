@@ -39,8 +39,8 @@ func TestErrCause(t *testing.T) {
 
 func isPathError(err error) bool {
 	var target *os.PathError
-	// return errors.Is(err, target) // 不能用Is, 因为Is是判断是否是同一个error, 而不是判断是否是同一个类型
-	return errors.As(err, &target)
+	// return errors.Is(err, target) // 不能用Is, 因为Is是递归判断`error值``, As是for递归As/Unwrap判断`error类型``
+	return errors.As(err, &target) // 会改写target
 }
 
 func isPathErrorStrict(err error) bool {

@@ -2,10 +2,32 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"reflect"
 	"strings"
 	"testing"
 )
+
+func TestTypeAs(t *testing.T) {
+	var target *os.PathError
+	err := &os.PathError{
+		Op: "open",
+	}
+
+	// errors.As(err, &target)
+	As := func(err, targetPtr any) {
+		tPtrVal := reflect.ValueOf(targetPtr)
+		targetType := tPtrVal.Type().Elem()
+		// 判断err是否赋值给targetType类型
+		if reflect.TypeOf(err).AssignableTo(targetType) {
+			tPtrVal.Elem().Set(reflect.ValueOf(err))
+		}
+	}
+	As(err, &target)
+	if target.Op != "open" {
+		t.Errorf("target.Op = %q, want %q", target.Op, "open")
+	}
+}
 
 type Foo struct {
 	A int    `tag1:"First Tag" tag2:"Second Tag"`

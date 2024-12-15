@@ -33,7 +33,7 @@ func TestReflecPointerUnexported(t *testing.T) {
 		// method1: Get the field, returns https://golang.org/pkg/reflect/#StructField
 		pv := reflect.NewAt(fieldType.Type, unsafe.Pointer(field.UnsafeAddr())).Elem().Interface()
 
-		// method2(recommended): Get the field, returns https://golang.org/pkg/reflect/#Value
+		// method2(recommended and safe): Get the field, returns https://golang.org/pkg/reflect/#Value
 		rv := "<unknown>"
 		switch field.Kind() { // 如果直接用field.Interface() 会报错: unexported field or method
 		case reflect.String:
@@ -121,10 +121,13 @@ func TestReflectStructUnexportedConvertPtr(t *testing.T) {
 
 	fmt.Println("\nreflect:")
 	for i := 0; i < vPtr.NumField(); i++ {
-		fieldType := vPtr.Type().Field(i)
+		fieldS := vPtr.Type().Field(i)
 		field := vPtr.Field(i)
+		fieldType := field.Type()
+		//field := vPtr.FieldByName("name")
+		//fieldType,_ := v.Type().FieldByName(fieldName).Type
 
-		pv := reflect.NewAt(fieldType.Type, unsafe.Pointer(field.UnsafeAddr())).Elem().Interface()
+		pv := reflect.NewAt(field.Type(), unsafe.Pointer(field.UnsafeAddr())).Elem().Interface()
 
 		// method2(recommended): Get the field, returns https://golang.org/pkg/reflect/#Value
 		rv := "<unknown>"
@@ -143,6 +146,6 @@ func TestReflectStructUnexportedConvertPtr(t *testing.T) {
 
 		}
 
-		fmt.Printf("k:%s, rv:%v, pv:%v\n", fieldType.Name, rv, pv)
+		fmt.Printf("k:%s,ktype:%s, rv:%v, pv:%v\n", fieldS.Name, fieldType.Name(), rv, pv)
 	}
 }

@@ -32,6 +32,7 @@ type Stock struct {
 
 type User struct {
 	gorm.Model
-	UserName string
+	Username string `gorm:"uniqueIndex:idx_username" json:"username"`
 	Age      uint
+	Score    uint
 }

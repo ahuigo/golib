@@ -60,31 +60,44 @@ func TestMyBagRelations(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	datas := []BagRelationsTable{
-		{
-			Data: &BagRelations{"a": "b"},
-		},
+	record := &BagRelationsTable{
+		Model: gorm.Model{ID: 1},
+		Data:  &BagRelations{"a": "old"},
+	}
+	// 1. onconflict时，只能用DoUpdates 手动更新data(因为updateAll 忽略excluded.data，　因为它有default)
+	// 1.2 `return　id,data`会修改传入数据的id,data字段(如果没有excluded,就用旧值)
+	if err := db.Clauses(clause.OnConflict{
+		Columns: []clause.Column{{Name: "id"}},
+		DoUpdates: clause.Assignments(map[string]any{
+			"id": gorm.Expr("excluded.id"),
+		}),
+		UpdateAll: true, // DoUpdates + UpdateAll 会合并
+	}).
+		Create(record).Error; err != nil {
+		t.Fatal(err)
 	}
 
-	// 2. upsert(Note:无法insert更新json(因为包括default), 且会覆盖data的值)
-	data := datas[0]
-	data.Data = &BagRelations{"a": "300", "b": "4"}
-	data2 := data.Data // 必须备份
+	// 2.1 当onconflictAll时, 忽略excluded.data，　因为它有default)
+	// 2.2 `return　id,data`会修改传入数据的id,data字段(如果没有excluded,就用旧值)
+	record.Data = &BagRelations{"a": "new"}
+	data := record.Data // 必须备份
 	err := db.Clauses(clause.OnConflict{
 		// Columns:   []clause.Column{{Name: "requirement_id"}, {Name: "task_type"}},
-		UpdateAll: true,
-	}).Create(&data).Error
+		UpdateAll: true, // DoUpdates + UpdateAll 会合并
+	}).Create(&record).Error
 	if err != nil {
 		t.Errorf("err:%v", err)
 	}
-	// 2.2 update(更新json)
-	err = tt.Db.Debug().Model(&data).Where("id", data.ID).
-		Update("data", data2).Error
+	fmt.Println("data.Data=", record.Data)
+
+	// 3. update 手动更新json字段: Update("data", data2)
+	err = tt.Db.Debug().Model(&record).Where("id", record.ID).
+		Update("data", data).Error
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	// 3. query
+	// 4. query
 	res := []BagRelationsTable{}
 	err = tt.Db.Debug().Find(&res).Error
 	if err != nil {

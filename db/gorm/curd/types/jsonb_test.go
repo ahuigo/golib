@@ -48,7 +48,7 @@ type JsonbTable struct {
 	Data2 pgtype.JSONB `json:"data2" gorm:"type:jsonb;default:'[]';not null"`
 }
 
-func TestJsonb(t *testing.T) {
+func TestJsonbMarshal(t *testing.T) {
 	o := pgtype.JSONB{}
 	json.Unmarshal([]byte(`{"a":1}`), &o)
 	o2 := struct {
@@ -65,9 +65,16 @@ func TestJsonb(t *testing.T) {
 func TestMyJsonb(t *testing.T) {
 	tt.Db.AutoMigrate(&JsonbTable{})
 
+	// pgtype.JSONB
+	o := pgtype.JSONB{}
+	json.Unmarshal([]byte(`{"a":1}`), &o)
+	// MyJsonb
 	datas := []JsonbTable{
 		{Data: &JSONB{"a": 1, "b": 2}},
-		{Data: &JSONB{"a": 2, "b": 3}},
+		{
+			Data:  &JSONB{"a": 2, "b": 3},
+			Data2: o,
+		},
 		{},
 	}
 
@@ -77,18 +84,23 @@ func TestMyJsonb(t *testing.T) {
 		t.Errorf("err:%v", err)
 	}
 
-	// 2. upsert(Note:无法insert更新json(因为包括default), 且会覆盖data的值)
+	// 2. upsert(Note:onconflict all不能更新Data json(因为它有default就会使用默认值)
+	// 2.1 `return　id,data`会修改传入数据的id,data字段(如果没有excluded,就用旧值)
 	data := datas[0]
 	data.Data = &JSONB{"a": 300, "b": 4}
+	data.Data2 = o
 	data2 := data.Data // 必须备份
 	err = tt.Db.Debug().Clauses(clause.OnConflict{
 		// Columns:   []clause.Column{{Name: "requirement_id"}, {Name: "task_type"}},
-		UpdateAll: true,
+		DoUpdates: clause.Assignments(map[string]any{
+			"data": gorm.Expr("excluded.data"), // 手动更新data json
+		}),
+		UpdateAll: true, // DoUpdates + UpdateAll 会合并
 	}).Create(&data).Error
 	if err != nil {
 		t.Errorf("err:%v", err)
 	}
-	// 2.2 update(更新json)
+	// 2.2 update(手动更新json)
 	err = tt.Db.Debug().Model(&data).Where("id", data.ID).
 		Update("data", data2).Error
 	if err != nil {

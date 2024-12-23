@@ -12,6 +12,11 @@ func TestAstWalk(t *testing.T) {
 	package mainx
 	import "fmt"
 	func Loop4(n int) { }
+	type User struct {
+		Name string
+	}
+	var u = User{Name: "test"}
+
 	`
 	fset := token.NewFileSet()
 	fileAst, err := parser.ParseFile(fset, "", srccode, parser.ParseComments)

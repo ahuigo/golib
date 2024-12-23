@@ -8,6 +8,7 @@ import (
 	"testing"
 )
 
+// 类型判断As
 func TestTypeAs(t *testing.T) {
 	var target *os.PathError
 	err := &os.PathError{
@@ -36,8 +37,9 @@ type Foo struct {
 type SliceStr []string
 
 func TestExamType(t *testing.T) {
+	type MyStr string
 	sl := []int{1, 2, 3}
-	greeting := "hello"
+	var greeting MyStr = "hello"
 	greetingPtr := &greeting
 	f := Foo{A: 10, B: "Salutations"}
 	structPtr := &f
@@ -65,7 +67,7 @@ func TestExamType(t *testing.T) {
 
 /*
 type.Name: string, "", StructName,..
-type.Kind: string, slice, struct,..
+type.Kind: string, slice, struct,..(注意Kind返回的是underlying type, Type.Name()才返回别名类型)
 type.Elem(): 获取ptr 实际的类型
 */
 func examiner(t reflect.Type, depth int) {

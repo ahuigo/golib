@@ -28,10 +28,10 @@ func TestCreateConflictUpdateReturn(t *testing.T) {
 	p := &Product1{Code: "L1217", Price: 17}
 	err := tt.Db.Debug().
 		Clauses(clause.OnConflict{
-			Columns: []clause.Column{{Name: "code"}},
+			Columns: []clause.Column{{Name: "code"}}, // 主键、唯一键
 			DoUpdates: clause.Assignments(map[string]any{
 				// "id": gorm.Expr("excluded.id"), // id会自增 (默认值有语法问题: 少了excluded.)
-				"id": gorm.Expr("product1.id"), // id 不会自增
+				"id": gorm.Expr("product1.id"), // id 不会自增(正常不应该自增)
 				// "code": gorm.Expr("excluded.code"), // id 不会自增
 			}),
 		}).
@@ -46,13 +46,22 @@ func TestCreateUpdateAll(t *testing.T) {
 	tt.Db.AutoMigrate(&User{})
 	db := tt.Db
 	users := []User{
-		{UserName: "usr1", Age: 1},
-		{UserName: "usr2", Age: 2},
+		{Username: "usr1", Age: 1, Score: 1},
+		{Username: "usr2", Age: 2},
 	}
 	db.Debug().
-		Omit("age").
 		Clauses(clause.OnConflict{
-			// Columns:   []clause.Column{{Name: "groupname"},{Name:"username"}}, //指定联合主键, 默认是primary key(仅限单主键)
+			Columns:   []clause.Column{{Name: "username"}}, //指定联合主键, 默认是primary key(仅限单主键)
+			UpdateAll: true,
+		}).
+		Create(&users)
+		/*
+			问题1：update All 会更新0值吗？ 会的
+		*/
+	users = []User{{Username: "usr1", Age: 0, Score: 2}}
+	db.Debug().
+		Clauses(clause.OnConflict{
+			Columns:   []clause.Column{{Name: "username"}}, //指定联合主键, 默认是primary key(仅限单主键)
 			UpdateAll: true,
 		}).
 		Create(&users)
@@ -63,10 +72,16 @@ func TestCreateUpdatePartial(t *testing.T) {
 	tt.Db.Debug().AutoMigrate(&City{})
 	db := tt.Db
 	// Update columns to default value on `id` conflict
-	users := []User{}
+	users := []User{
+		{Age: 1, Score: 1},
+	}
 	db.Clauses(clause.OnConflict{
-		Columns:   []clause.Column{{Name: "id"}},
-		DoUpdates: clause.Assignments(map[string]interface{}{"role": "user"}),
+		Columns: []clause.Column{{Name: "id"}},
+		DoUpdates: clause.Assignments(map[string]any{
+			"id":  gorm.Expr("user.id"), // id 不会自增(正常不应该自增)
+			"Age": 10,
+		}),
+		// UpdateAll: true,
 	}).Create(&users)
 	// MERGE INTO "users" USING *** WHEN NOT MATCHED THEN INSERT *** WHEN MATCHED THEN UPDATE SET ***; SQL Server
 	// INSERT INTO `users` *** ON DUPLICATE KEY UPDATE ***; MySQL

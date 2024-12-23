@@ -8,10 +8,10 @@ import (
 )
 
 func mergeStruct1[T any](s1 *T) *T {
-	d1, _ := json.Marshal(s1)
+	data, _ := json.Marshal(s1)
 	// 利用反射根据s1的类型创建一个新的*T(s1 类型*T, Elem()获取类型T)
 	s := reflect.New(reflect.TypeOf(s1).Elem()).Interface()
-	json.Unmarshal(d1, s)
+	json.Unmarshal(data, s)
 	return s.(*T)
 }
 

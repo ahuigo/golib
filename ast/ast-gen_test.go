@@ -1,3 +1,4 @@
+// refer: http://timd.cn/go/ast/
 package main
 
 import (
@@ -186,14 +187,16 @@ func AddImport(file *ast.File, packageName string) {
 			Value: fmt.Sprintf(`"%s"`, packageName),
 		},
 	}
+	// 存储导入规范：方便快速访问所有导入的包
+	file.Imports = append(file.Imports, importSpec)
 	// 创建导入声明
 	importDecl := &ast.GenDecl{
 		Tok:   token.IMPORT,
 		Specs: []ast.Spec{importSpec},
 	}
-	file.Imports = append(file.Imports, importSpec)
 	// 将导入声明添加到文件的声明列表
 	file.Decls = append([]ast.Decl{importDecl}, file.Decls...)
+
 }
 
 // CreatePrintStatement 创建打印语句

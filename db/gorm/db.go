@@ -26,8 +26,8 @@ func GetDb() *gorm.DB {
 		},
 	)
 	_ = newLogger
-
-	dsn := "host=localhost user=role1 password='' dbname=ahuigo port=5432 sslmode=disable TimeZone=Asia/Shanghai"
+	// schema prefix: https://stackoverflow.com/questions/54203807/how-set-a-specifc-database-schema-with-gorm
+	dsn := "host=localhost user=role1 password='' dbname=ahuigo port=5432 sslmode=disable search_path=public TimeZone=Asia/Shanghai"
 	//dsn:="host=localhost user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai"
 	Db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
 		// Logger: newLogger,

@@ -1,6 +1,8 @@
 package curd
 
 import (
+	"time"
+
 	"github.com/lib/pq"
 	"gorm.io/gorm"
 )
@@ -24,10 +26,11 @@ type Product struct {
 }
 
 type Stock struct {
-	Code  string `gorm:"primary_key" `
-	Price uint
-	Num   int
-	Count *uint `json:"count"  gorm:"default:2"`
+	Code      string `gorm:"primary_key" `
+	Price     uint
+	Num       int
+	Count     *uint     `json:"count"  gorm:"default:2"`
+	CreatedAt time.Time `json:"created_at" gorm:"created_at"`
 }
 
 type User struct {

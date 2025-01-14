@@ -16,6 +16,7 @@ var outFile, _ = os.Create("tmp/a.go.txt")
 
 const srccode = `
 	package main
+	var A = 10
 	func Loop(n int) { }
 	func Loop2(n int) { }
 	func TestX() {

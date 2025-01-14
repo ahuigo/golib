@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"testing"
+	"time"
 	"tt"
 
 	"gorm.io/gorm"
@@ -27,6 +28,40 @@ func TestCreate(t *testing.T) {
 
 	p := Product{Code: "L1217", Price: 17, Model: gorm.Model{ID: 1}}
 	err := tt.Db.Debug().Omit("ID").Create(&p).Error
+	fmt.Printf("id:%v, err:%v\n", p.ID, err)
+}
+
+// Omit 只能有一个，它会覆盖掉之前的
+func TestCreateOmits(t *testing.T) {
+	tt.Db.AutoMigrate(&Product{})
+
+	p := Product{Code: "L1217", Price: 17, Model: gorm.Model{ID: 1}}
+	err := tt.Db.Debug().Omit("ID").Omit("Price").Create(&p).Error
+	fmt.Printf("id:%v, err:%v\n", p.ID, err)
+}
+
+// Omit 应该合并:ID,Price 或　id,price
+func TestCreateOmitOne(t *testing.T) {
+	tt.Db.AutoMigrate(&Product{})
+
+	p := Product{Code: "L1217", Price: 17, Model: gorm.Model{ID: 1}}
+	err := tt.Db.Debug().Omit("ID,Price").Create(&p).Error
+	// err := tt.Db.Debug().Omit("id,price").Create(&p).Error
+	fmt.Printf("id:%v, err:%v\n", p.ID, err)
+}
+func TestCreateAutoID(t *testing.T) {
+	type ProductID struct {
+		// model外，要加：autoIncrement
+		ID uint `gorm:"unique;primaryKey;autoIncrement" json:"id" form:"id"`
+		//// 只能叫Model，否则会UpdatedAt/CreatedAt不自动更新
+		CreatedAt time.Time  `json:"-"`
+		UpdatedAt time.Time  `json:"-"`
+		DeletedAt *time.Time `json:"-"`
+	}
+	// tt.Db.Migrator().DropTable(&ProductID{})
+	tt.Db.AutoMigrate(&ProductID{})
+	p := ProductID{}
+	err := tt.Db.Debug().Create(&p).Error
 	fmt.Printf("id:%v, err:%v\n", p.ID, err)
 }
 

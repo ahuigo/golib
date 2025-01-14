@@ -51,3 +51,44 @@ func TestUpdateArray(t *testing.T) {
 	}
 
 }
+
+func TestUpdatesArray(t *testing.T) {
+	// 自动迁移模式
+	var err error
+	tt.Db.Migrator().DropTable(&Person{})
+	tt.Db.AutoMigrate(&Person{})
+
+	// 1. insert
+	p := Person{Name: "com", Username: "Alex", Age: 3, Addrs: []string{"a", "b"}}
+	if err = tt.Db.Debug().Create(&p).Error; err != nil {
+		t.Fatal(err)
+	}
+
+	// 2. find
+	res := Person{}
+	if err := tt.Db.Where("username=?", p.Username).Find(&res).Error; err != nil {
+		panic(err)
+	} else {
+		t.Logf("res:%v\n", res)
+		if res.Addrs[0] != "a" {
+			panic("error addrs")
+		}
+	}
+
+	/************* update **
+	以下这几种, 默认会被Updates忽略:
+	 1. []string(nil)
+	********************************************/
+	// 2. update empty
+	// addrs := pq.StringArray{}
+	db := tt.Db.Model(&Person{}).Debug()
+	p = Person{Addrs: []string(nil)}
+	if err := db.Where("username=?", "Alex").Updates(p).Error; err != nil {
+		t.Fatal(err)
+	}
+	p = Person{Addrs: pq.StringArray{}}
+	if err := db.Where("username=?", "Alex").Updates(p).Error; err != nil {
+		t.Fatal(err)
+	}
+
+}

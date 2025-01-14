@@ -48,26 +48,19 @@ func selectFirstEmpty2() {
 	stock := &Stock{}
 	// gorm2 只有在你使用 First、Last、Take 这些预期会返回结果的方法查询记录时，才会返回 ErrRecordNotFound，我们还移除了 RecordNotFound
 	cursor := tt.Db.Where("price%20>=?", 100).Select([]string{"code"}).First(stock)
+	// cursor := tt.Db.Where("price%20>=?", 100).Select([]string{"code"}).Scan([]Stock{})
 	err := cursor.Error
 	fmt.Printf("\nFirst empty: err=%v, stock=%v\n", err, stock)
 	fmt.Printf("read r.RowsAffected == 0: %v\n", cursor.RowsAffected == 0)
 	if err != nil {
 		fmt.Println("read First().Error is RecordNotFound():", errors.Is(err, gorm.ErrRecordNotFound)) // otgorm
+		// fmt.Println("read First().Error is ErrNoRows():", errors.Is(err, sql.ErrNoRows), err == sql.ErrNoRows) // otgorm
 		fmt.Println("read First().Error.Error(): ", err.Error())
 	}
 
 }
 
 func TestSelectEmpty2(t *testing.T) {
-	var err error
-	if err != nil {
-		println(err)
-		println(err.Error())
-		fmt.Println(err)
-		panic("连接数据库失败")
-	}
-	defer tt.SqlDb.Close()
-
 	// 自动迁移模式
 	tt.Db.AutoMigrate(&Product{})
 	tt.Db.AutoMigrate(&Stock{})

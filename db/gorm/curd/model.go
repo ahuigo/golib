@@ -23,6 +23,7 @@ type Product struct {
 	gorm.Model
 	Code  string
 	Price uint
+	Data  []byte
 }
 
 type Stock struct {

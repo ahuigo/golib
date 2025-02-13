@@ -26,7 +26,7 @@ func TestCreateBatch(t *testing.T) {
 func TestCreate(t *testing.T) {
 	tt.Db.AutoMigrate(&Product{})
 
-	p := Product{Code: "L1217", Price: 17, Model: gorm.Model{ID: 1}}
+	p := Product{Code: "L1217", Price: 17, Model: gorm.Model{ID: 1}, Data: []byte("123")}
 	err := tt.Db.Debug().Omit("ID").Create(&p).Error
 	fmt.Printf("id:%v, err:%v\n", p.ID, err)
 }
@@ -45,7 +45,8 @@ func TestCreateOmitOne(t *testing.T) {
 	tt.Db.AutoMigrate(&Product{})
 
 	p := Product{Code: "L1217", Price: 17, Model: gorm.Model{ID: 1}}
-	err := tt.Db.Debug().Omit("ID,Price").Create(&p).Error
+	err := tt.Db.Debug().Omit("ID", "Price").Create(&p).Error
+	// err := tt.Db.Debug().Omit("ID,Price").Create(&p).Error
 	// err := tt.Db.Debug().Omit("id,price").Create(&p).Error
 	fmt.Printf("id:%v, err:%v\n", p.ID, err)
 }

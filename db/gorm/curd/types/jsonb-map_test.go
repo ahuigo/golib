@@ -12,10 +12,10 @@ import (
 	"gorm.io/gorm/clause"
 )
 
-type BagRelations map[string]string
+type MapStrStr map[string]string
 
 // Value makes `BagRelations` satisfy the `driver.Valuer` interface.
-func (j BagRelations) Value() (driver.Value, error) {
+func (j MapStrStr) Value() (driver.Value, error) {
 	value, err := json.Marshal(j)
 	if err != nil {
 		return nil, err
@@ -24,13 +24,12 @@ func (j BagRelations) Value() (driver.Value, error) {
 }
 
 // 很重要: 用于指定pg的数据类型
-func (j BagRelations) GormDataType() string {
-	// return "BagRelations"
+func (j MapStrStr) GormDataType() string {
 	return "jsonb"
 }
 
 // Scan makes `BagRelations` satisfy the `sql.Scanner` interface.
-func (j *BagRelations) Scan(value interface{}) error {
+func (j *MapStrStr) Scan(value interface{}) error {
 	bytes, ok := value.([]byte)
 	if !ok {
 		return errors.New("type assertion to []byte failed")
@@ -42,8 +41,8 @@ func (j *BagRelations) Scan(value interface{}) error {
 	return nil
 }
 
-// DefaultValueInterface (没有用，不接受自定义有类型)
-func (u *BagRelations) DefaultValueInterface() map[string]interface{} {
+// pgDefault: DefaultValueInterface (没有用，不接受自定义有类型)
+func (u *MapStrStr) DefaultValueInterface() map[string]interface{} {
 	return map[string]interface{}{
 		"name": "alex",
 	}
@@ -51,7 +50,7 @@ func (u *BagRelations) DefaultValueInterface() map[string]interface{} {
 
 type BagRelationsTable struct {
 	gorm.Model
-	Data *BagRelations `json:"data" gorm:"not null;default:'{}'"`
+	Data *MapStrStr `json:"data" gorm:"not null;default:'{}'"`
 }
 
 func TestMyBagRelations(t *testing.T) {
@@ -62,7 +61,7 @@ func TestMyBagRelations(t *testing.T) {
 
 	record := &BagRelationsTable{
 		Model: gorm.Model{ID: 1},
-		Data:  &BagRelations{"a": "old"},
+		Data:  &MapStrStr{"a": "old"},
 	}
 	// 1. onconflict时，只能用DoUpdates 手动更新data(因为updateAll 忽略excluded.data，　因为它有default)
 	// 1.2 `return　id,data`会修改传入数据的id,data字段(如果没有excluded,就用旧值)
@@ -79,7 +78,7 @@ func TestMyBagRelations(t *testing.T) {
 
 	// 2.1 当onconflictAll时, 忽略excluded.data，　因为它有default)
 	// 2.2 `return　id,data`会修改传入数据的id,data字段(如果没有excluded,就用旧值)
-	record.Data = &BagRelations{"a": "new"}
+	record.Data = &MapStrStr{"a": "new"}
 	data := record.Data // 必须备份
 	err := db.Clauses(clause.OnConflict{
 		// Columns:   []clause.Column{{Name: "requirement_id"}, {Name: "task_type"}},

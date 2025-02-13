@@ -51,6 +51,12 @@ func TestParseAllVars(t *testing.T) {
 				}
 			}
 		}
+		// 断言函数声明
+		if funcDecl, ok := decl.(*ast.FuncDecl); ok {
+			funcname := funcDecl.Name.Name
+			println(funcname)
+		}
+
 	}
 
 	// 将修改后的AST重新打印为Go代码并输出

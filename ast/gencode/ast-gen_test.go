@@ -1,5 +1,5 @@
 // refer: http://timd.cn/go/ast/
-package main
+package gencode
 
 import (
 	"bytes"

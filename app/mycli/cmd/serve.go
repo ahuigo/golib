@@ -1,6 +1,5 @@
 /*
 Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
@@ -11,30 +10,23 @@ import (
 )
 
 // serveCmd represents the serve command
+var username string
+var sqls []string
 var serveCmd = &cobra.Command{
-	Use:   "serve",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Use:   "serve [flags] sql1 sql2 sql3 ...",
+	Short: "short msg for serve",
+	Long:  `mycli serve is used to start the server`,
+	Args:  cobra.MinimumNArgs(0), // 允许 0 个或多个参数
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("serve called")
+		sqls = args // 将命令行参数赋值给 sqls
+		fmt.Println("serve called, with args:", args)
+		fmt.Println("config:", cfgFile)
+		fmt.Println("user:", username)
+		fmt.Println("SQLs:", sqls)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(serveCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// serveCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// serveCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	serveCmd.LocalFlags().StringVarP(&username, "user", "u", "anonymouse", "用户名")
 }

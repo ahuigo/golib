@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
+	"testing"
 
-    "github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v5"
 )
 
-func main() {
+func TestVerified(t *testing.T) {
 	// sample token string taken from the New example
 	tokenString := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJiYXIiLCJuYmYiOjE0NDQ0Nzg0MDB9.-BRTwjN-sAlUjO-82qDrNHdMtGAwgWH05PrN49Ep_sU"
 

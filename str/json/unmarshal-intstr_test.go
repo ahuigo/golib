@@ -17,6 +17,7 @@ type Int2 int
 type Item struct {
 	Price IntStr `json:"price"`
 	Age   Int2   `json:"age"`
+	Num   any    `json:"num"`
 }
 
 func (v *Int2) UnmarshalJSON(b []byte) (err error) {
@@ -48,11 +49,11 @@ func TestUnmarshalCustom(t *testing.T) {
 	item1 := &Item{}
 	item2 := &Item{}
 	item3 := &Item{}
-	bytes := []byte(`{"price":"200","age":"10"}`)
+	bytes := []byte(`{"price":"200","age":"10", "num":99}`)
 	_ = json.Unmarshal(bytes, item1)
 	_ = gojson.Unmarshal(bytes, item2)
 	_ = sonic.Unmarshal(bytes, item3)
-	t.Logf("%#v\n", item1)
+	t.Logf("%#v, %T\n", item1, item1.Num) // int -> float64
 	t.Logf("%#v\n", item2)
 	t.Logf("%#v\n", item3)
 }

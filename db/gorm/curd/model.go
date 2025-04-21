@@ -20,6 +20,7 @@ type Person struct {
 }
 
 type Product struct {
+	//// 只能叫Model，否则会UpdatedAt/CreatedAt不自动更新
 	gorm.Model
 	Code  string
 	Price uint

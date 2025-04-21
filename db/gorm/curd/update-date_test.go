@@ -5,6 +5,7 @@ import (
 	"tt"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 func TestUpdateCurrentDate(t *testing.T) {
@@ -23,9 +24,21 @@ func TestUpdateCurrentDate(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// 2. update:  UPDATE "person1" SET "created_at"='2024-07-12 22:57:40.442',"updated_at"='2024-07-12 22:57:40.444',"age"=4 WHERE id=1
+	// 2. update:  UPDATE "person1" SET "updated_at"='2025-04-21 21:54:49.763',"age"=5 WHERE id=1 AND "person1"."deleted_at" IS NULL AND "id" = 1
+	p = Person1{ID: 1, Age: 5}
 	db := tt.Db.Debug()
 	if err := db.Model(&p).Where("id=?", 1).Updates(&p).Error; err != nil {
+		t.Fatal(err)
+	}
+
+	// 3. updateAll:UPDATE "person1" SET "updated_at"='2025-04-21 21:54:49.763',"age"=5 WHERE id=1 AND "person1"."deleted_at" IS NULL AND "id" = 1
+	p = Person1{ID: 1, Age: 6}
+	if err := tt.Db.Debug().Model(&p).
+		Clauses(clause.OnConflict{
+			// Columns:   []clause.Column{{Name: "xxx"}}, //指定联合主键, 默认是primary key(仅限单主键)
+			UpdateAll: true,
+		}).
+		Where("id=?", 1).Updates(&p).Error; err != nil {
 		t.Fatal(err)
 	}
 

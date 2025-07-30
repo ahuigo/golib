@@ -10,3 +10,6 @@ gen:
 install:
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	brew install protoc
+	# install grpcurl
+	go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
+

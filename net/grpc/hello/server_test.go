@@ -26,20 +26,27 @@ func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloRe
 	return &pb.HelloReply{Message: "Hello " + in.Name}, nil
 }
 
-func TestHelloServerWithProxy(t *testing.T) {
-	opts := []grpc.ServerOption{
-		grpc.UnaryInterceptor(authenticateClient),
-	}
+func TestHelloServerWithAuth(t *testing.T) {
 
 	log.Println("listen ", ":50051")
 	lis, err := net.Listen("tcp", ":50051")
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
+	opts := []grpc.ServerOption{
+		grpc.UnaryInterceptor(authenticateClient),
+	}
 	s := grpc.NewServer(opts...)
 
 	// Register reflection service on gRPC server.
 	pb.RegisterGreeterServer(s, &server{})
+
+	/**
+	有反射功能时，可以这样调用：
+		grpcurl -plaintext localhost:50051 list
+	# 调用具体方法：
+	grpcurl -plaintext -d '{"name": "world"}' localhost:50051 helloworld.Greeter/SayHello
+	*/
 	reflection.Register(s)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
@@ -56,6 +63,12 @@ func TestHelloServer(t *testing.T) {
 
 	// Register reflection service on gRPC server.
 	pb.RegisterGreeterServer(s, &server{})
+	/**
+	有反射功能时，可以这样调用：
+		grpcurl -plaintext localhost:50051 list
+	# 调用具体方法：
+	grpcurl -plaintext -d '{"name": "world"}' localhost:50051 helloworld.Greeter/SayHello
+	*/
 	reflection.Register(s)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)

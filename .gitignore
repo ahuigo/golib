@@ -36,5 +36,7 @@ __debug_bin
 *.out
 *.tmp
 a.go
+CLAUDE.md
+.claude/
 #conf.local.yaml
-
+app/llm/face/models/

@@ -55,8 +55,9 @@ func isSameFace(facePath1, facePath2 string) (bool, error) {
 	// 计算两个人脸特征向量的欧几里得距离
 	distance := euclideanDistance(faces1[0].Descriptor, faces2[0].Descriptor)
 
-	// 设置阈值，通常小于0.6认为是同一个人
-	threshold := 0.6
+	// 设置阈值，通常小于一个值认为是同一个人
+	fmt.Println("distance:", distance)
+	threshold := 0.5
 	return distance < threshold, nil
 }
 
@@ -93,8 +94,14 @@ func euclideanDistance(a, b face.Descriptor) float64 {
 	return math.Sqrt(sum)
 }
 func TestIsSameFace(t *testing.T) {
-	p1 := "/opt/tmp/pics/t1.jpg"
-	p2 := "/opt/tmp/pics/tb1.jpg"
+	p1 := "./pics/lili.jpg"
+	p1 = "./pics/leijun.jpg"
+	p1 = "./pics/chenshuai1.jpg"
+	p2 := "./pics/wanpeng.jpg"
+	// p2 = "./pics/lili2.jpg"
+	p2 = "./pics/leijun.jpg"
+	p2 = "./pics/chenshuai3.jpg"
+	p2 = "./pics/glna2.jpg"
 	result, err := isSameFace(p1, p2)
 	if err != nil {
 		t.Fatalf("isSameFace(%s, %s) returned error: %v", p1, p2, err)

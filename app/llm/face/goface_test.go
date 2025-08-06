@@ -5,7 +5,7 @@ package face
 1. go-face(基于dlib 一个强大的C++库，提供人脸检测和识别功能。可以通过CGO调用): 专注人脸。
 	- 使用深度卷积神经网络（CNN）
 	- 简单直接的工作流程：输入图片 -> 得到特征向量 -> 对比距离。
-	- 参考实现案例：https://github.com/AndriyKalashnykov/go-face-recognition
+	- 参考实现案例：https://github.com/AndriyKalashnykov/go-face-recognition/tree/main/models
 	- models 下载： https://dlib.net/files/
 2. gocv: 基于opencv的Go语言绑定
 	- 它不仅支持人脸检测, 还有能进行图像滤波、色彩空间转换、物体跟踪、视频流处理（全栈）

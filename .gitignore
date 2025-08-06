@@ -40,3 +40,4 @@ CLAUDE.md
 .claude/
 #conf.local.yaml
 app/llm/face/models/
+pics/

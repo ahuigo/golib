@@ -14,13 +14,6 @@ export CGO_LDFLAGS = -L/opt/homebrew/Cellar/dlib/20.0/lib -ldlib \
 	-L/opt/homebrew/opt/jpeg/lib -ljpeg \
 	-stdlib=libc++
 
-# 运行特定测试
-test:
-	go test -v -run TestIsSameFace
-
-test2:
-	go test -v -run TestRealHumanFace
-
 # 安装依赖 - macOS
 install-mac:
 	@echo "Installing dependencies on macOS..."
@@ -31,3 +24,10 @@ install-debian:
 	@echo "Installing dependencies on Debian/Ubuntu..."
 	sudo apt-get update
 	sudo apt-get install -y libdlib-dev libjpeg-dev cmake pkg-config build-essential
+
+# 运行特定测试
+test:
+	go test -v -run TestIsSameFace
+
+test2:
+	go test -v -run TestRealHumanFace

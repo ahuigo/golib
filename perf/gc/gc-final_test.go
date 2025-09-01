@@ -16,14 +16,19 @@ func fooCache() {
 	}
 	c := &Cache{1}
 	runtime.SetFinalizer(c, stopJanitor)
-	println(0)
+	println(1)
 	_ = c
+    println("1.2")
 
 }
 
 func TestSetFinalizer(t *testing.T) {
+    println(0)
 	fooCache()
+    println("2")
 	cs := make([]int, 1e7)
-	runtime.GC()
+    println("3")
+	runtime.GC() // call stopJanitor
+    println("4")
 	println(len(cs))
 }

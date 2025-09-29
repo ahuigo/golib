@@ -2,6 +2,7 @@ package queue
 
 import (
 	"fmt"
+	"sync"
 	"testing"
 	_ "time"
 )
@@ -39,7 +40,7 @@ BenchmarkPushTailMutex-10         	85902454	        13.89 ns/op	       0 B/op	  
 BenchmarkPushTailCASFixed-10      	90363997	        20.10 ns/op	      56 B/op	       0 allocs/op
 BenchmarkPushTailMutexFixed-10    	63611265	        16.45 ns/op	      52 B/op	       0 allocs/op
 */
-func BenchmarkPushTailCAS(b *testing.B) {
+func BenchmarkPushTailCASBad(b *testing.B) {
 	fmt.Println("size0")
 	b.StopTimer()
 	q := New()
@@ -47,23 +48,24 @@ func BenchmarkPushTailCAS(b *testing.B) {
 	m := 0
 	for i := 0; i < b.N; i++ {
 		m = i
-		q.PushTailCAS(Message{id: i})
+		q.PushTailCASBad(Message{id: i})
 	}
 	fmt.Println("size1:", q.Len(), m)
 }
 
-func BenchmarkPushTailMutex(b *testing.B) {
+func BenchmarkPushTailMutexBad(b *testing.B) {
 	b.StopTimer()
 	q := New()
 	b.StartTimer()
 	m := 0
 	for i := 0; i < b.N; i++ {
 		m = i
-		q.PushTailMutex(Message{id: i})
+		q.PushTailMutexBad(Message{id: i})
 	}
 	fmt.Println("size2:", q.Len(), m)
 }
 
+// 14000w QPS
 func BenchmarkPushTailCASFixed(b *testing.B) {
 	b.StopTimer()
 	q := New()
@@ -73,9 +75,32 @@ func BenchmarkPushTailCASFixed(b *testing.B) {
 		m = i
 		q.PushTailCASFixed(Message{id: i})
 	}
-	fmt.Println("size3:", q.Len(), m)
+	println("size3:", q.Len(), m)
 }
 
+// 4617w QPS
+func BenchmarkPushTailCASFixedMulti(b *testing.B) {
+	b.StopTimer()
+	q := New()
+	m := 0
+	routineNum := 8
+	wg := sync.WaitGroup{}
+	wg.Add(routineNum)
+	b.StartTimer()
+	for j := 0; j < routineNum; j++ {
+		go func(j int) {
+			defer wg.Done()
+			for i := 0; i < b.N/routineNum; i++ {
+				m = i
+				q.PushTailCASFixed(Message{id: i})
+			}
+		}(j)
+	}
+	wg.Wait()
+	println("size3:", q.Len(), m)
+}
+
+// 8700w QPS
 func BenchmarkPushTailMutexFixed(b *testing.B) {
 	b.StopTimer()
 	q := New()
@@ -85,5 +110,27 @@ func BenchmarkPushTailMutexFixed(b *testing.B) {
 		m = i
 		q.PushTailMutexFixed(Message{id: i})
 	}
-	fmt.Println("size4:", q.Len(), m)
+	println("size4:", q.Len(), m)
+}
+
+// 1136w QPS
+func BenchmarkPushTailMutexFixedMulti(b *testing.B) {
+	b.StopTimer()
+	q := New()
+	m := 0
+	routineNum := 8
+	wg := sync.WaitGroup{}
+	wg.Add(routineNum)
+	b.StartTimer()
+	for j := 0; j < routineNum; j++ {
+		go func(j int) {
+			defer wg.Done()
+			for i := 0; i < b.N/routineNum; i++ {
+				m = i
+				q.PushTailMutexFixed(Message{id: i})
+			}
+		}(j)
+	}
+	wg.Wait()
+	println("size4:", q.Len(), m)
 }

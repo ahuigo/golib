@@ -42,3 +42,14 @@ func TestCancel(t *testing.T) {
 		}
 	}
 }
+
+func TestCancelWithValue(t *testing.T) {
+	type favContextKey string
+	k := favContextKey("language")
+
+	ctx := context.WithValue(context.Background(), k, "Go")
+	ctx, cancel := context.WithCancel(ctx)
+	cancel()
+	t.Log("context is canceled??", ctx.Err()) // "context canceled"
+	t.Log("key:", k, "value:", ctx.Value(k))  // "Go"
+}

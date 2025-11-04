@@ -1,9 +1,11 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"runtime/pprof"
 	"runtime/trace"
@@ -18,17 +20,26 @@ var memprofile = flag.String("memprofile", "mem.pprof", "write memory profile to
 // 可以使用 runtime/trace 工具
 var traceprofile = flag.String("traceprofile", "trace.pprof", "write memory profile to `file`")
 
-func longfun1() {
-	for i := 0; i < 2e3; i++ {
-		for i := 0; i < 1e6; i++ {
-		}
-	}
-}
 func longfun2() {
 	for i := 1; i < 2e3; i++ {
 		for i := 0; i < 1e6; i++ {
 		}
 	}
+}
+func longfun1(max int) {
+	for i := 0; i < max; i++ {
+		for i := 0; i < 1e6; i++ {
+		}
+	}
+}
+
+func fetchHttpSlow() {
+	resp, err := http.Get("http://m:4500/sleep/1")
+	if err != nil {
+		log.Fatal(err)
+	}
+	resp.Body.Read(make([]byte, 1024))
+	defer resp.Body.Close()
 }
 
 func sleep() {
@@ -37,12 +48,13 @@ func sleep() {
 func hello() {
 	fmt.Printf("hello world1!\n")
 	start := time.Now()
+	fetchHttpSlow()
 	sleep()
-	longfun1()
+	longfun1(2e3)
 	fmt.Println("longfun1 time:", time.Since(start))
 	sleep()
 	longfun2()
-	fmt.Printf("hello world2!\n")
+	fmt.Println("longfun2 time:", time.Since(start))
 }
 
 func main() {
@@ -66,9 +78,11 @@ func main() {
 		}
 		defer pprof.StopCPUProfile()
 	}
-
+	ctx := context.Background()
+	region := trace.StartRegion(ctx, "main region")
 	// ... rest of the program ...
 	hello()
+	region.End()
 
 	// if *memprofile != "" {
 	// 	f, err := os.Create(*memprofile)

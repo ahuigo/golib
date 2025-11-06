@@ -3,6 +3,7 @@ __debug_bin*
 main
 dump.rdb
 go.work.sum
+go.sum
 /log/logs
 # gonic
 /gonic/ginapp/docs

@@ -74,7 +74,7 @@ func TestSyncPollBufferBadCaseRelease(t *testing.T) {
 
 	/*
 		sync.Pool 两种做法：
-		1.　要么只get，不reset+put放回。等引用消失后gc会自动回收
+		1.　要么只get，不reset+put放回。等引用消失后gc会自动回收(pool并没有持有引用)
 		1.　要么1.get，2.使用完后, 3.reset+put放回
 		3.　不能1.get，2.再reset+put放回，3.再继续使用(共享冲突)
 	*/

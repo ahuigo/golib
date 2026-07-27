@@ -13,7 +13,6 @@ require (
 	github.com/spf13/viper v1.15.0
 	github.com/stretchr/testify v1.8.3
 	github.com/thinkerou/favicon v0.2.0
-	golang.org/x/crypto v0.23.0
 	golang.org/x/sync v0.2.0
 	gopkg.in/go-playground/validator.v8 v8.18.2
 )
